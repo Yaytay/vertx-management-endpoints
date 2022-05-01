@@ -13,7 +13,7 @@
     <appender-ref ref="STDOUTPUT" />
   </logger>
 
-  <root level="TRACE">
+  <root level="INFO">
     <appender-ref ref="STDOUTPUT"/>
   </root>
 

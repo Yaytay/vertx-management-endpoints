@@ -10,7 +10,6 @@ import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.Router;
-import io.vertx.ext.web.RoutingContext;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import org.junit.jupiter.api.Test;
@@ -39,11 +38,6 @@ public class ThreadDumpRouterIT {
     HttpServer httpServer = vertx.createHttpServer(new HttpServerOptions().setPort(0));
     Router router = Router.router(vertx);
     router.route("/manage/threaddump").handler(new ThreadDumpRouter());
-    router.routeWithRegex("/.*").handler((RoutingContext event) -> {
-      logger.debug("Here");
-      event.response().setStatusCode(200);
-      event.response().end("Bad");
-    });
     
     httpServer
             .requestHandler(router)

@@ -1,0 +1,165 @@
+<html><head>
+<title>Logback Configuration</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<style type="text/css">
+table {
+  border:1px solid #000000;
+  border-collapse: collapse;
+}
+td, th {
+  border:1px solid #000000;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+</style>
+<script src="https://unpkg.com/react@18.1.0/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+<script>
+  data = {"appenders":{},"loggers":{}};
+
+  class Appender extends React.Component {
+    render() {
+      return React.createElement('tr', {'key':'tr'}, [
+        React.createElement('td', {'key':'name'}, this.props.appender.name)
+        , React.createElement('td', {'key':'type'}, this.props.appender.type)
+        , React.createElement('td', {'key':'started'}, this.props.appender.started ? 'true' : 'false')
+      ]);
+    }
+  };
+
+  class Appenders extends React.Component {
+    render() {
+
+      var rows = [];
+      Object.entries(this.props.appenders).forEach(([k, v]) => {
+        rows.push(React.createElement(Appender, {'key': v.name, 'appender': v}, null));
+      });
+
+      return [
+        React.createElement('h2', {'key' : 'title'}, 'Appenders')
+        , React.createElement('table', {'key' : 'table'}, 
+          [
+            React.createElement('thead', {'key':'thead'}, [
+              React.createElement('tr', {'key': 'tr'},
+              [
+              React.createElement('th', {'key':'name'}, 'Name')
+              , React.createElement('th', {'key':'type'}, 'Type')
+              , React.createElement('th', {'key':'started'}, 'Started')
+              ])
+            ])
+            , React.createElement('tbody', {'key':'tbody'}, rows)
+          ]
+        )
+      ];
+    }
+  };
+
+  class LogLevelSelector extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {'level': this.props.level};
+    }
+    render() {
+      return React.createElement('select', {'value':this.state.level,'onChange':(e) => {
+        this.setState({'level': e.target.value});
+        this.props.updateLogger(this.props.logger, e.target.value);
+      }}, [
+        React.createElement('option', {'key':'empty'}, '')
+        , React.createElement('option', {'key':'trace'},'trace')
+        , React.createElement('option', {'key':'debug'},'debug')
+        , React.createElement('option', {'key':'info'},'info')
+        , React.createElement('option', {'key':'warn'},'warn')
+        , React.createElement('option', {'key':'error'},'error')
+      ]);
+    }
+  }
+
+  class Logger extends React.Component {
+    render() {
+      var logLevelSelectorProps = {
+        'logger': this.props.logger.name
+        , 'level': (this.props.logger.level == null ? '' : this.props.logger.level.toLowerCase())
+        , 'updateLogger': this.props.updateLogger
+      }
+      
+      return React.createElement('tr', {'key':'tr'}, [
+        React.createElement('td', {'key':'name'}, this.props.logger.name)
+        , React.createElement('td', {'key':'level'}, 
+            React.createElement(LogLevelSelector, logLevelSelectorProps, null))
+        , React.createElement('td', {'key':'effLevel'}, this.props.logger.effectiveLevel)
+        , React.createElement('td', {'key':'additive'}, this.props.logger.additive ? 'true' : 'false')
+        , React.createElement('td', {'key':'appenders'}, this.props.logger.appenders)
+      ]);
+    }
+  };
+
+  class Loggers extends React.Component {
+    render() {      
+
+      var rows = [];
+      Object.entries(this.props.loggers).forEach(([k, v]) => {
+        rows.push(React.createElement(Logger, {'key': v.name, 'logger': v, 'updateLogger': this.props.updateLogger}, null));
+      });
+
+      return [
+        React.createElement('h2', {'key' : 'title'}, 'Loggers')
+        , React.createElement('table', {'key' : 'table'}, 
+          [
+          React.createElement('thead', {'key':'thead'}, 
+              React.createElement('tr', {'key': 'head'},
+              [
+              React.createElement('th', {'key':'name'}, 'Name')
+              , React.createElement('th', {'key':'level'}, 'Level')
+              , React.createElement('th', {'key':'effLevel'}, 'Effective Level')
+              , React.createElement('th', {'key':'additive'}, 'Additive')
+              , React.createElement('th', {'key':'appenders'}, 'Appenders')
+              ])
+          )
+          , React.createElement('tbody', {'key':'tbody'}, rows)
+          ])
+      ];
+    }
+  };
+
+  class LogbackDetails extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {'appenders': this.props.appenders, 'loggers': this.props.loggers};
+      fetch(baseurl)
+              .then(response => response.json())
+              .then(newdata => {
+                this.setState({'appenders': newdata.appenders, 'loggers': newdata.loggers});
+              })
+              ;
+      this.updateLogger = this.updateLogger.bind(this);
+    }
+    updateLogger(loggerName, newLevel) {
+      const requestOptions = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ level: newLevel })
+      };
+      fetch(baseurl + '/' + loggerName, requestOptions)
+        .then(response => response.json())
+        .then(newdata => {
+          this.setState({'appenders': newdata.appenders, 'loggers': newdata.loggers});
+        });
+    }
+    render() {      
+      return [
+        React.createElement(Appenders, {'key':'appenders', 'appenders': this.state.appenders }, null)
+        , React.createElement(Loggers, {'key':'loggers', 'loggers': this.state.loggers, 'updateLogger': this.updateLogger }, null)
+      ];
+    }
+  }
+
+  const baseurl = URL;
+  const root = ReactDOM.createRoot(document.getElementById("root"));
+  const logbackDetails = React.createElement(LogbackDetails, data, null);
+  root.render(logbackDetails);
+</script>
+</body>
+</html>
