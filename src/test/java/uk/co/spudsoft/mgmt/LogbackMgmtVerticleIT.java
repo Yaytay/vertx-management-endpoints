@@ -21,7 +21,6 @@ import io.restassured.http.ContentType;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;
-import io.vertx.junit5.Timeout;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import org.junit.jupiter.api.Test;
@@ -39,7 +38,6 @@ import static org.hamcrest.Matchers.not;
  * @author jtalbut
  */
 @ExtendWith(VertxExtension.class)
-@Timeout(60000)
 public class LogbackMgmtVerticleIT {
 
   @SuppressWarnings("constantname")
