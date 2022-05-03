@@ -21,6 +21,7 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import io.netty.handler.codec.http.HttpHeaderNames;
+import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
@@ -31,6 +32,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.MIMEHeader;
 import io.vertx.ext.web.ParsedHeaderValue;
 import io.vertx.ext.web.ParsedHeaderValues;
+import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.impl.ParsableMIMEValue;
 import java.io.InputStream;
@@ -45,17 +47,19 @@ import org.slf4j.LoggerFactory;
  *
  * @author jtalbut
  */
-public class LogbackMgmtRouter implements Handler<RoutingContext> {
+public class LogbackMgmtVerticle extends AbstractVerticle implements Handler<RoutingContext> {
 
   @SuppressWarnings("constantname")
-  private static final Logger logger = LoggerFactory.getLogger(LogbackMgmtRouter.class);
+  private static final Logger logger = LoggerFactory.getLogger(LogbackMgmtVerticle.class);
 
   private static final ParsedHeaderValue HTML = new ParsableMIMEValue("text/html");
   private static final ParsedHeaderValue JSON = new ParsableMIMEValue("application/json");
   
   private String htmlContents;
 
-  public LogbackMgmtRouter() {
+  public LogbackMgmtVerticle(Router router) {
+    router.route(HttpMethod.GET, "/logback").handler(this);
+    router.route(HttpMethod.PUT, "/logback/:logger").handler(this);
   }
     
   @Override
@@ -68,7 +72,7 @@ public class LogbackMgmtRouter implements Handler<RoutingContext> {
         getLogLevelsJson(event.response());
       }
     } else if (request.method() == HttpMethod.PUT) {
-      updateLogLevel(request, event.response());
+      updateLogLevel(event.pathParam("logger"), request, event.response());
     } else {
       event.next();
     }
@@ -131,10 +135,20 @@ public class LogbackMgmtRouter implements Handler<RoutingContext> {
   }
 
   public static void setLogLevel(String loggerName, String levelName) {
-    ch.qos.logback.classic.Logger lg = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(loggerName);
-    Level level = Level.toLevel(levelName);
-    logger.info("Changing {} log level to {}", lg, level);
-    lg.setLevel(level);              
+    Object loggerFactory = LoggerFactory.getILoggerFactory();
+    ch.qos.logback.classic.Logger lg;
+    if (loggerFactory instanceof LoggerContext lc) {
+      lg = lc.exists(loggerName);
+    } else {
+      lg = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(loggerName);
+    }
+    if (lg != null) {
+      Level level = Level.toLevel(levelName);
+      logger.info("Changing {} log level to {}", lg, level);
+      lg.setLevel(level);
+    } else {
+      logger.info("Not changing the level of {} because it does not already exist", loggerName);
+    }
   }
   
   private void getLogLevelsJson(HttpServerResponse response) {
@@ -173,10 +187,7 @@ public class LogbackMgmtRouter implements Handler<RoutingContext> {
             });
   }
 
-  private void updateLogLevel(HttpServerRequest request, HttpServerResponse response) {
-    int lastSlash = request.absoluteURI().lastIndexOf("/");
-    String loggerName = request.absoluteURI().substring(lastSlash + 1);
-
+  private void updateLogLevel(String loggerName, HttpServerRequest request, HttpServerResponse response) {
     request.body()
             .compose(buffer -> {
               JsonObject jo = buffer.toJsonObject();

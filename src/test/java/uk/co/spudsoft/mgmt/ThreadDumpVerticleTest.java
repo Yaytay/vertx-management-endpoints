@@ -16,41 +16,22 @@
  */
 package uk.co.spudsoft.mgmt;
 
-import io.vertx.core.http.HttpMethod;
-import io.vertx.core.http.HttpServerRequest;
-import io.vertx.core.http.HttpServerResponse;
-import io.vertx.ext.web.RoutingContext;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 
 /**
  *
  * @author jtalbut
  */
-public class ThreadDumpRouterTest {
-  
-  @Test
-  public void testHandler() {
-    RoutingContext rc = mock(RoutingContext.class);
-    HttpServerResponse response = mock(HttpServerResponse.class);
-    when(rc.response()).thenReturn(response);
-    HttpServerRequest request = mock(HttpServerRequest.class);
-    when(rc.request()).thenReturn(request);
-    when(request.method()).thenReturn(HttpMethod.GET);
-    ThreadDumpRouter handler = new ThreadDumpRouter();
-    handler.handle(rc);
-  }
+public class ThreadDumpVerticleTest {
   
   @Test
   public void testBuildStackTrace() {
-    ThreadDumpRouter handler = new ThreadDumpRouter();
-    String stackTrace = handler.buildStackTrace();
+    String stackTrace = ThreadDumpVerticle.buildStackTrace();
     assertThat(stackTrace, startsWith("main (RUNNABLE)"));
     assertThat(stackTrace, containsString("WAITING"));
     assertThat(stackTrace, containsString("Daemon"));

@@ -17,10 +17,12 @@
 package uk.co.spudsoft.mgmt;
 
 import io.netty.handler.codec.http.HttpHeaderNames;
+import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
@@ -30,8 +32,12 @@ import java.lang.management.ThreadMXBean;
  *
  * @author jtalbut
  */
-public class ThreadDumpRouter implements Handler<RoutingContext> {
+public class ThreadDumpVerticle extends AbstractVerticle implements Handler<RoutingContext> {
 
+  public ThreadDumpVerticle(Router router) {
+    router.route(HttpMethod.GET, "/threaddump").handler(this);
+  }  
+  
   @Override
   public void handle(RoutingContext rc) {
     
@@ -50,7 +56,7 @@ public class ThreadDumpRouter implements Handler<RoutingContext> {
     }
   }
 
-  String buildStackTrace() {
+  static String buildStackTrace() {
     ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean();
     ThreadInfo[] threadInfo = threadMxBean.dumpAllThreads(true, true);
 

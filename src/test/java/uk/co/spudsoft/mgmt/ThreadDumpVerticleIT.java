@@ -6,9 +6,8 @@
 package uk.co.spudsoft.mgmt;
 
 import io.restassured.RestAssured;
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpServer;
-import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
@@ -25,32 +24,32 @@ import static org.hamcrest.Matchers.containsString;
  * @author jtalbut
  */
 @ExtendWith(VertxExtension.class)
-public class ThreadDumpRouterIT {
+public class ThreadDumpVerticleIT {
 
   @SuppressWarnings("constantname")
-  private static final Logger logger = LoggerFactory.getLogger(ThreadDumpRouterIT.class);
+  private static final Logger logger = LoggerFactory.getLogger(ThreadDumpVerticleIT.class);
   
   private int port;
   
   @Test
   public void testHandle(Vertx vertx, VertxTestContext testContext) throws Throwable {
 
-    HttpServer httpServer = vertx.createHttpServer(new HttpServerOptions().setPort(0));
     Router router = Router.router(vertx);
-    router.route("/manage/threaddump").handler(new ThreadDumpRouter());
+    Router mgmtRouter = Router.router(vertx);
+    router.mountSubRouter("/manage", mgmtRouter);
+    HttpServerVerticle httperServerVerticle = new HttpServerVerticle(router);
+
     
-    httpServer
-            .requestHandler(router)
-            .listen()
-            .onFailure(ex -> {
-              testContext.failNow(ex);
-            })
-            .onSuccess(hs -> {
-              vertx.executeBlocking(p -> {
-                port = httpServer.actualPort();
+    ThreadDumpVerticle threadDumpVerticle = new ThreadDumpVerticle(mgmtRouter);
+    
+    vertx
+            .deployVerticle(threadDumpVerticle)
+            .compose(verticleName -> vertx.deployVerticle(httperServerVerticle))
+            .compose(verticleName -> {
+                port = httperServerVerticle.getPort();
                 RestAssured.port = port;
                 logger.debug("Listening on port {}", port);
-
+    
                 testContext.verify(() -> {
                   long start = System.currentTimeMillis();
                   given()
@@ -68,8 +67,8 @@ public class ThreadDumpRouterIT {
                 });
 
                 testContext.completeNow();
+                return Future.succeededFuture();
               });
-            });
   };
   
 }
