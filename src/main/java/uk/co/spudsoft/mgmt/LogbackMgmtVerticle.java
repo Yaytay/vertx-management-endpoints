@@ -44,7 +44,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * A Vertx Verticle for allowing users to pull and update logback levels.
  *
+ * It is strongly recommended that this endpoint be mounted on via a subrouter, the path to which is only accessible from authorised personnel.
+ * The integration tests demonstrate the use of a suitable subrouter to locate the endpoint at /manage/logback.
+ *
+ * Two routes are created:
+ * <ul>
+ * <LI>GET /logback
+ * Downloads a JSON representation of all the registered loggers.
+ * If the request specifies an Accept header of "text/html" (before any specification of "application/json") downloads a single HTML page that provides the ability to change log levels via a UI.
+ * <LI>PUT /logback/:logger
+ * Requires a message body that contains a JSON object with a single element ("level") with a value that is (case insensitive) a valid Logback level.
+ * The level of the specified logger is changed to the specified level.
+ * </ul>
+ * 
  * @author jtalbut
  */
 public class LogbackMgmtVerticle extends AbstractVerticle implements Handler<RoutingContext> {
@@ -57,6 +71,13 @@ public class LogbackMgmtVerticle extends AbstractVerticle implements Handler<Rou
   
   private String htmlContents;
 
+  /**
+   * Constructor.
+   * 
+   * The router passed in should be a sub router that is inaccessible to normal users.
+   * 
+   * @param router The router that this handler will be attached to.
+   */
   public LogbackMgmtVerticle(Router router) {
     router.route(HttpMethod.GET, "/logback").handler(this);
     router.route(HttpMethod.PUT, "/logback/:logger").handler(this);
@@ -96,6 +117,13 @@ public class LogbackMgmtVerticle extends AbstractVerticle implements Handler<Rou
     }
   }
 
+  /**
+   * Get the current log levels as a JsonObject.
+   * 
+   * This does the bulk of the work of verticle.
+   * 
+   * @return the current log levels as a JsonObject.
+   */
   public static JsonObject getLogLevels() {
     LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
     JsonObject json = new JsonObject();
@@ -134,13 +162,20 @@ public class LogbackMgmtVerticle extends AbstractVerticle implements Handler<Rou
     return json;
   }
 
+  /**
+   * Set the level of the specified logger.
+   * 
+   * This will only do anything if the LoggerFactory returns a Logback LoggerContext that contains a Logger with the specified name.
+   * This prevents a caller from creating new Loggers.
+   * 
+   * @param loggerName The name of the Logger to be adjusted.
+   * @param levelName The desired target level (will default to Debug if not recognised as a valid level).
+   */
   public static void setLogLevel(String loggerName, String levelName) {
     Object loggerFactory = LoggerFactory.getILoggerFactory();
-    ch.qos.logback.classic.Logger lg;
+    ch.qos.logback.classic.Logger lg = null;
     if (loggerFactory instanceof LoggerContext lc) {
       lg = lc.exists(loggerName);
-    } else {
-      lg = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(loggerName);
     }
     if (lg != null) {
       Level level = Level.toLevel(levelName);

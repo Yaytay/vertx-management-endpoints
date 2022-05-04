@@ -29,11 +29,22 @@ import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 
 /**
+ * A Vertx Verticle for allowing users to download a thread dump of the process.
  *
+ * It is strongly recommended that this endpoint be mounted on via a subrouter, the path to which is only accessible from authorised personnel.
+ * The integration tests demonstrate the use of a suitable subrouter to locate the endpoint at /manage/threaddump.
+ * 
  * @author jtalbut
  */
 public class ThreadDumpVerticle extends AbstractVerticle implements Handler<RoutingContext> {
 
+  /**
+   * Constructor.
+   * 
+   * The router passed in should be a sub router that is inaccessible to normal users.
+   * 
+   * @param router The router that this handler will be attached to.
+   */
   public ThreadDumpVerticle(Router router) {
     router.route(HttpMethod.GET, "/threaddump").handler(this);
   }  

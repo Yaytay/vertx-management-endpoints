@@ -34,7 +34,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * A Vertx Verticle for allowing users to download a heap dump over HTTP.
+ * 
+ * It is vital, for obvious security reasons, that this endpoint is not accessible to end users.
+ * It is strongly recommended that this endpoint be mounted on via a subrouter, the path to which is only accessible from authorised personnel.
+ * The integration tests demonstrate the use of a suitable subrouter to locate the endpoint at /manage/heapdump.
+ * 
+ * The heapdump generated is written to disk and then streamed from there to the client.
+ * The resulting hprof file is likely to be large (the integration test routinely generates a 40MB file), avoid downloading it using any client that will try to store it in memory.
+ * 
  * @author jtalbut
  */
 public class HeapDumpVerticle extends AbstractVerticle implements Handler<RoutingContext> {
@@ -42,6 +50,13 @@ public class HeapDumpVerticle extends AbstractVerticle implements Handler<Routin
   @SuppressWarnings("constantname")
   private static final Logger logger = LoggerFactory.getLogger(HeapDumpVerticle.class);
   
+  /**
+   * Constructor.
+   * 
+   * The router passed in should be a sub router that is inaccessible to normal users.
+   * 
+   * @param router The router that this handler will be attached to.
+   */
   public HeapDumpVerticle(Router router) {
     router.route(HttpMethod.GET, "/heapdump").handler(this);
   }

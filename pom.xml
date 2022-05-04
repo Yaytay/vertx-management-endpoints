@@ -532,6 +532,7 @@
         </executions>      
         <configuration>
           <quiet>true</quiet>
+          <failOnWarnings>true</failOnWarnings>
         </configuration>
       </plugin>    
                 

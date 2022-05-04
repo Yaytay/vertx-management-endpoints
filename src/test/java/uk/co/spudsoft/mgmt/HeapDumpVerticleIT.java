@@ -28,6 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 
 /**
  *
@@ -71,8 +73,13 @@ public class HeapDumpVerticleIT {
                       .statusCode(200)
                       .extract().header(HttpHeaderNames.CONTENT_LENGTH.toString())
                       ;                  
-                  logger.debug("First request took {}s", (System.currentTimeMillis() - start) / 1000.0);
                   int length = Integer.parseInt(contentLengthString);
+                  logger.debug("First request took {}s to produce a file of {} bytes ({}MB)"
+                          , (System.currentTimeMillis() - start) / 1000.0
+                          , contentLengthString
+                          , length / (1024 * 1024)
+                  );
+                  assertThat(length, greaterThan(1000000));
 
                 });
                         
