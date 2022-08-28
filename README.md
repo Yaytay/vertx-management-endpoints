@@ -9,10 +9,10 @@
 A few Vert.x HTTP Server routes for providing functionality similar to Springs actuators.
 
 The routes currently in the library are:
-- (#HeapDumpVerticle)[HeapDumpVerticle]
-- InFlightVerticle
-- LogbackMgmtVerticle
-- ThreadDumpVerticle
+- (#heapdumproute)[HeapDumpRoute]
+- InFlightRoute
+- LogbackMgmtRoute
+- ThreadDumpRoute
 
 # Basic Usage
 
