@@ -18,7 +18,6 @@ package uk.co.spudsoft.mgmt;
 
 import com.sun.management.HotSpotDiagnosticMXBean;
 import io.netty.handler.codec.http.HttpHeaderNames;
-import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
@@ -45,20 +44,37 @@ import org.slf4j.LoggerFactory;
  * 
  * @author jtalbut
  */
-public class HeapDumpVerticle extends AbstractVerticle implements Handler<RoutingContext> {
+public class HeapDumpRoute implements Handler<RoutingContext> {
 
-  @SuppressWarnings("constantname")
-  private static final Logger logger = LoggerFactory.getLogger(HeapDumpVerticle.class);
-  
+  private static final Logger logger = LoggerFactory.getLogger(HeapDumpRoute.class);
+
   /**
    * Constructor.
+   */
+  public HeapDumpRoute() {
+  }  
+  
+  /**
+   * Deploy the route to the router passed in at the normal endpoint.
    * 
    * The router passed in should be a sub router that is inaccessible to normal users.
    * 
    * @param router The router that this handler will be attached to.
    */
-  public HeapDumpVerticle(Router router) {
-    router.route(HttpMethod.GET, "/heapdump").handler(this);
+  public void standardDeploy(Router router) {
+    router.route(HttpMethod.GET, "/heapdump").handler(this::handle);
+  }
+  
+  /**
+   * Factory method to do standard deployment on newly constructed route.
+   * 
+   * The router passed in should be a sub router that is inaccessible to normal users.
+   * 
+   * @param router The router that this handler will be attached to.
+   */
+  public static void createAndDeploy(Router router) {
+    HeapDumpRoute route = new HeapDumpRoute();
+    route.standardDeploy(router);
   }
   
   @Override

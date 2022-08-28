@@ -36,14 +36,14 @@ import static org.hamcrest.Matchers.greaterThan;
  * @author jtalbut
  */
 @ExtendWith(VertxExtension.class)
-public class HeapDumpVerticleIT {
+public class InFlightRouteIT {
   
   @SuppressWarnings("constantname")
-  private static final Logger logger = LoggerFactory.getLogger(HeapDumpVerticleIT.class);
+  private static final Logger logger = LoggerFactory.getLogger(InFlightRouteIT.class);
   
   private int port;
     
-  public HeapDumpVerticleIT() {
+  public InFlightRouteIT() {
   }
 
   @org.junit.jupiter.api.Test
@@ -51,14 +51,13 @@ public class HeapDumpVerticleIT {
 
     Router router = Router.router(vertx);
     Router mgmtRouter = Router.router(vertx);
-    router.mountSubRouter("/manage", mgmtRouter);
+    router.route("/manage/*").subRouter(mgmtRouter);
     HttpServerVerticle httperServerVerticle = new HttpServerVerticle(router);
     
-    HeapDumpVerticle threadDumpVerticle = new HeapDumpVerticle(mgmtRouter);
+    InFlightRoute.createAndDeploy(router, mgmtRouter);
     
     vertx
-            .deployVerticle(threadDumpVerticle)
-            .compose(verticleName -> vertx.deployVerticle(httperServerVerticle))
+            .deployVerticle(httperServerVerticle)
             .compose(verticleName -> {
                 port = httperServerVerticle.getPort();
                 RestAssured.port = port;
@@ -66,21 +65,13 @@ public class HeapDumpVerticleIT {
     
                 testContext.verify(() -> {
 
-                  long start = System.currentTimeMillis();
-                  String contentLengthString = given()
-                      .get("/manage/heapdump")
+                  String body = given()
+                      .get("/manage/inflight")
                       .then()
                       .statusCode(200)
-                      .extract().header(HttpHeaderNames.CONTENT_LENGTH.toString())
+                      .extract().body().asString()
                       ;                  
-                  int length = Integer.parseInt(contentLengthString);
-                  logger.debug("First request took {}s to produce a file of {} bytes ({}MB)"
-                          , (System.currentTimeMillis() - start) / 1000.0
-                          , contentLengthString
-                          , length / (1024 * 1024)
-                  );
-                  assertThat(length, greaterThan(1000000));
-
+                  logger.debug("Response: {}", body);
                 });
                         
                 testContext.completeNow();

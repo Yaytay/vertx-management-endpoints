@@ -24,10 +24,10 @@ import static org.hamcrest.Matchers.containsString;
  * @author jtalbut
  */
 @ExtendWith(VertxExtension.class)
-public class ThreadDumpVerticleIT {
+public class ThreadDumpRouteIT {
 
   @SuppressWarnings("constantname")
-  private static final Logger logger = LoggerFactory.getLogger(ThreadDumpVerticleIT.class);
+  private static final Logger logger = LoggerFactory.getLogger(ThreadDumpRouteIT.class);
   
   private int port;
   
@@ -36,15 +36,13 @@ public class ThreadDumpVerticleIT {
 
     Router router = Router.router(vertx);
     Router mgmtRouter = Router.router(vertx);
-    router.mountSubRouter("/manage", mgmtRouter);
+    router.route("/manage/*").subRouter(mgmtRouter);
     HttpServerVerticle httperServerVerticle = new HttpServerVerticle(router);
-
     
-    ThreadDumpVerticle threadDumpVerticle = new ThreadDumpVerticle(mgmtRouter);
+    ThreadDumpRoute.createAndDeploy(mgmtRouter);
     
     vertx
-            .deployVerticle(threadDumpVerticle)
-            .compose(verticleName -> vertx.deployVerticle(httperServerVerticle))
+            .deployVerticle(httperServerVerticle)
             .compose(verticleName -> {
                 port = httperServerVerticle.getPort();
                 RestAssured.port = port;

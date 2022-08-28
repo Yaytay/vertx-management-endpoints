@@ -38,10 +38,10 @@ import static org.hamcrest.Matchers.not;
  * @author jtalbut
  */
 @ExtendWith(VertxExtension.class)
-public class LogbackMgmtVerticleIT {
+public class LogbackMgmtRouteIT {
 
   @SuppressWarnings("constantname")
-  private static final Logger logger = LoggerFactory.getLogger(LogbackMgmtVerticleIT.class);
+  private static final Logger logger = LoggerFactory.getLogger(LogbackMgmtRouteIT.class);
   
   private int port;
   
@@ -50,14 +50,13 @@ public class LogbackMgmtVerticleIT {
 
     Router router = Router.router(vertx);
     Router mgmtRouter = Router.router(vertx);
-    router.mountSubRouter("/manage", mgmtRouter);
+    router.route("/manage/*").subRouter(mgmtRouter);
     HttpServerVerticle httperServerVerticle = new HttpServerVerticle(router);
     
-    LogbackMgmtVerticle logbackMgmtVerticle = new LogbackMgmtVerticle(mgmtRouter);
+    LogbackMgmtRoute.createAndDeploy(mgmtRouter);
     
     vertx
-            .deployVerticle(logbackMgmtVerticle)
-            .compose(verticleName -> vertx.deployVerticle(httperServerVerticle))
+            .deployVerticle(httperServerVerticle)
             .compose(verticleName -> {
                 port = httperServerVerticle.getPort();
                 RestAssured.port = port;
@@ -70,7 +69,7 @@ public class LogbackMgmtVerticleIT {
                       .then()
                       .statusCode(200)
                       .body(
-                          containsString("\"uk.co.spudsoft.mgmt.LogbackMgmtVerticleIT\":{\"name\":\"uk.co.spudsoft.mgmt.LogbackMgmtVerticleIT\",\"effectiveLevel\":\"TRACE\",\"additive\":true,\"appenders\":[]}")
+                          containsString("\"uk.co.spudsoft.mgmt.LogbackMgmtRouteIT\":{\"name\":\"uk.co.spudsoft.mgmt.LogbackMgmtRouteIT\",\"effectiveLevel\":\"TRACE\",\"additive\":true,\"appenders\":[]}")
                       );
                   logger.debug("First request took {}s", (System.currentTimeMillis() - start) / 1000.0);
                   start = System.currentTimeMillis();
@@ -80,17 +79,17 @@ public class LogbackMgmtVerticleIT {
                       .then()
                       .statusCode(200)
                       .body(
-                          not(containsString("\"uk.co.spudsoft.mgmt.LogbackMgmtVerticleIT\":{\"name\":\"uk.co.spudsoft.mgmt.LogbackMgmtVerticleIT\",\"effectiveLevel\":\"TRACE\",\"additive\":true,\"appenders\":[]}"))
+                          not(containsString("\"uk.co.spudsoft.mgmt.LogbackMgmtRouteIT\":{\"name\":\"uk.co.spudsoft.mgmt.LogbackMgmtRouteIT\",\"effectiveLevel\":\"TRACE\",\"additive\":true,\"appenders\":[]}"))
                       );
                   logger.debug("Second request took {}s", (System.currentTimeMillis() - start) / 1000.0);
                   start = System.currentTimeMillis();
                   given()
                       .body("{\"level\":\"WARN\"}")
-                      .put("/manage/logback/uk.co.spudsoft.mgmt.LogbackMgmtVerticleIT")
+                      .put("/manage/logback/uk.co.spudsoft.mgmt.LogbackMgmtRouteIT")
                       .then()
                       .statusCode(200)
                       .body(
-                          containsString("\"uk.co.spudsoft.mgmt.LogbackMgmtVerticleIT\":{\"name\":\"uk.co.spudsoft.mgmt.LogbackMgmtVerticleIT\",\"level\":\"WARN\",\"effectiveLevel\":\"WARN\",\"additive\":true,\"appenders\":[]}")
+                          containsString("\"uk.co.spudsoft.mgmt.LogbackMgmtRouteIT\":{\"name\":\"uk.co.spudsoft.mgmt.LogbackMgmtRouteIT\",\"level\":\"WARN\",\"effectiveLevel\":\"WARN\",\"additive\":true,\"appenders\":[]}")
                       );                          
                   logger.debug("Third request took {}s", (System.currentTimeMillis() - start) / 1000.0);
                   start = System.currentTimeMillis();
@@ -100,7 +99,7 @@ public class LogbackMgmtVerticleIT {
                       .then()
                       .statusCode(200)
                       .body(
-                          not(containsString("\"uk.co.spudsoft.mgmt.LogbackMgmtVerticleIT\":{\"name\":\"uk.co.spudsoft.mgmt.LogbackMgmtVerticleIT\",\"effectiveLevel\":\"TRACE\",\"additive\":true,\"appenders\":[]}"))
+                          not(containsString("\"uk.co.spudsoft.mgmt.LogbackMgmtRouteIT\":{\"name\":\"uk.co.spudsoft.mgmt.LogbackMgmtRouteIT\",\"effectiveLevel\":\"TRACE\",\"additive\":true,\"appenders\":[]}"))
                       );
                   logger.debug("Fourth request took {}s", (System.currentTimeMillis() - start) / 1000.0);
 
@@ -118,7 +117,7 @@ public class LogbackMgmtVerticleIT {
                   start = System.currentTimeMillis();
                   given()
                       .body("{\"level\":\"WARN\"}")
-                      .put("/manage/logback/uk.co.spudsoft.mgmt.LogbackMgmtVerticleIT/lower")
+                      .put("/manage/logback/uk.co.spudsoft.mgmt.LogbackMgmtRouteIT/lower")
                       .then()
                       .statusCode(404)
                       ;                          

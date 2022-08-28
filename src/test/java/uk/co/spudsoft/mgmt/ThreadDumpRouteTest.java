@@ -27,11 +27,11 @@ import static org.hamcrest.Matchers.startsWith;
  *
  * @author jtalbut
  */
-public class ThreadDumpVerticleTest {
+public class ThreadDumpRouteTest {
   
   @Test
   public void testBuildStackTrace() {
-    String stackTrace = ThreadDumpVerticle.buildStackTrace();
+    String stackTrace = ThreadDumpRoute.buildStackTrace();
     assertThat(stackTrace, startsWith("main (RUNNABLE)"));
     assertThat(stackTrace, containsString("WAITING"));
     assertThat(stackTrace, containsString("Daemon"));

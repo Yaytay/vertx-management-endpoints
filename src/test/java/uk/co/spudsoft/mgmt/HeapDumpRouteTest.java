@@ -32,38 +32,38 @@ import static org.mockito.Mockito.when;
  *
  * @author jtalbut
  */
-public class HeapDumpVerticleTest {
+public class HeapDumpRouteTest {
   
   @Test
   public void testReportError() {
     HttpServerResponse response = mock(HttpServerResponse.class);
-    HeapDumpVerticle.reportError("message", new IllegalArgumentException("ExceptionMessage"), response);
+    HeapDumpRoute.reportError("message", new IllegalArgumentException("ExceptionMessage"), response);
     verify(response).setStatusCode(500);
     verify(response).end("Failed to generate heap dump");
   }
   
   @Test
   public void testGetProcessName() {
-    String processName = HeapDumpVerticle.getProcessName();
+    String processName = HeapDumpRoute.getProcessName();
     assertThat(processName, startsWith("surefirebooter"));
     
-    assertEquals("bob", HeapDumpVerticle.getProcessName("bob fred", () -> null));
-    assertEquals("bob", HeapDumpVerticle.getProcessName("bob", () -> null));
+    assertEquals("bob", HeapDumpRoute.getProcessName("bob fred", () -> null));
+    assertEquals("bob", HeapDumpRoute.getProcessName("bob", () -> null));
     ProcessHandle ph = mock(ProcessHandle.class);
     Info i = mock(Info.class);
     when(ph.info()).thenReturn(i);
     
     Optional<String> command = Optional.empty();
     when(i.command()).thenReturn(command);
-    assertEquals("heap", HeapDumpVerticle.getProcessName(null, () -> ph));
+    assertEquals("heap", HeapDumpRoute.getProcessName(null, () -> ph));
     
     command = Optional.of("carol");
     when(i.command()).thenReturn(command);
-    assertEquals("carol", HeapDumpVerticle.getProcessName("", () -> ph));
+    assertEquals("carol", HeapDumpRoute.getProcessName("", () -> ph));
     
-    assertEquals("ted", HeapDumpVerticle.getProcessName("bob/carol/ted", () -> null));
-    assertEquals("ted", HeapDumpVerticle.getProcessName("bob\\carol\\ted", () -> null));
-    assertEquals("ted", HeapDumpVerticle.getProcessName("bob\\carol\\ted.jar", () -> null));
+    assertEquals("ted", HeapDumpRoute.getProcessName("bob/carol/ted", () -> null));
+    assertEquals("ted", HeapDumpRoute.getProcessName("bob\\carol\\ted", () -> null));
+    assertEquals("ted", HeapDumpRoute.getProcessName("bob\\carol\\ted.jar", () -> null));
     
   }
   

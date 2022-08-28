@@ -21,7 +21,6 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import io.netty.handler.codec.http.HttpHeaderNames;
-import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
@@ -61,28 +60,47 @@ import org.slf4j.LoggerFactory;
  * 
  * @author jtalbut
  */
-public class LogbackMgmtVerticle extends AbstractVerticle implements Handler<RoutingContext> {
+public class LogbackMgmtRoute implements Handler<RoutingContext> {
 
   @SuppressWarnings("constantname")
-  private static final Logger logger = LoggerFactory.getLogger(LogbackMgmtVerticle.class);
+  private static final Logger logger = LoggerFactory.getLogger(LogbackMgmtRoute.class);
 
   private static final ParsedHeaderValue HTML = new ParsableMIMEValue("text/html");
   private static final ParsedHeaderValue JSON = new ParsableMIMEValue("application/json");
   
-  private String htmlContents;
+  private String htmlContents;    
 
   /**
    * Constructor.
+   */
+  public LogbackMgmtRoute() {
+  }
+  
+  /**
+   * Deploy the route to the router passed in at the normal endpoint.
    * 
    * The router passed in should be a sub router that is inaccessible to normal users.
    * 
    * @param router The router that this handler will be attached to.
    */
-  public LogbackMgmtVerticle(Router router) {
-    router.route(HttpMethod.GET, "/logback").handler(this);
-    router.route(HttpMethod.PUT, "/logback/:logger").handler(this);
+  public void standardDeploy(Router router) {
+    router.route(HttpMethod.GET, "/logback").handler(this::handle);
+    router.route(HttpMethod.PUT, "/logback/:logger").handler(this::handle);
   }
-    
+  
+  /**
+   * Factory method to do standard deployment on newly constructed route.
+   * 
+   * The router passed in should be a sub router that is inaccessible to normal users.
+   * 
+   * @param router The router that this handler will be attached to.
+   */
+  public static void createAndDeploy(Router router) {
+    LogbackMgmtRoute route = new LogbackMgmtRoute();
+    route.standardDeploy(router);
+  }
+
+  
   @Override
   public void handle(RoutingContext event) {
     HttpServerRequest request = event.request();

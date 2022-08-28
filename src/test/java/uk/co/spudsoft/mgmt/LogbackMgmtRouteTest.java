@@ -30,22 +30,22 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  * @author jtalbut
  */
-public class LogbackMgmtVerticleTest {
+public class LogbackMgmtRouteTest {
   
   @SuppressWarnings("constantname")
-  private static final Logger logger = LoggerFactory.getLogger(LogbackMgmtVerticleTest.class);
+  private static final Logger logger = LoggerFactory.getLogger(LogbackMgmtRouteTest.class);
   
   @Test
   public void testGetLogLevels() {
-    JsonObject json = LogbackMgmtVerticle.getLogLevels();
+    JsonObject json = LogbackMgmtRoute.getLogLevels();
     assertNotNull(json);
     logger.debug("Loggers: {}", json);
     assertThat(json.getJsonObject("appenders").size(), equalTo(1));
     assertThat(json.getJsonObject("loggers").size(), greaterThan(4));    
     assertThat(json.getJsonObject("loggers").getJsonObject(getClass().getCanonicalName()).getString("effectiveLevel"), equalTo("TRACE"));
     
-    LogbackMgmtVerticle.setLogLevel(getClass().getCanonicalName(), "DEBUG");
-    json = LogbackMgmtVerticle.getLogLevels();
+    LogbackMgmtRoute.setLogLevel(getClass().getCanonicalName(), "DEBUG");
+    json = LogbackMgmtRoute.getLogLevels();
     assertThat(json.getJsonObject("loggers").getJsonObject(getClass().getCanonicalName()).getString("effectiveLevel"), equalTo("DEBUG"));
   }
   

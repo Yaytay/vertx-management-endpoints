@@ -17,7 +17,6 @@
 package uk.co.spudsoft.mgmt;
 
 import io.netty.handler.codec.http.HttpHeaderNames;
-import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerRequest;
@@ -36,18 +35,36 @@ import java.lang.management.ThreadMXBean;
  * 
  * @author jtalbut
  */
-public class ThreadDumpVerticle extends AbstractVerticle implements Handler<RoutingContext> {
+public class ThreadDumpRoute implements Handler<RoutingContext> {
 
   /**
    * Constructor.
+   */
+  public ThreadDumpRoute() {
+  }
+
+  /**
+   * Deploy the route to the router passed in at the normal endpoint.
    * 
    * The router passed in should be a sub router that is inaccessible to normal users.
    * 
    * @param router The router that this handler will be attached to.
    */
-  public ThreadDumpVerticle(Router router) {
-    router.route(HttpMethod.GET, "/threaddump").handler(this);
-  }  
+  public void standardDeploy(Router router) {
+    router.route(HttpMethod.GET, "/threaddump").handler(this::handle);
+  }
+  
+  /**
+   * Factory method to do standard deployment on newly constructed route.
+   * 
+   * The router passed in should be a sub router that is inaccessible to normal users.
+   * 
+   * @param router The router that this handler will be attached to.
+   */
+  public static void createAndDeploy(Router router) {
+    ThreadDumpRoute route = new ThreadDumpRoute();
+    route.standardDeploy(router);
+  }
   
   @Override
   public void handle(RoutingContext rc) {
