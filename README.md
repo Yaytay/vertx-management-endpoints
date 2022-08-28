@@ -10,9 +10,9 @@ A few Vert.x HTTP Server routes for providing functionality similar to Springs a
 
 The routes currently in the library are:
 - [HeapDumpRoute](#heapdumproute)
-- InFlightRoute
-- LogbackMgmtRoute
-- ThreadDumpRoute
+- [InFlightRoute](#inflightroute)
+- [LogbackMgmtRoute](#logbackmgmtroute)
+- [ThreadDumpRoute](#threaddumproute)
 
 # Basic Usage
 
