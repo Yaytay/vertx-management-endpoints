@@ -43,7 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A Vertx Verticle for allowing users to pull and update logback levels.
+ * A Vertx HTTP Server route for allowing users to pull and update logback levels.
  *
  * It is strongly recommended that this endpoint be mounted on via a subrouter, the path to which is only accessible from authorised personnel.
  * The integration tests demonstrate the use of a suitable subrouter to locate the endpoint at /manage/logback.

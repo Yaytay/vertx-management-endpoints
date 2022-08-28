@@ -28,7 +28,7 @@ import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 
 /**
- * A Vertx Verticle for allowing users to download a thread dump of the process.
+ * A Vertx HTTP Server route for allowing users to download a thread dump of the process.
  *
  * It is strongly recommended that this endpoint be mounted on via a subrouter, the path to which is only accessible from authorised personnel.
  * The integration tests demonstrate the use of a suitable subrouter to locate the endpoint at /manage/threaddump.

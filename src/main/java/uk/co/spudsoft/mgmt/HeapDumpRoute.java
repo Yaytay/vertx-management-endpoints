@@ -33,7 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A Vertx Verticle for allowing users to download a heap dump over HTTP.
+ * A Vertx HTTP Server route for allowing users to download a heap dump over HTTP.
  * 
  * It is vital, for obvious security reasons, that this endpoint is not accessible to end users.
  * It is strongly recommended that this endpoint be mounted on via a subrouter, the path to which is only accessible from authorised personnel.

@@ -30,8 +30,43 @@ LogbackMgmtRoute.createAndDeploy(mgmtRouter);
 ThreadDumpRoute.createAndDeploy(mgmtRouter);
 ```
 
-## 
+Manual deployments basically involve copying the code from the createAndDeploy methods.
+Note that the InFlightRoute must be installed on all routers that you want to monitor and is the most likely to be deployed in a custom manner.
 
+## Important
+
+Most of these routes expose information that you really do not want accessible to end users.
+It is expected that the sub router used for these routes be restricted to trusted users only.
+
+## HeapDumpRoute
+
+A Vertx route for allowing users to download a heap dump over HTTP.
+
+The heapdump generated is written to disk and then streamed from there to the client.
+The resulting hprof file is likely to be large (the integration test routinely generates a 40MB file), avoid downloading it using any client that will try to store it in memory.
+To help with this the output will include a Content-Disposition header to instruct browsers to save the body to a file.
+
+## InFlightroute
+
+A Vertx HTTP Server route for allowing users to download information about all HTTP requests currently being processed by the server.
+
+This is only likely to be useful if your service has slow endpoints (or ones that generate a lot of data).
+
+## LogbackMgmtRoute
+
+A Vertx HTTP Server route for allowing users to pull and update logback levels.
+
+Two routes are created:
+- GET /logback
+  Downloads a JSON representation of all the registered loggers.
+  If the request specifies an Accept header of "text/html" (before any specification of "application/json") downloads a single HTML page that provides the ability to change log levels via a UI.
+- PUT /logback/:logger
+  Requires a message body that contains a JSON object with a single element ("level") with a value that is (case insensitive) a valid Logback level.
+  The level of the specified logger is changed to the specified level.
+
+## ThreadDumpRoute
+
+A Vertx HTTP Server route for allowing users to download a thread dump of the process.
 
 # Building
 
