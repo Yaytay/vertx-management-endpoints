@@ -9,6 +9,8 @@
   <artifactId>vertx-management-endpoints</artifactId>
   <version>0.0.0</version>
   <name>Vertx Management Endpoints</name>
+  <description>A few Vert.x HTTP Server routes for providing functionality similar to Springs actuators.</description>
+  <url>https://github.com/Yaytay/vertx-management-endpoints</url>
   
   <licenses>
     <license>
