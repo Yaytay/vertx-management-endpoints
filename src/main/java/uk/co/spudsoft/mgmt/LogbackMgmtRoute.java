@@ -84,8 +84,8 @@ public class LogbackMgmtRoute implements Handler<RoutingContext> {
    * @param router The router that this handler will be attached to.
    */
   public void standardDeploy(Router router) {
-    router.route(HttpMethod.GET, "/logback").handler(this::handle);
-    router.route(HttpMethod.PUT, "/logback/:logger").handler(this::handle);
+    router.route(HttpMethod.GET, "/logback").handler(this::handle).setName("Logback Management");
+    router.route(HttpMethod.PUT, "/logback/:logger").handler(this::handle).setName("Logback Management");
   }
   
   /**

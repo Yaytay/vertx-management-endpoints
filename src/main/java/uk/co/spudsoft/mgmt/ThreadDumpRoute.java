@@ -51,7 +51,7 @@ public class ThreadDumpRoute implements Handler<RoutingContext> {
    * @param router The router that this handler will be attached to.
    */
   public void standardDeploy(Router router) {
-    router.route(HttpMethod.GET, "/threaddump").handler(this::handle);
+    router.route(HttpMethod.GET, "/threaddump").handler(this::handle).setName("Thread Dump");
   }
   
   /**

@@ -16,7 +16,6 @@
  */
 package uk.co.spudsoft.mgmt;
 
-import io.netty.handler.codec.http.HttpHeaderNames;
 import io.restassured.RestAssured;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
@@ -28,8 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -46,7 +44,7 @@ public class InFlightRouteIT {
   public InFlightRouteIT() {
   }
 
-  @org.junit.jupiter.api.Test
+  @Test
   public void testHandle(Vertx vertx, VertxTestContext testContext) throws Throwable {
 
     Router router = Router.router(vertx);
