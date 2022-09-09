@@ -60,6 +60,7 @@ jobs:
         MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         GITHUB_ACTOR: ${{ github.actor }} # GITHUB_TOKEN is the default env for the password 
         GITHUB_TOKEN: ${{ github.token }} # GITHUB_TOKEN is the default env for the password 
+        MAVEN_OPTS: -Djava.security.manager=allow
       run: |
         mvn -B \
           -P ci-cd \
@@ -82,6 +83,7 @@ jobs:
         MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
         MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+        MAVEN_OPTS: -Djava.security.manager=allow
       run: |
         mvn -B \
           -P ci-cd \
