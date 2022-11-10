@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ThreadDumpRoute.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Vertx Management Endpoints</a> &gt; <a href="index.source.html" class="el_package">uk.co.spudsoft.mgmt</a> &gt; <span class="el_source">ThreadDumpRoute.java</span></div><h1>ThreadDumpRoute.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2022 jtalbut
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package uk.co.spudsoft.mgmt;
+
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.vertx.core.Handler;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.http.HttpServerResponse;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
+
+/**
+ * A Vertx HTTP Server route for allowing users to download a thread dump of the process.
+ *
+ * It is strongly recommended that this endpoint be mounted on via a subrouter, the path to which is only accessible from authorised personnel.
+ * The integration tests demonstrate the use of a suitable subrouter to locate the endpoint at /manage/threaddump.
+ * 
+ * @author jtalbut
+ */
+public class ThreadDumpRoute implements Handler&lt;RoutingContext&gt; {
+
+  /**
+   * Constructor.
+   */
+<span class="fc" id="L43">  public ThreadDumpRoute() {</span>
+<span class="fc" id="L44">  }</span>
+
+  /**
+   * Deploy the route to the router passed in at the normal endpoint.
+   * 
+   * The router passed in should be a sub router that is inaccessible to normal users.
+   * 
+   * @param router The router that this handler will be attached to.
+   */
+  public void standardDeploy(Router router) {
+<span class="fc" id="L54">    router.route(HttpMethod.GET, &quot;/threaddump&quot;).handler(this::handle).setName(&quot;Thread Dump&quot;);</span>
+<span class="fc" id="L55">  }</span>
+  
+  /**
+   * Factory method to do standard deployment on newly constructed route.
+   * 
+   * The router passed in should be a sub router that is inaccessible to normal users.
+   * 
+   * @param router The router that this handler will be attached to.
+   */
+  public static void createAndDeploy(Router router) {
+<span class="fc" id="L65">    ThreadDumpRoute route = new ThreadDumpRoute();</span>
+<span class="fc" id="L66">    route.standardDeploy(router);</span>
+<span class="fc" id="L67">  }</span>
+  
+  @Override
+  public void handle(RoutingContext rc) {
+    
+<span class="fc" id="L72">    HttpServerRequest request = rc.request();</span>
+    
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">    if (request.method() == HttpMethod.GET) {</span>
+
+<span class="fc" id="L76">      String stackTraceString = buildStackTrace();</span>
+
+<span class="fc" id="L78">      HttpServerResponse response = rc.response();</span>
+<span class="fc" id="L79">      response.setStatusCode(200);</span>
+<span class="fc" id="L80">      response.putHeader(HttpHeaderNames.CONTENT_TYPE, &quot;text/plain&quot;);</span>
+<span class="fc" id="L81">      response.end(stackTraceString);</span>
+<span class="fc" id="L82">    } else {</span>
+<span class="nc" id="L83">      rc.next();</span>
+    }
+<span class="fc" id="L85">  }</span>
+
+  static String buildStackTrace() {
+<span class="fc" id="L88">    ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean();</span>
+<span class="fc" id="L89">    ThreadInfo[] threadInfo = threadMxBean.dumpAllThreads(true, true);</span>
+
+<span class="fc" id="L91">    StringBuilder stackTraceString = new StringBuilder();</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">    for (ThreadInfo t : threadInfo) {</span>
+<span class="fc" id="L93">      StackTraceElement[] stackTrace = t.getStackTrace();</span>
+<span class="fc" id="L94">      stackTraceString.append(t.getThreadName())</span>
+<span class="fc" id="L95">              .append(&quot; (&quot;).append(t.getThreadState()).append(&quot;)&quot;)</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">              .append(t.isDaemon() ? &quot; Daemon&quot; : &quot;&quot;)</span>
+<span class="fc" id="L97">              .append(&quot;\n&quot;);</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">      if (t.isSuspended()) {</span>
+<span class="nc" id="L99">        stackTraceString.append(&quot;Suspended\n&quot;);</span>
+      }
+<span class="fc" id="L101">      String lockName = t.getLockName();</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">      if (lockName != null) {</span>
+<span class="fc" id="L103">        stackTraceString</span>
+<span class="fc" id="L104">                .append(&quot;Waiting for &quot;)</span>
+<span class="fc" id="L105">                .append(lockName)</span>
+                ;
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">        if (t.getLockOwnerId() &gt;= 0) {</span>
+<span class="nc" id="L108">          stackTraceString</span>
+<span class="nc" id="L109">                  .append(&quot; held by &quot;)</span>
+<span class="nc" id="L110">                  .append(t.getLockOwnerId())</span>
+<span class="nc" id="L111">                  .append(&quot; (&quot;)</span>
+<span class="nc" id="L112">                  .append(t.getLockOwnerName())</span>
+<span class="nc" id="L113">                  .append(&quot;)&quot;)</span>
+                  ;
+        }
+<span class="fc" id="L116">        stackTraceString</span>
+<span class="fc" id="L117">                .append(&quot;\n&quot;)</span>
+                ;
+      }
+<span class="fc bfc" id="L120" title="All 2 branches covered.">      for (StackTraceElement s : stackTrace) {</span>
+<span class="fc" id="L121">        stackTraceString.append(&quot;  &quot;).append(s.toString()).append(&quot;\n&quot;);</span>
+      }
+<span class="fc" id="L123">      stackTraceString.append(&quot;\n&quot;);</span>
+    }
+<span class="fc" id="L125">    return stackTraceString.toString();</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
