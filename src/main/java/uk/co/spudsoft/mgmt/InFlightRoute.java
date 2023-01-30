@@ -92,7 +92,9 @@ public class InFlightRoute implements Handler<RoutingContext> {
       for (RoutingContext rc : map.values()) {
         try {
           JsonObject data = new JsonObject();
-          if (rc.get(TIMESTAMP_KEY) instanceof Long timestamp) {
+          Object timestampObject = rc.get(TIMESTAMP_KEY);
+          if (timestampObject instanceof Long) {
+            Long timestamp = (Long) timestampObject;
             data.put("StartTimestamp", Instant.ofEpochMilli(timestamp).atOffset(ZoneOffset.UTC).toLocalDateTime().toString());
             data.put("SecondsSoFar", (System.currentTimeMillis() - timestamp) / 1000.0);
           } 

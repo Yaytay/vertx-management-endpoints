@@ -192,7 +192,8 @@ public class LogbackMgmtRoute implements Handler<RoutingContext> {
   public static void setLogLevel(String loggerName, String levelName) {
     Object loggerFactory = LoggerFactory.getILoggerFactory();
     ch.qos.logback.classic.Logger lg = null;
-    if (loggerFactory instanceof LoggerContext lc) {
+    if (loggerFactory instanceof LoggerContext) {
+      LoggerContext lc = (LoggerContext) loggerFactory;
       lg = lc.exists(loggerName);
     }
     if (lg != null) {
