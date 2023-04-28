@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ManagementRoute.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Vertx Management Endpoints</a> &gt; <a href="index.source.html" class="el_package">uk.co.spudsoft.mgmt</a> &gt; <span class="el_source">ManagementRoute.java</span></div><h1>ManagementRoute.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2022 jtalbut
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package uk.co.spudsoft.mgmt;
+
+import io.vertx.core.Handler;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Route;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+  * A Vertx HTTP Server route for providing easy access to other &quot;management&quot; routes.
+ * 
+ * It is strongly recommended that this endpoint is not accessible to end users.
+ * 
+ * @author jtalbut
+ */
+public class ManagementRoute implements Handler&lt;RoutingContext&gt; {
+  
+<span class="fc" id="L40">  private static final Logger logger = LoggerFactory.getLogger(ManagementRoute.class);</span>
+  
+  private final Router mgmtRouter;
+
+  /**
+   * Constructor.
+   * 
+   * @param mgmtRouter The router that this route will report.
+   */
+<span class="fc" id="L49">  public ManagementRoute(Router mgmtRouter) {</span>
+<span class="fc" id="L50">    this.mgmtRouter = mgmtRouter;</span>
+<span class="fc" id="L51">  }</span>
+  
+  
+  /**
+   * Deploy the route to the router passed in at the normal endpoint.
+   * 
+   * The router passed in should be a sub router that is inaccessible to normal users.
+   * 
+   * @param router The router that this handler will be attached to.
+   */
+  public void standardDeploy(Router router) {
+<span class="fc" id="L62">    router.route(&quot;/manage/*&quot;).subRouter(mgmtRouter);</span>
+<span class="fc" id="L63">    router.route(HttpMethod.GET, &quot;/manage&quot;).handler(this::handle);</span>
+<span class="fc" id="L64">  }</span>
+  
+  /**
+   * Factory method to do standard deployment on newly constructed route.
+   * 
+   * The router passed in should be a sub router that is inaccessible to normal users.
+   * 
+   * The standard way to configure this router should be something like:
+   * 
+   * 
+   * @param router The router that this handler will be attached to.
+   * @param mgmtRouter The router that this route will report.
+   */
+  public static void createAndDeploy(Router router, Router mgmtRouter) {
+<span class="fc" id="L78">    ManagementRoute route = new ManagementRoute(mgmtRouter);</span>
+<span class="fc" id="L79">    route.standardDeploy(router);</span>
+<span class="fc" id="L80">  }</span>
+
+  @Override
+  public void handle(RoutingContext event) {
+    
+<span class="fc bfc" id="L85" title="All 2 branches covered.">    if (LogbackMgmtRoute.wantsHtml(event)) {</span>
+<span class="fc" id="L86">      returnHtml(event);</span>
+    } else {
+<span class="fc" id="L88">      returnJson(event);</span>
+    }
+<span class="fc" id="L90">  }</span>
+  
+  private void returnJson(RoutingContext event) {
+    
+<span class="fc" id="L94">    JsonArray result = new JsonArray();</span>
+    
+<span class="fc" id="L96">    HttpServerRequest request = event.request();</span>
+    
+<span class="fc bfc" id="L98" title="All 2 branches covered.">    for (Route route : mgmtRouter.getRoutes()) {</span>
+<span class="pc bpc" id="L99" title="1 of 6 branches missed.">      if (route.isExactPath() &amp;&amp; route.methods() != null &amp;&amp; route.methods().contains(HttpMethod.GET)) {</span>
+<span class="fc" id="L100">        JsonObject object = new JsonObject();</span>
+<span class="fc" id="L101">        object.put(&quot;name&quot;, route.getName());</span>
+<span class="fc" id="L102">        object.put(&quot;url&quot;, request.absoluteURI() + route.getPath());</span>
+<span class="fc" id="L103">        result.add(object);</span>
+      }
+<span class="fc" id="L105">    }</span>
+
+<span class="fc" id="L107">    event.end(result.toString());    </span>
+    
+<span class="fc" id="L109">  }</span>
+
+  private static final String HEAD = &quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;Management Endpoints&lt;/title&gt;&lt;meta http-equiv=\&quot;content-type\&quot; content=\&quot;text/html; charset=utf-8\&quot;&gt;&lt;/head&gt;&lt;body&gt;&lt;table&gt;&lt;tr&gt;&lt;th&gt;Route&lt;/th&gt;&lt;th&gt;Link&lt;/th&gt;&lt;/tr&gt;&quot;;
+  private static final String TAIL = &quot;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;&quot;;
+  
+  private void returnHtml(RoutingContext event) {
+
+<span class="fc" id="L116">    HttpServerResponse response = event.response();</span>
+    
+<span class="fc" id="L118">    response.putHeader(&quot;Content-Type&quot;, &quot;text/html&quot;);</span>
+<span class="fc" id="L119">    response.setChunked(true);</span>
+<span class="fc" id="L120">    response.write(HEAD);</span>
+    
+<span class="fc" id="L122">    HttpServerRequest request = event.request();</span>
+    
+<span class="fc bfc" id="L124" title="All 2 branches covered.">    for (Route route : mgmtRouter.getRoutes()) {</span>
+<span class="pc bpc" id="L125" title="1 of 6 branches missed.">      if (route.isExactPath() &amp;&amp; route.methods() != null &amp;&amp; route.methods().contains(HttpMethod.GET)) {</span>
+<span class="fc" id="L126">        response.write(&quot;&lt;tr&gt;&lt;td&gt;&quot; + route.getName() + &quot;&lt;/td&gt;&lt;td&gt;&lt;a href=\&quot;&quot; + request.absoluteURI() + route.getPath() + &quot;\&quot;&gt;&quot; + request.absoluteURI() + route.getPath() + &quot;&lt;/td&gt;&lt;/tr&gt;&quot;);</span>
+      }
+<span class="fc" id="L128">    }</span>
+
+<span class="fc" id="L130">    event.end(TAIL);    </span>
+    
+<span class="fc" id="L132">  }</span>
+  
+  
+  
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>
