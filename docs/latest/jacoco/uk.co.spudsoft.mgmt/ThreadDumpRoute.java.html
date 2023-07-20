@@ -21,11 +21,15 @@ import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 /**
  * A Vertx HTTP Server route for allowing users to download a thread dump of the process.
@@ -37,11 +41,15 @@ import java.lang.management.ThreadMXBean;
  */
 public class ThreadDumpRoute implements Handler&lt;RoutingContext&gt; {
 
+  private static final String TYPE_JSON = &quot;application/json&quot;;
+  private static final String TYPE_HTML = &quot;text/html&quot;;
+  private static final String TYPE_PLAIN = &quot;text/plain&quot;;
+  
   /**
    * Constructor.
    */
-<span class="fc" id="L43">  public ThreadDumpRoute() {</span>
-<span class="fc" id="L44">  }</span>
+<span class="fc" id="L51">  public ThreadDumpRoute() {</span>
+<span class="fc" id="L52">  }</span>
 
   /**
    * Deploy the route to the router passed in at the normal endpoint.
@@ -51,8 +59,14 @@ public class ThreadDumpRoute implements Handler&lt;RoutingContext&gt; {
    * @param router The router that this handler will be attached to.
    */
   public void standardDeploy(Router router) {
-<span class="fc" id="L54">    router.route(HttpMethod.GET, &quot;/threaddump&quot;).handler(this::handle).setName(&quot;Thread Dump&quot;);</span>
-<span class="fc" id="L55">  }</span>
+<span class="fc" id="L62">    router.route(HttpMethod.GET, &quot;/threaddump&quot;)</span>
+<span class="fc" id="L63">            .handler(this::handle)</span>
+<span class="fc" id="L64">            .setName(&quot;Thread Dump&quot;)</span>
+<span class="fc" id="L65">            .produces(TYPE_JSON)</span>
+<span class="fc" id="L66">            .produces(TYPE_HTML)</span>
+<span class="fc" id="L67">            .produces(TYPE_PLAIN)</span>
+            ;
+<span class="fc" id="L69">  }</span>
   
   /**
    * Factory method to do standard deployment on newly constructed route.
@@ -62,68 +76,186 @@ public class ThreadDumpRoute implements Handler&lt;RoutingContext&gt; {
    * @param router The router that this handler will be attached to.
    */
   public static void createAndDeploy(Router router) {
-<span class="fc" id="L65">    ThreadDumpRoute route = new ThreadDumpRoute();</span>
-<span class="fc" id="L66">    route.standardDeploy(router);</span>
-<span class="fc" id="L67">  }</span>
+<span class="fc" id="L79">    ThreadDumpRoute route = new ThreadDumpRoute();</span>
+<span class="fc" id="L80">    route.standardDeploy(router);</span>
+<span class="fc" id="L81">  }</span>
   
   @Override
   public void handle(RoutingContext rc) {
     
-<span class="fc" id="L72">    HttpServerRequest request = rc.request();</span>
+<span class="fc" id="L86">    HttpServerRequest request = rc.request();</span>
     
-<span class="pc bpc" id="L74" title="1 of 2 branches missed.">    if (request.method() == HttpMethod.GET) {</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">    if (request.method() == HttpMethod.GET) {</span>
 
-<span class="fc" id="L76">      String stackTraceString = buildStackTrace();</span>
-
-<span class="fc" id="L78">      HttpServerResponse response = rc.response();</span>
-<span class="fc" id="L79">      response.setStatusCode(200);</span>
-<span class="fc" id="L80">      response.putHeader(HttpHeaderNames.CONTENT_TYPE, &quot;text/plain&quot;);</span>
-<span class="fc" id="L81">      response.end(stackTraceString);</span>
-<span class="fc" id="L82">    } else {</span>
-<span class="nc" id="L83">      rc.next();</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">      if (TYPE_JSON.equals(rc.getAcceptableContentType())) {</span>
+<span class="fc" id="L91">        HttpServerResponse response = rc.response();</span>
+<span class="fc" id="L92">        response.setStatusCode(200);</span>
+<span class="fc" id="L93">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_PLAIN);</span>
+<span class="fc" id="L94">        response.end(buildStackTraceJson().toBuffer());</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">      } else if (TYPE_HTML.equals(rc.getAcceptableContentType())) {</span>
+<span class="fc" id="L96">        HttpServerResponse response = rc.response();</span>
+<span class="fc" id="L97">        response.setStatusCode(200);</span>
+<span class="fc" id="L98">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_PLAIN);</span>
+<span class="fc" id="L99">        response.end(buildStackTraceHtml());</span>
+<span class="fc" id="L100">      } else {</span>
+<span class="fc" id="L101">        HttpServerResponse response = rc.response();</span>
+<span class="fc" id="L102">        response.setStatusCode(200);</span>
+<span class="fc" id="L103">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_PLAIN);</span>
+<span class="fc" id="L104">        response.end(buildStackTraceText());</span>
+<span class="fc" id="L105">      }</span>
+    } else {
+<span class="nc" id="L107">      rc.next();</span>
     }
-<span class="fc" id="L85">  }</span>
+<span class="fc" id="L109">  }</span>
 
-  static String buildStackTrace() {
-<span class="fc" id="L88">    ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean();</span>
-<span class="fc" id="L89">    ThreadInfo[] threadInfo = threadMxBean.dumpAllThreads(true, true);</span>
+  static String buildStackTraceHtml() {
+<span class="fc" id="L112">    ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean();</span>
+<span class="fc" id="L113">    ThreadInfo[] threadInfo = threadMxBean.dumpAllThreads(true, true);</span>
 
-<span class="fc" id="L91">    StringBuilder stackTraceString = new StringBuilder();</span>
-<span class="fc bfc" id="L92" title="All 2 branches covered.">    for (ThreadInfo t : threadInfo) {</span>
-<span class="fc" id="L93">      StackTraceElement[] stackTrace = t.getStackTrace();</span>
-<span class="fc" id="L94">      stackTraceString.append(t.getThreadName())</span>
-<span class="fc" id="L95">              .append(&quot; (&quot;).append(t.getThreadState()).append(&quot;)&quot;)</span>
-<span class="fc bfc" id="L96" title="All 2 branches covered.">              .append(t.isDaemon() ? &quot; Daemon&quot; : &quot;&quot;)</span>
-<span class="fc" id="L97">              .append(&quot;\n&quot;);</span>
-<span class="pc bpc" id="L98" title="1 of 2 branches missed.">      if (t.isSuspended()) {</span>
-<span class="nc" id="L99">        stackTraceString.append(&quot;Suspended\n&quot;);</span>
-      }
-<span class="fc" id="L101">      String lockName = t.getLockName();</span>
-<span class="fc bfc" id="L102" title="All 2 branches covered.">      if (lockName != null) {</span>
-<span class="fc" id="L103">        stackTraceString</span>
-<span class="fc" id="L104">                .append(&quot;Waiting for &quot;)</span>
-<span class="fc" id="L105">                .append(lockName)</span>
-                ;
-<span class="pc bpc" id="L107" title="1 of 2 branches missed.">        if (t.getLockOwnerId() &gt;= 0) {</span>
-<span class="nc" id="L108">          stackTraceString</span>
-<span class="nc" id="L109">                  .append(&quot; held by &quot;)</span>
-<span class="nc" id="L110">                  .append(t.getLockOwnerId())</span>
-<span class="nc" id="L111">                  .append(&quot; (&quot;)</span>
-<span class="nc" id="L112">                  .append(t.getLockOwnerName())</span>
-<span class="nc" id="L113">                  .append(&quot;)&quot;)</span>
+<span class="fc" id="L115">    StringBuilder stackTraceString = new StringBuilder();</span>
+    
+<span class="fc" id="L117">    stackTraceString.append(&quot;&lt;html&gt;&lt;head&gt;&quot;);</span>
+<span class="fc" id="L118">    stackTraceString.append(&quot;&lt;title&gt;&quot;).append(HeapDumpRoute.getProcessName()).append(&quot; @ &quot;).append(ZonedDateTime.now(ZoneOffset.UTC).toString()).append(&quot;&lt;/title&gt;&quot;);</span>
+<span class="fc" id="L119">    stackTraceString.append(&quot;&lt;/head&gt;&lt;body&gt;&quot;);</span>
+<span class="fc" id="L120">    stackTraceString.append(&quot;&lt;table&gt;&quot;);</span>
+
+<span class="fc bfc" id="L122" title="All 2 branches covered.">    for (ThreadInfo t : threadInfo) {</span>
+<span class="fc" id="L123">      stackTraceString.append(&quot;&lt;tr&gt;&quot;);</span>
+
+<span class="fc" id="L125">      stackTraceString.append(&quot;&lt;td&gt;&lt;b&gt;&quot;);</span>
+<span class="fc" id="L126">      stackTraceString.append(t.getThreadName());</span>
+<span class="fc" id="L127">      stackTraceString.append(&quot;&lt;/b&gt;&lt;/td&gt;&quot;);</span>
+<span class="fc" id="L128">      stackTraceString.append(&quot;&lt;td&gt;&quot;);</span>
+<span class="fc" id="L129">      stackTraceString.append(t.getThreadId());</span>
+<span class="fc" id="L130">      stackTraceString.append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="fc" id="L131">      stackTraceString.append(&quot;&lt;td&gt;&quot;);</span>
+<span class="fc" id="L132">      stackTraceString.append(t.getThreadState());</span>
+<span class="fc" id="L133">      stackTraceString.append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="fc" id="L134">      stackTraceString.append(&quot;&lt;td&gt;&quot;);</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">      stackTraceString.append(t.isDaemon() ? &quot;daemon&quot; : &quot;&quot;);</span>
+<span class="fc" id="L136">      stackTraceString.append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="fc" id="L137">      stackTraceString.append(&quot;&lt;td&gt;&quot;);</span>
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">      stackTraceString.append(t.isSuspended() ? &quot;suspended&quot; : &quot;&quot;);</span>
+<span class="fc" id="L139">      stackTraceString.append(&quot;&lt;/td&gt;&quot;);</span>
+<span class="fc" id="L140">      stackTraceString.append(&quot;&lt;td&gt;&quot;);</span>
+<span class="fc" id="L141">      stackTraceString.append(&quot;&lt;/td&gt;&quot;);</span>
+
+<span class="fc" id="L143">      stackTraceString.append(&quot;&lt;/tr&gt;&quot;);</span>
+      
+<span class="fc" id="L145">      String lockName = t.getLockName();</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">      if (lockName != null) {</span>
+<span class="fc" id="L147">        stackTraceString</span>
+<span class="fc" id="L148">                .append(&quot;&lt;tr&gt;&lt;td colspan=\&quot;6\&quot; style=\&quot;padding-left: 20px;\&quot;&gt;Waiting for &quot;)</span>
+<span class="fc" id="L149">                .append(lockName);</span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">        if (t.getLockOwnerId() &gt;= 0) {</span>
+<span class="nc" id="L151">          stackTraceString</span>
+<span class="nc" id="L152">                  .append(&quot;&lt;br/&gt;Held by &quot;)</span>
+<span class="nc" id="L153">                  .append(t.getLockOwnerId())</span>
+<span class="nc" id="L154">                  .append(&quot; (&quot;)</span>
+<span class="nc" id="L155">                  .append(t.getLockOwnerName())</span>
+<span class="nc" id="L156">                  .append(&quot;)&quot;)</span>
                   ;
         }
-<span class="fc" id="L116">        stackTraceString</span>
-<span class="fc" id="L117">                .append(&quot;\n&quot;)</span>
-                ;
+<span class="fc" id="L159">        stackTraceString.append(&quot;&lt;/td&gt;&lt;/tr&gt;&quot;);</span>
       }
-<span class="fc bfc" id="L120" title="All 2 branches covered.">      for (StackTraceElement s : stackTrace) {</span>
-<span class="fc" id="L121">        stackTraceString.append(&quot;  &quot;).append(s.toString()).append(&quot;\n&quot;);</span>
-      }
-<span class="fc" id="L123">      stackTraceString.append(&quot;\n&quot;);</span>
+      
+      
+<span class="fc" id="L163">      stackTraceString.append(&quot;&lt;tr&gt;&lt;td colspan=\&quot;6\&quot; style=\&quot;padding-left: 40px;\&quot;&gt;&lt;pre&gt;&quot;);</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">      for (StackTraceElement s : t.getStackTrace()) {</span>
+<span class="fc" id="L165">        stackTraceString.append(s.toString()).append(&quot;\n&quot;);</span>
+      }      
+<span class="fc" id="L167">      stackTraceString.append(&quot;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;\n&quot;);</span>
     }
-<span class="fc" id="L125">    return stackTraceString.toString();</span>
+<span class="fc" id="L169">    stackTraceString.append(&quot;&lt;/table&gt;&lt;body&gt;&lt;/html&gt;&quot;);</span>
+    
+<span class="fc" id="L171">    return stackTraceString.toString();</span>
   }
 
+  static JsonObject buildStackTraceJson() {
+<span class="fc" id="L175">    ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean();</span>
+<span class="fc" id="L176">    ThreadInfo[] threadInfo = threadMxBean.dumpAllThreads(true, true);</span>
+
+<span class="fc" id="L178">    JsonObject result = new JsonObject();</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">    for (ThreadInfo t : threadInfo) {</span>
+<span class="fc" id="L180">      JsonObject thread = new JsonObject();</span>
+<span class="fc" id="L181">      result.put(t.getThreadName(), thread);</span>
+<span class="fc" id="L182">      thread.put(&quot;id&quot;, t.getThreadId());</span>
+<span class="fc" id="L183">      thread.put(&quot;daemon&quot;, t.isDaemon());</span>
+<span class="fc" id="L184">      thread.put(&quot;suspended&quot;, t.isSuspended());</span>
+<span class="fc" id="L185">      thread.put(&quot;state&quot;, t.getThreadState());</span>
+<span class="fc" id="L186">      addNonNullObjectToJson(thread, &quot;lockInfo&quot;, t.getLockInfo());</span>
+<span class="fc" id="L187">      addNonNullObjectToJson(thread, &quot;lockOwnerName&quot;, t.getLockOwnerName());</span>
+<span class="fc" id="L188">      long lockOwnerId = t.getLockOwnerId();      </span>
+<span class="pc bpc" id="L189" title="1 of 2 branches missed.">      if (lockOwnerId &gt; 0) {</span>
+<span class="nc" id="L190">        thread.put(&quot;lockOwnerId&quot;, lockOwnerId);</span>
+      }
+<span class="fc" id="L192">      thread.put(&quot;blockedCount&quot;, t.getBlockedCount());</span>
+<span class="fc" id="L193">      thread.put(&quot;blockedTime&quot;, t.getBlockedTime());</span>
+      
+<span class="fc" id="L195">      StackTraceElement[] stackTrace = t.getStackTrace();</span>
+<span class="fc" id="L196">      JsonArray jsonStack = new JsonArray();</span>
+<span class="fc" id="L197">      thread.put(&quot;stackTrace&quot;, jsonStack);</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">      for (StackTraceElement s : stackTrace) {</span>
+<span class="fc" id="L199">        JsonObject stackTraceElement = new JsonObject();</span>
+<span class="fc" id="L200">        addNonNullObjectToJson(stackTraceElement, &quot;classLoaderName&quot;, s.getClassLoaderName());</span>
+<span class="fc" id="L201">        addNonNullObjectToJson(stackTraceElement, &quot;className&quot;, s.getClassName());</span>
+<span class="fc" id="L202">        addNonNullObjectToJson(stackTraceElement, &quot;fileName&quot;, s.getFileName());</span>
+<span class="fc" id="L203">        addNonNullObjectToJson(stackTraceElement, &quot;lineNumber&quot;, s.getLineNumber());</span>
+<span class="fc" id="L204">        addNonNullObjectToJson(stackTraceElement, &quot;methodName&quot;, s.getMethodName());</span>
+<span class="fc" id="L205">        addNonNullObjectToJson(stackTraceElement, &quot;moduleName&quot;, s.getModuleName());</span>
+<span class="fc" id="L206">        addNonNullObjectToJson(stackTraceElement, &quot;moduleVersion&quot;, s.getModuleVersion());</span>
+<span class="fc" id="L207">        jsonStack.add(stackTraceElement);</span>
+      }
+    }
+<span class="fc" id="L210">    return result;</span>
+  }
+
+  static void addNonNullObjectToJson(JsonObject parent, String name, Object value) {
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">    if (name != null) {</span>
+<span class="fc" id="L215">      parent.put(name, value);</span>
+    }
+<span class="fc" id="L217">  }</span>
+
+  static String buildStackTraceText() {
+<span class="fc" id="L220">    ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean();</span>
+<span class="fc" id="L221">    ThreadInfo[] threadInfo = threadMxBean.dumpAllThreads(true, true);</span>
+
+<span class="fc" id="L223">    StringBuilder stackTraceString = new StringBuilder();</span>
+<span class="fc bfc" id="L224" title="All 2 branches covered.">    for (ThreadInfo t : threadInfo) {</span>
+<span class="fc" id="L225">      StackTraceElement[] stackTrace = t.getStackTrace();</span>
+<span class="fc" id="L226">      stackTraceString.append(t.getThreadName())</span>
+<span class="fc" id="L227">              .append(&quot; (&quot;).append(t.getThreadState()).append(&quot;)&quot;)</span>
+<span class="fc bfc" id="L228" title="All 2 branches covered.">              .append(t.isDaemon() ? &quot; Daemon&quot; : &quot;&quot;)</span>
+<span class="fc" id="L229">              .append(&quot;\n&quot;);</span>
+<span class="pc bpc" id="L230" title="1 of 2 branches missed.">      if (t.isSuspended()) {</span>
+<span class="nc" id="L231">        stackTraceString.append(&quot;Suspended\n&quot;);</span>
+      }
+<span class="fc" id="L233">      String lockName = t.getLockName();</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">      if (lockName != null) {</span>
+<span class="fc" id="L235">        stackTraceString</span>
+<span class="fc" id="L236">                .append(&quot;Waiting for &quot;)</span>
+<span class="fc" id="L237">                .append(lockName)</span>
+                ;
+<span class="pc bpc" id="L239" title="1 of 2 branches missed.">        if (t.getLockOwnerId() &gt;= 0) {</span>
+<span class="nc" id="L240">          stackTraceString</span>
+<span class="nc" id="L241">                  .append(&quot; held by &quot;)</span>
+<span class="nc" id="L242">                  .append(t.getLockOwnerId())</span>
+<span class="nc" id="L243">                  .append(&quot; (&quot;)</span>
+<span class="nc" id="L244">                  .append(t.getLockOwnerName())</span>
+<span class="nc" id="L245">                  .append(&quot;)&quot;)</span>
+                  ;
+        }
+<span class="fc" id="L248">        stackTraceString</span>
+<span class="fc" id="L249">                .append(&quot;\n&quot;)</span>
+                ;
+      }
+<span class="fc bfc" id="L252" title="All 2 branches covered.">      for (StackTraceElement s : stackTrace) {</span>
+<span class="fc" id="L253">        stackTraceString.append(&quot;  &quot;).append(s.toString()).append(&quot;\n&quot;);</span>
+      }
+<span class="fc" id="L255">      stackTraceString.append(&quot;\n&quot;);</span>
+    }
+<span class="fc" id="L257">    return stackTraceString.toString();</span>
+  }
+  
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
