@@ -31,7 +31,7 @@ public class ThreadDumpRouteTest {
   
   @Test
   public void testBuildStackTrace() {
-    String stackTrace = ThreadDumpRoute.buildStackTrace();
+    String stackTrace = ThreadDumpRoute.buildStackTraceText();
     assertThat(stackTrace, startsWith("main (RUNNABLE)"));
     assertThat(stackTrace, containsString("WAITING"));
     assertThat(stackTrace, containsString("Daemon"));

@@ -62,6 +62,48 @@ public class ThreadDumpRouteIT {
                       )
                       ;
                   logger.debug("First request took {}s", (System.currentTimeMillis() - start) / 1000.0);
+
+                  given()
+                      .log().all()
+                      .accept("text/html")
+                      .get("/manage/threaddump")
+                      .then()
+                      .statusCode(200)
+                      .log().body()
+                      .body(
+                          containsString("RUNNABLE")
+                          , containsString("TIMED_WAIT")
+                      )
+                      ;
+                  
+                  given()
+                      .log().all()
+                      .accept("text/plain")
+                      .get("/manage/threaddump")
+                      .then()
+                      .statusCode(200)
+                      .log().body()
+                      .body(
+                          containsString("RUNNABLE")
+                          , containsString("TIMED_WAIT")
+                      )
+                      ;
+                  
+                  given()
+                      .log().all()
+                      .accept("application/json")
+                      .get("/manage/threaddump")
+                      .then()
+                      .statusCode(200)
+                      .log().body()
+                      .body(
+                          containsString("RUNNABLE")
+                          , containsString("TIMED_WAIT")
+                      )
+                      ;
+                  
+                  
+                  
                 });
 
                 testContext.completeNow();

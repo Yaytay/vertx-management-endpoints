@@ -21,11 +21,15 @@ import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 /**
  * A Vertx HTTP Server route for allowing users to download a thread dump of the process.
@@ -37,6 +41,10 @@ import java.lang.management.ThreadMXBean;
  */
 public class ThreadDumpRoute implements Handler<RoutingContext> {
 
+  private static final String TYPE_JSON = "application/json";
+  private static final String TYPE_HTML = "text/html";
+  private static final String TYPE_PLAIN = "text/plain";
+  
   /**
    * Constructor.
    */
@@ -51,7 +59,13 @@ public class ThreadDumpRoute implements Handler<RoutingContext> {
    * @param router The router that this handler will be attached to.
    */
   public void standardDeploy(Router router) {
-    router.route(HttpMethod.GET, "/threaddump").handler(this::handle).setName("Thread Dump");
+    router.route(HttpMethod.GET, "/threaddump")
+            .handler(this::handle)
+            .setName("Thread Dump")
+            .produces(TYPE_JSON)
+            .produces(TYPE_HTML)
+            .produces(TYPE_PLAIN)
+            ;
   }
   
   /**
@@ -73,18 +87,136 @@ public class ThreadDumpRoute implements Handler<RoutingContext> {
     
     if (request.method() == HttpMethod.GET) {
 
-      String stackTraceString = buildStackTrace();
-
-      HttpServerResponse response = rc.response();
-      response.setStatusCode(200);
-      response.putHeader(HttpHeaderNames.CONTENT_TYPE, "text/plain");
-      response.end(stackTraceString);
+      if (TYPE_JSON.equals(rc.getAcceptableContentType())) {
+        HttpServerResponse response = rc.response();
+        response.setStatusCode(200);
+        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_PLAIN);
+        response.end(buildStackTraceJson().toBuffer());
+      } else if (TYPE_HTML.equals(rc.getAcceptableContentType())) {
+        HttpServerResponse response = rc.response();
+        response.setStatusCode(200);
+        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_PLAIN);
+        response.end(buildStackTraceHtml());
+      } else {
+        HttpServerResponse response = rc.response();
+        response.setStatusCode(200);
+        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_PLAIN);
+        response.end(buildStackTraceText());
+      }
     } else {
       rc.next();
     }
   }
 
-  static String buildStackTrace() {
+  static String buildStackTraceHtml() {
+    ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean();
+    ThreadInfo[] threadInfo = threadMxBean.dumpAllThreads(true, true);
+
+    StringBuilder stackTraceString = new StringBuilder();
+    
+    stackTraceString.append("<html><head>");
+    stackTraceString.append("<title>").append(HeapDumpRoute.getProcessName()).append(" @ ").append(ZonedDateTime.now(ZoneOffset.UTC).toString()).append("</title>");
+    stackTraceString.append("</head><body>");
+    stackTraceString.append("<table>");
+
+    for (ThreadInfo t : threadInfo) {
+      stackTraceString.append("<tr>");
+
+      stackTraceString.append("<td><b>");
+      stackTraceString.append(t.getThreadName());
+      stackTraceString.append("</b></td>");
+      stackTraceString.append("<td>");
+      stackTraceString.append(t.getThreadId());
+      stackTraceString.append("</td>");
+      stackTraceString.append("<td>");
+      stackTraceString.append(t.getThreadState());
+      stackTraceString.append("</td>");
+      stackTraceString.append("<td>");
+      stackTraceString.append(t.isDaemon() ? "daemon" : "");
+      stackTraceString.append("</td>");
+      stackTraceString.append("<td>");
+      stackTraceString.append(t.isSuspended() ? "suspended" : "");
+      stackTraceString.append("</td>");
+      stackTraceString.append("<td>");
+      stackTraceString.append("</td>");
+
+      stackTraceString.append("</tr>");
+      
+      String lockName = t.getLockName();
+      if (lockName != null) {
+        stackTraceString
+                .append("<tr><td colspan=\"6\" style=\"padding-left: 20px;\">Waiting for ")
+                .append(lockName);
+        if (t.getLockOwnerId() >= 0) {
+          stackTraceString
+                  .append("<br/>Held by ")
+                  .append(t.getLockOwnerId())
+                  .append(" (")
+                  .append(t.getLockOwnerName())
+                  .append(")")
+                  ;
+        }
+        stackTraceString.append("</td></tr>");
+      }
+      
+      
+      stackTraceString.append("<tr><td colspan=\"6\" style=\"padding-left: 40px;\"><pre>");
+      for (StackTraceElement s : t.getStackTrace()) {
+        stackTraceString.append(s.toString()).append("\n");
+      }      
+      stackTraceString.append("</pre></td></tr>\n");
+    }
+    stackTraceString.append("</table><body></html>");
+    
+    return stackTraceString.toString();
+  }
+
+  static JsonObject buildStackTraceJson() {
+    ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean();
+    ThreadInfo[] threadInfo = threadMxBean.dumpAllThreads(true, true);
+
+    JsonObject result = new JsonObject();
+    for (ThreadInfo t : threadInfo) {
+      JsonObject thread = new JsonObject();
+      result.put(t.getThreadName(), thread);
+      thread.put("id", t.getThreadId());
+      thread.put("daemon", t.isDaemon());
+      thread.put("suspended", t.isSuspended());
+      thread.put("state", t.getThreadState());
+      addNonNullObjectToJson(thread, "lockInfo", t.getLockInfo());
+      addNonNullObjectToJson(thread, "lockOwnerName", t.getLockOwnerName());
+      long lockOwnerId = t.getLockOwnerId();      
+      if (lockOwnerId > 0) {
+        thread.put("lockOwnerId", lockOwnerId);
+      }
+      thread.put("blockedCount", t.getBlockedCount());
+      thread.put("blockedTime", t.getBlockedTime());
+      
+      StackTraceElement[] stackTrace = t.getStackTrace();
+      JsonArray jsonStack = new JsonArray();
+      thread.put("stackTrace", jsonStack);
+      for (StackTraceElement s : stackTrace) {
+        JsonObject stackTraceElement = new JsonObject();
+        addNonNullObjectToJson(stackTraceElement, "classLoaderName", s.getClassLoaderName());
+        addNonNullObjectToJson(stackTraceElement, "className", s.getClassName());
+        addNonNullObjectToJson(stackTraceElement, "fileName", s.getFileName());
+        addNonNullObjectToJson(stackTraceElement, "lineNumber", s.getLineNumber());
+        addNonNullObjectToJson(stackTraceElement, "methodName", s.getMethodName());
+        addNonNullObjectToJson(stackTraceElement, "moduleName", s.getModuleName());
+        addNonNullObjectToJson(stackTraceElement, "moduleVersion", s.getModuleVersion());
+        jsonStack.add(stackTraceElement);
+      }
+    }
+    return result;
+  }
+
+  static void addNonNullObjectToJson(JsonObject parent, String name, Object value) {
+    if (name != null) {
+      parent.put(name, value);
+    }
+  }
+
+  static String buildStackTraceText() {
     ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean();
     ThreadInfo[] threadInfo = threadMxBean.dumpAllThreads(true, true);
 
@@ -124,5 +256,5 @@ public class ThreadDumpRoute implements Handler<RoutingContext> {
     }
     return stackTraceString.toString();
   }
-
+  
 }
