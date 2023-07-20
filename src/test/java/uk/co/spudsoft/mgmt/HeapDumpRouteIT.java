@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static io.restassured.RestAssured.given;
+import io.restassured.http.ContentType;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 
@@ -79,6 +80,15 @@ public class HeapDumpRouteIT {
                           , length / (1024 * 1024)
                   );
                   assertThat(length, greaterThan(1000000));
+                  
+                  String body = given()
+                          .accept(ContentType.HTML)
+                          .get("/manage/heapdump")
+                          .then()
+                          .statusCode(200)
+                          .contentType(ContentType.HTML)
+                          .extract().body().asString();
+                  logger.debug("HTML: {}", body);
 
                 });
                         

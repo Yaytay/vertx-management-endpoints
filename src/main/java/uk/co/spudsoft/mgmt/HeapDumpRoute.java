@@ -20,6 +20,7 @@ import com.sun.management.HotSpotDiagnosticMXBean;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -48,6 +49,8 @@ public class HeapDumpRoute implements Handler<RoutingContext> {
 
   private static final Logger logger = LoggerFactory.getLogger(HeapDumpRoute.class);
 
+  private static final String TYPE_BINARY = "application/octet-stream";
+  private static final String TYPE_HTML = "text/html";
   /**
    * Constructor.
    */
@@ -62,7 +65,12 @@ public class HeapDumpRoute implements Handler<RoutingContext> {
    * @param router The router that this handler will be attached to.
    */
   public void standardDeploy(Router router) {
-    router.route(HttpMethod.GET, "/heapdump").handler(this::handle).setName("Heap Dump");
+    router.route(HttpMethod.GET, "/heapdump")
+            .handler(this::handle)
+            .setName("Heap Dump")
+            .produces(TYPE_BINARY)
+            .produces(TYPE_HTML)
+            ;
   }
   
   /**
@@ -81,44 +89,74 @@ public class HeapDumpRoute implements Handler<RoutingContext> {
   public void handle(RoutingContext rc) {
   
     HttpServerResponse response = rc.response();
-
-    String processName = getProcessName();
-    String timestamp = LocalDateTime
-            .now(Clock.systemUTC())
-            .withNano(0)
-            .toString()
-            .replace(":", "-")
-            ;
     
-    String filename = processName + "-" + timestamp;
+    HttpServerRequest request = rc.request();
     
-    File tempFile;
-    try {
-      tempFile = File.createTempFile(filename, ".hprof");
-      tempFile.delete();
-    } catch (IOException ex) {
-      reportError("Failed to create temporary file: ", ex, response);
-      return ;
-    }
+    if (request.method() == HttpMethod.GET) {
       
-    try {
-      HotSpotDiagnosticMXBean mxBean = ManagementFactory.getPlatformMXBean(HotSpotDiagnosticMXBean.class);
-      mxBean.dumpHeap(tempFile.getAbsolutePath(), false);
-    } catch (Throwable ex) {
-      reportError("Failed to generate heap dump: ", ex, response);
-      return ;
-    }
-    
-    response.putHeader(HttpHeaderNames.CONTENT_TYPE, "application/octet-stream");
-    response.putHeader("Content-Disposition", "attachment; filename=\"" + filename + ".hprof\"");
-
-    response.sendFile(tempFile.getAbsolutePath(), (ar) -> {
-      if (!tempFile.delete()) {
-        logger.error("Failed to delete temporary files: {}", tempFile);
+      if (TYPE_HTML.equals(rc.getAcceptableContentType())) {
+        
+        response.setStatusCode(200);
+        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_HTML);
+        response.setChunked(true);
+        
+        response.write("<html>");
+        response.write("<head>");
+        response.write("</head>");
+        response.write("<body>");
+        
+        response.write("<A target=\"_blank\" href=\"");
+        response.write(request.path());
+        response.write("\">Click to download heap dump file</A>");
+        
+        response.write("</body>");
+        response.write("</html>");
+        
+        response.end();
+        
       } else {
-        logger.debug("Deleted temporary file: {}", tempFile);
+        String processName = getProcessName();
+        String timestamp = LocalDateTime
+                .now(Clock.systemUTC())
+                .withNano(0)
+                .toString()
+                .replace(":", "-")
+                ;
+
+        String filename = processName + "-" + timestamp;
+
+        File tempFile;
+        try {
+          tempFile = File.createTempFile(filename, ".hprof");
+          tempFile.delete();
+        } catch (IOException ex) {
+          reportError("Failed to create temporary file: ", ex, response);
+          return ;
+        }
+
+        try {
+          HotSpotDiagnosticMXBean mxBean = ManagementFactory.getPlatformMXBean(HotSpotDiagnosticMXBean.class);
+          mxBean.dumpHeap(tempFile.getAbsolutePath(), false);
+        } catch (Throwable ex) {
+          reportError("Failed to generate heap dump: ", ex, response);
+          return ;
+        }
+
+        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_BINARY);
+        response.putHeader("Content-Disposition", "attachment; filename=\"" + filename + ".hprof\"");
+
+        response.sendFile(tempFile.getAbsolutePath(), (ar) -> {
+          if (!tempFile.delete()) {
+            logger.error("Failed to delete temporary files: {}", tempFile);
+          } else {
+            logger.debug("Deleted temporary file: {}", tempFile);
+          }
+        });
       }
-    });
+      
+    } else {
+      rc.next();
+    }
   }
 
   static void reportError(String message, Throwable ex, HttpServerResponse response) {
