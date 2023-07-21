@@ -65,7 +65,7 @@ public class DumpSysPropsRouteIT {
                 testContext.verify(() -> {
 
                   String body = given()
-                      .get("/manage/dumpsysprops")
+                      .get("/manage/" + DumpSysPropsRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -74,7 +74,7 @@ public class DumpSysPropsRouteIT {
 
                   body = given()
                       .accept(ContentType.HTML)
-                      .get("/manage/dumpsysprops")
+                      .get("/manage/" + DumpSysPropsRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -83,7 +83,7 @@ public class DumpSysPropsRouteIT {
 
                   body = given()
                       .accept(ContentType.JSON)
-                      .get("/manage/dumpsysprops")
+                      .get("/manage/" + DumpSysPropsRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -92,7 +92,7 @@ public class DumpSysPropsRouteIT {
 
                   body = given()
                       .accept(ContentType.TEXT)
-                      .get("/manage/dumpsysprops")
+                      .get("/manage/" + DumpSysPropsRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()

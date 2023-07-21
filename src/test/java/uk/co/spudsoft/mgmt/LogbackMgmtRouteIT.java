@@ -65,7 +65,7 @@ public class LogbackMgmtRouteIT {
                 testContext.verify(() -> {
                   long start = System.currentTimeMillis();
                   given()
-                      .get("/manage/logback")
+                      .get("/manage/" + LogbackMgmtRoute.PATH)
                       .then()
                       .statusCode(200)
                       .body(
@@ -75,7 +75,7 @@ public class LogbackMgmtRouteIT {
                   start = System.currentTimeMillis();
                   given()
                       .accept(ContentType.HTML)
-                      .get("/manage/logback")
+                      .get("/manage/" + LogbackMgmtRoute.PATH)
                       .then()
                       .statusCode(200)
                       .body(
@@ -95,7 +95,7 @@ public class LogbackMgmtRouteIT {
                   start = System.currentTimeMillis();
                   given()
                       .accept(ContentType.HTML)
-                      .get("/manage/logback")
+                      .get("/manage/" + LogbackMgmtRoute.PATH)
                       .then()
                       .statusCode(200)
                       .body(

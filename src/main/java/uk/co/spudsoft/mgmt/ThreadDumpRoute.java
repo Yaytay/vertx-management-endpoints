@@ -41,6 +41,11 @@ import java.time.ZonedDateTime;
  */
 public class ThreadDumpRoute implements Handler<RoutingContext> {
 
+  /**
+   * The path at which the standardDeploy method will put the router.
+   */
+  public static final String PATH = "threads";
+  
   private static final String TYPE_JSON = "application/json";
   private static final String TYPE_HTML = "text/html";
   private static final String TYPE_PLAIN = "text/plain";
@@ -59,7 +64,7 @@ public class ThreadDumpRoute implements Handler<RoutingContext> {
    * @param router The router that this handler will be attached to.
    */
   public void standardDeploy(Router router) {
-    router.route(HttpMethod.GET, "/threaddump")
+    router.route(HttpMethod.GET, "/" + PATH)
             .handler(this::handle)
             .setName("Thread Dump")
             .produces(TYPE_JSON)

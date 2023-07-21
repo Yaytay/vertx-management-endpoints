@@ -37,6 +37,11 @@ import org.slf4j.LoggerFactory;
  */
 public class ManagementRoute implements Handler<RoutingContext> {
   
+  /**
+   * The path at which the standardDeploy method will put the router.
+   */
+  public static final String PATH = "manage";
+  
   private static final Logger logger = LoggerFactory.getLogger(ManagementRoute.class);
   
   private final Router mgmtRouter;
@@ -60,7 +65,7 @@ public class ManagementRoute implements Handler<RoutingContext> {
    */
   public void standardDeploy(Router router) {
     router.route("/manage/*").subRouter(mgmtRouter);
-    router.route(HttpMethod.GET, "/manage").handler(this::handle);
+    router.route(HttpMethod.GET, "/" + PATH).handler(this::handle);
   }
   
   /**

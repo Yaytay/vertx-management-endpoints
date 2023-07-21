@@ -49,6 +49,11 @@ public class HeapDumpRoute implements Handler<RoutingContext> {
 
   private static final Logger logger = LoggerFactory.getLogger(HeapDumpRoute.class);
 
+  /**
+   * The path at which the standardDeploy method will put the router.
+   */
+  public static final String PATH = "heapdump";
+  
   private static final String TYPE_BINARY = "application/octet-stream";
   private static final String TYPE_HTML = "text/html";
   /**
@@ -65,7 +70,7 @@ public class HeapDumpRoute implements Handler<RoutingContext> {
    * @param router The router that this handler will be attached to.
    */
   public void standardDeploy(Router router) {
-    router.route(HttpMethod.GET, "/heapdump")
+    router.route(HttpMethod.GET, "/" + PATH)
             .handler(this::handle)
             .setName("Heap Dump")
             .produces(TYPE_BINARY)

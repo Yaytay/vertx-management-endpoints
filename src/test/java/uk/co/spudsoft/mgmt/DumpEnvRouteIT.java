@@ -66,7 +66,7 @@ public class DumpEnvRouteIT {
                 testContext.verify(() -> {
 
                   String body = given()
-                      .get("/manage/dumpenv")
+                      .get("/manage/" + DumpEnvRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -75,7 +75,7 @@ public class DumpEnvRouteIT {
 
                   body = given()
                       .accept(ContentType.HTML)
-                      .get("/manage/dumpenv")
+                      .get("/manage/" + DumpEnvRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -84,7 +84,7 @@ public class DumpEnvRouteIT {
 
                   body = given()
                       .accept(ContentType.JSON)
-                      .get("/manage/dumpenv")
+                      .get("/manage/" + DumpEnvRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -93,7 +93,7 @@ public class DumpEnvRouteIT {
 
                   body = given()
                       .accept(ContentType.TEXT)
-                      .get("/manage/dumpenv")
+                      .get("/manage/" + DumpEnvRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()

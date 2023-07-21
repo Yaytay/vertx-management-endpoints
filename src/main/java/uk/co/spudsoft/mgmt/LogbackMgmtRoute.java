@@ -62,6 +62,11 @@ import org.slf4j.LoggerFactory;
  */
 public class LogbackMgmtRoute implements Handler<RoutingContext> {
 
+  /**
+   * The path at which the standardDeploy method will put the router.
+   */
+  public static final String PATH = "logback";
+
   @SuppressWarnings("constantname")
   private static final Logger logger = LoggerFactory.getLogger(LogbackMgmtRoute.class);
 
@@ -84,8 +89,8 @@ public class LogbackMgmtRoute implements Handler<RoutingContext> {
    * @param router The router that this handler will be attached to.
    */
   public void standardDeploy(Router router) {
-    router.route(HttpMethod.GET, "/logback").handler(this::handle).setName("Logback Management");
-    router.route(HttpMethod.PUT, "/logback/:logger").handler(this::handle).setName("Logback Management");
+    router.route(HttpMethod.GET, "/" + PATH).handler(this::handle).setName("Logback Management");
+    router.route(HttpMethod.PUT, "/" + PATH + "/:logger").handler(this::handle).setName("Logback Management");
   }
   
   /**

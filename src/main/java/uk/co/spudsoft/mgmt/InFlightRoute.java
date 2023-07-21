@@ -43,6 +43,11 @@ import org.slf4j.LoggerFactory;
 public class InFlightRoute implements Handler<RoutingContext> {
   
   /**
+   * The path at which the standardDeploy method will put the router.
+   */
+  public static final String PATH = "inflight";
+  
+  /**
    * The key value that will be used for storing the timestamp of the start of processing in the RoutingContext.
    */
   public static final String TIMESTAMP_KEY = InFlightRoute.class.getCanonicalName() + "_StartTimestamp";
@@ -68,7 +73,7 @@ public class InFlightRoute implements Handler<RoutingContext> {
   public void standardDeploy(Router rootRouter, Router manageRouter) {
     rootRouter.route().handler(this::record);
     manageRouter.route().handler(this::record);
-    manageRouter.route(HttpMethod.GET, "/inflight").handler(this::handle).setName("In Flight");
+    manageRouter.route(HttpMethod.GET, "/" + PATH).handler(this::handle).setName("In Flight");
   }
   
   /**

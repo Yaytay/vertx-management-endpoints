@@ -69,7 +69,7 @@ public class AccessLogRouteIT {
                 testContext.verify(() -> {
 
                   String body = given()
-                      .get("/manage/accesslog")
+                      .get("/manage/" + AccessLogOutputRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -78,7 +78,7 @@ public class AccessLogRouteIT {
 
                   body = given()
                       .accept(ContentType.HTML)
-                      .get("/manage/accesslog")
+                      .get("/manage/" + AccessLogOutputRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -87,7 +87,7 @@ public class AccessLogRouteIT {
 
                   body = given()
                       .accept(ContentType.JSON)
-                      .get("/manage/accesslog")
+                      .get("/manage/" + AccessLogOutputRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -96,7 +96,7 @@ public class AccessLogRouteIT {
 
                   body = given()
                       .accept(ContentType.TEXT)
-                      .get("/manage/accesslog")
+                      .get("/manage/" + AccessLogOutputRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -105,7 +105,7 @@ public class AccessLogRouteIT {
 
                   body = given()
                       .accept(ContentType.HTML)
-                      .get("/manage/accesslog")
+                      .get("/manage/" + AccessLogOutputRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()

@@ -68,7 +68,7 @@ public class DumpParametersRouteIT {
                 testContext.verify(() -> {
 
                   String body = given()
-                      .get("/manage/dumpparams")
+                      .get("/manage/" + DumpParametersRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -77,7 +77,7 @@ public class DumpParametersRouteIT {
 
                   body = given()
                       .accept(ContentType.HTML)
-                      .get("/manage/dumpparams")
+                      .get("/manage/" + DumpParametersRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -86,7 +86,7 @@ public class DumpParametersRouteIT {
 
                   body = given()
                       .accept(ContentType.JSON)
-                      .get("/manage/dumpparams")
+                      .get("/manage/" + DumpParametersRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -95,7 +95,7 @@ public class DumpParametersRouteIT {
 
                   body = given()
                       .accept(ContentType.TEXT)
-                      .get("/manage/dumpparams")
+                      .get("/manage/" + DumpParametersRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -105,7 +105,7 @@ public class DumpParametersRouteIT {
                   ref.set("Goodbye");
                         
                   body = given()
-                      .get("/manage/dumpparams")
+                      .get("/manage/" + DumpParametersRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -114,7 +114,7 @@ public class DumpParametersRouteIT {
 
                   body = given()
                       .accept(ContentType.HTML)
-                      .get("/manage/dumpparams")
+                      .get("/manage/" + DumpParametersRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -123,7 +123,7 @@ public class DumpParametersRouteIT {
 
                   body = given()
                       .accept(ContentType.JSON)
-                      .get("/manage/dumpparams")
+                      .get("/manage/" + DumpParametersRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -132,7 +132,7 @@ public class DumpParametersRouteIT {
 
                   body = given()
                       .accept(ContentType.TEXT)
-                      .get("/manage/dumpparams")
+                      .get("/manage/" + DumpParametersRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()

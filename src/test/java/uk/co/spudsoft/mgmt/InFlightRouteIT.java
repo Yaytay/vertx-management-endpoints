@@ -64,7 +64,7 @@ public class InFlightRouteIT {
                 testContext.verify(() -> {
 
                   String body = given()
-                      .get("/manage/inflight")
+                      .get("/manage/" + InFlightRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()

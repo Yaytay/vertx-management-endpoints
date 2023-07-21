@@ -68,7 +68,7 @@ public class HeapDumpRouteIT {
 
                   long start = System.currentTimeMillis();
                   String contentLengthString = given()
-                      .get("/manage/heapdump")
+                      .get("/manage/" + HeapDumpRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().header(HttpHeaderNames.CONTENT_LENGTH.toString())
@@ -83,7 +83,7 @@ public class HeapDumpRouteIT {
                   
                   String body = given()
                           .accept(ContentType.HTML)
-                          .get("/manage/heapdump")
+                          .get("/manage/" + HeapDumpRoute.PATH)
                           .then()
                           .statusCode(200)
                           .contentType(ContentType.HTML)
