@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccessLogOutputRoute.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Vertx Management Endpoints</a> &gt; <a href="index.source.html" class="el_package">uk.co.spudsoft.mgmt</a> &gt; <span class="el_source">AccessLogOutputRoute.java</span></div><h1>AccessLogOutputRoute.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2023 jtalbut
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package uk.co.spudsoft.mgmt;
+
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.vertx.core.Handler;
+import io.vertx.core.MultiMap;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.http.HttpServerResponse;
+import static io.vertx.core.http.HttpVersion.HTTP_1_0;
+import static io.vertx.core.http.HttpVersion.HTTP_1_1;
+import static io.vertx.core.http.HttpVersion.HTTP_2;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.core.net.SocketAddress;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.impl.Utils;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * A Vertx HTTP Server route for outputting HTTP requests captured by AccessLogCaptureRoute.
+ *
+ * @author jtalbut
+ */
+public class AccessLogOutputRoute implements Handler&lt;RoutingContext&gt; {
+
+  private static final String TYPE_JSON = &quot;application/json&quot;;
+  private static final String TYPE_HTML = &quot;text/html&quot;;
+  private static final String TYPE_PLAIN = &quot;text/plain&quot;;
+  
+  private final RingBuffer&lt;AccessLogCaptureRoute.AccessLogData&gt; buffer;
+
+  /**
+   * Constructor.
+   * @param buffer The buffer from the AccessLogCaptureRoute.
+   */
+<span class="fc" id="L58">  public AccessLogOutputRoute(RingBuffer&lt;AccessLogCaptureRoute.AccessLogData&gt; buffer) {</span>
+<span class="fc" id="L59">    this.buffer = buffer;</span>
+<span class="fc" id="L60">  }  </span>
+  
+  /**
+   * Deploy the route to the router passed in at the normal endpoint.
+   * 
+   * The router passed in should be a sub router that is inaccessible to normal users.
+   * 
+   * @param router The router that this handler will be attached to.
+   */
+  public void standardDeploy(Router router) {
+<span class="fc" id="L70">    router.route(HttpMethod.GET, &quot;/accesslog&quot;)</span>
+<span class="fc" id="L71">            .handler(this::handle)</span>
+<span class="fc" id="L72">            .setName(&quot;Access Log&quot;)</span>
+<span class="fc" id="L73">            .produces(TYPE_JSON)</span>
+<span class="fc" id="L74">            .produces(TYPE_HTML)</span>
+<span class="fc" id="L75">            .produces(TYPE_PLAIN)</span>
+            ;
+<span class="fc" id="L77">  }</span>
+  
+  /**
+   * Factory method to do standard deployment on newly constructed route.
+   * 
+   * The router passed in should be a sub router that is inaccessible to normal users.
+   * 
+   * @param router The router that this handler will be attached to.
+   * @param buffer The buffer from the AccessLogCaptureRoute.
+   */
+  public static void createAndDeploy(Router router, RingBuffer&lt;AccessLogCaptureRoute.AccessLogData&gt; buffer) {
+<span class="fc" id="L88">    AccessLogOutputRoute route = new AccessLogOutputRoute(buffer);</span>
+<span class="fc" id="L89">    route.standardDeploy(router);</span>
+<span class="fc" id="L90">  }</span>
+  
+  private static JsonObject toJson(AccessLogCaptureRoute.AccessLogData record) {
+<span class="fc" id="L93">    JsonObject jo = new JsonObject();</span>
+    
+<span class="fc" id="L95">    jo.put(&quot;timestamp&quot;, ZonedDateTime.ofInstant(Instant.ofEpochMilli(record.getTimestamp()), ZoneOffset.UTC).toString());</span>
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">    if (record.getTimestamp() &gt; 0) {</span>
+<span class="fc" id="L97">      jo.put(&quot;endTimestamp&quot;, ZonedDateTime.ofInstant(Instant.ofEpochMilli(record.getEndTimestamp()), ZoneOffset.UTC).toString());</span>
+    }
+<span class="fc" id="L99">    HttpServerRequest request = record.getRequest();    </span>
+<span class="fc" id="L100">    jo.put(&quot;headers&quot;, request.headers());</span>
+<span class="fc" id="L101">    jo.put(&quot;url&quot;, request.absoluteURI());    </span>
+<span class="fc" id="L102">    jo.put(&quot;bytesRead&quot;, request.bytesRead());</span>
+<span class="fc" id="L103">    HttpServerResponse response = record.getResponse();</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">    if (response != null) {</span>
+<span class="fc" id="L105">      jo.put(&quot;responseHeaders&quot;, response.headers());</span>
+<span class="fc" id="L106">      jo.put(&quot;statusCode&quot;, response.getStatusCode());</span>
+<span class="fc" id="L107">      jo.put(&quot;bytesWritten&quot;, response.bytesWritten());</span>
+    }
+<span class="fc" id="L109">    return jo;</span>
+  }
+  
+  @Override
+  public void handle(RoutingContext rc) {
+    
+<span class="fc" id="L115">    HttpServerRequest request = rc.request();</span>
+    
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">    if (request.method() == HttpMethod.GET) {</span>
+      
+<span class="fc" id="L119">      AccessLogCaptureRoute.AccessLogData data[] = buffer.toArray(i -&gt; new AccessLogCaptureRoute.AccessLogData[i]);</span>
+      
+<span class="fc bfc" id="L121" title="All 2 branches covered.">      if (TYPE_JSON.equals(rc.getAcceptableContentType())) {</span>
+        
+<span class="fc" id="L123">        JsonArray ja = new JsonArray();</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        for (AccessLogCaptureRoute.AccessLogData record : data) {</span>
+<span class="fc" id="L125">          ja.add(toJson(record));</span>
+        }
+        
+<span class="fc" id="L128">        HttpServerResponse response = rc.response();</span>
+<span class="fc" id="L129">        response.setStatusCode(200);</span>
+<span class="fc" id="L130">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_JSON);</span>
+<span class="fc" id="L131">        response.end(Json.encode(ja));</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">      } else if (TYPE_HTML.equals(rc.getAcceptableContentType())) {</span>
+<span class="fc" id="L133">        HttpServerResponse response = rc.response();</span>
+<span class="fc" id="L134">        response.setStatusCode(200);</span>
+<span class="fc" id="L135">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_HTML);</span>
+<span class="fc" id="L136">        response.setChunked(true);</span>
+        
+<span class="fc" id="L138">        response.write(&quot;&lt;html&gt;&quot;);</span>
+<span class="fc" id="L139">        response.write(&quot;&lt;head&gt;&quot;);</span>
+<span class="fc" id="L140">        response.write(&quot;&lt;style&gt;table.top,th.top,td.top { border: 1px solid black; border-collapse: collapse; padding-left: 10px; padding-right: 10px; } td.number { text-align: right; }&lt;/style&gt;&quot;);</span>
+<span class="fc" id="L141">        response.write(&quot;&lt;script type=\&quot;text/javascript\&quot;&gt;\n    function flip(id) {\n      var el = document.getElementById(id);\n      if (el) {\n        if (el.style.display == 'none') {\n          el.style.display = '';\n        } else {\n          el.style.display = 'none';\n        }\n      }\n    }\n  &lt;/script&gt;&quot;);</span>
+<span class="fc" id="L142">        response.write(&quot;&lt;/head&gt;&quot;);</span>
+<span class="fc" id="L143">        response.write(&quot;&lt;body&gt;&quot;);</span>
+        
+<span class="fc" id="L145">        response.write(&quot;&lt;table style=\&quot;border: 1px solid black; border-collapse: collapse;\&quot; class=\&quot;top\&quot;&gt;&quot;);</span>
+<span class="fc" id="L146">        response.write(&quot;&lt;thead&gt;&lt;tr&gt;&lt;th class=\&quot;top\&quot;&gt;Time&lt;/th&gt;&lt;th class=\&quot;top\&quot;&gt;Method&lt;/th&gt;&lt;th class=\&quot;top\&quot;&gt;URL&lt;/th&gt;&lt;th class=\&quot;top\&quot;&gt;Status&lt;/th&gt;&lt;th class=\&quot;top\&quot;&gt;Duration&lt;/th&gt;&lt;th class=\&quot;top\&quot;&gt;Bytes Written&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;\n&quot;);</span>
+        
+<span class="fc" id="L148">        response.write(&quot;&lt;tbody&gt;\n&quot;);</span>
+        
+<span class="fc" id="L150">        int id = 0;</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        for (AccessLogCaptureRoute.AccessLogData record : data) {</span>
+<span class="fc" id="L152">          ++id;</span>
+<span class="fc" id="L153">          response.write(&quot;&lt;tr id=\&quot;row-&quot; + id + &quot;\&quot; onclick=\&quot;flip('headers-&quot; + id + &quot;')\&quot;&gt;&lt;td class=\&quot;top\&quot;&gt;&quot;);</span>
+<span class="fc" id="L154">          response.write(ZonedDateTime.ofInstant(Instant.ofEpochMilli(record.getTimestamp()), ZoneOffset.UTC).toString());</span>
+<span class="fc" id="L155">          response.write(&quot;&lt;/td&gt;&lt;td class=\&quot;top\&quot;&gt;&quot;);</span>
+<span class="fc" id="L156">          response.write(record.getRequest().method().toString());</span>
+<span class="fc" id="L157">          response.write(&quot;&lt;/td&gt;&lt;td class=\&quot;top\&quot;&gt;&quot;);</span>
+<span class="fc" id="L158">          response.write(record.getRequest().absoluteURI());</span>
+<span class="fc" id="L159">          response.write(&quot;&lt;/td&gt;&lt;td class=\&quot;top\&quot;&gt;&quot;);</span>
+<span class="fc bfc" id="L160" title="All 2 branches covered.">          if (record.getResponse() != null) {</span>
+<span class="fc" id="L161">            response.write(Integer.toString(record.getResponse().getStatusCode()));</span>
+<span class="fc" id="L162">            response.write(&quot;&lt;/td&gt;&lt;td class=\&quot;number top\&quot;&gt;&quot;);</span>
+<span class="fc" id="L163">            response.write(Long.toString(record.getEndTimestamp() - record.getTimestamp()));</span>
+<span class="fc" id="L164">            response.write(&quot; ms&quot;);</span>
+<span class="fc" id="L165">            response.write(&quot;&lt;/td&gt;&lt;td class=\&quot;number top\&quot;&gt;&quot;);</span>
+<span class="fc" id="L166">            response.write(Long.toString(record.getResponse().bytesWritten()));</span>
+<span class="fc" id="L167">            response.write(&quot; B&quot;);</span>
+          } else {
+<span class="fc" id="L169">            response.write(&quot;&lt;/td&gt;&lt;td class=\&quot;top\&quot;&gt;&quot;);</span>
+<span class="fc" id="L170">            response.write(&quot;&lt;/td&gt;&lt;td class=\&quot;top\&quot;&gt;&quot;);</span>
+          }
+<span class="fc" id="L172">          response.write(&quot;&lt;/td&gt;&lt;/tr&gt;&quot;);</span>
+          
+<span class="fc" id="L174">          response.write(&quot;&lt;tr id=\&quot;headers-&quot; + id + &quot;\&quot; style=\&quot;display: none;\&quot;&gt;&lt;td colspan=\&quot;6\&quot;&gt;&quot;);</span>
+<span class="fc" id="L175">          response.write(&quot;&lt;table style=\&quot;width: 100%;\&quot;&gt;&quot;);</span>
+<span class="fc" id="L176">          response.write(&quot;&lt;thead&gt;&quot;);</span>
+<span class="fc" id="L177">          response.write(&quot;&lt;tr&gt;&quot;);</span>
+<span class="fc" id="L178">          response.write(&quot;&lt;th style=\&quot;width: 50%;\&quot;&gt;Request Headers&lt;/th&gt;&quot;);</span>
+<span class="fc" id="L179">          response.write(&quot;&lt;th style=\&quot;width: 50%;\&quot;&gt;Response Headers&lt;/th&gt;&quot;);</span>
+<span class="fc" id="L180">          response.write(&quot;&lt;/tr&gt;&quot;);          </span>
+<span class="fc" id="L181">          response.write(&quot;&lt;/thead&gt;&quot;);</span>
+<span class="fc" id="L182">          response.write(&quot;&lt;tr&gt;&quot;);</span>
+
+<span class="fc" id="L184">          response.write(&quot;&lt;td style=\&quot;width: 50%; vertical-align: top;\&quot;&gt;&quot;);</span>
+<span class="fc" id="L185">          response.write(&quot;&lt;table style=\&quot;width: 100%;\&quot;&gt;&quot;);          </span>
+<span class="fc" id="L186">          List&lt;String&gt; keys = new ArrayList&lt;&gt;(request.headers().names());</span>
+<span class="fc" id="L187">          keys.sort(String.CASE_INSENSITIVE_ORDER);          </span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">          for (String key : keys) {</span>
+<span class="fc" id="L189">            response.write(&quot;&lt;tr&gt;&lt;td&gt;&lt;pre&gt;&quot;);</span>
+<span class="fc" id="L190">            response.write(key);</span>
+<span class="fc" id="L191">            response.write(&quot;&lt;/pre&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&quot;);</span>
+<span class="fc" id="L192">            List&lt;String&gt; values = request.headers().getAll(key);</span>
+<span class="fc" id="L193">            boolean first = true;</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">            for (String value : values) {</span>
+<span class="pc bpc" id="L195" title="1 of 2 branches missed.">              if (!first) {</span>
+<span class="nc" id="L196">                response.write(&quot;\n&quot;);</span>
+              }
+<span class="fc" id="L198">              first = false;</span>
+<span class="fc" id="L199">              response.write(value);</span>
+<span class="fc" id="L200">            }</span>
+<span class="fc" id="L201">            response.write(&quot;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&quot;);</span>
+<span class="fc" id="L202">          }</span>
+<span class="fc" id="L203">          response.write(&quot;&lt;/table&gt;&lt;/td&gt;&quot;);</span>
+
+<span class="fc" id="L205">          response.write(&quot;&lt;td style=\&quot;width: 50%; vertical-align: top;\&quot;&gt;&quot;);</span>
+<span class="fc" id="L206">          response.write(&quot;&lt;table style=\&quot;width: 100%;\&quot;&gt;&quot;);</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">          if (record.getResponse() != null) {</span>
+<span class="fc" id="L208">            keys = new ArrayList&lt;&gt;(record.getResponse().headers().names());</span>
+<span class="fc" id="L209">            keys.sort(String.CASE_INSENSITIVE_ORDER);          </span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">            for (String key : keys) {</span>
+<span class="fc" id="L211">              response.write(&quot;&lt;tr&gt;&lt;td&gt;&lt;pre&gt;&quot;);</span>
+<span class="fc" id="L212">              response.write(key);</span>
+<span class="fc" id="L213">              response.write(&quot;&lt;/pre&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&quot;);</span>
+<span class="fc" id="L214">              List&lt;String&gt; values = record.getResponse().headers().getAll(key);</span>
+<span class="fc" id="L215">              boolean first = true;</span>
+<span class="fc bfc" id="L216" title="All 2 branches covered.">              for (String value : values) {</span>
+<span class="pc bpc" id="L217" title="1 of 2 branches missed.">                if (!first) {</span>
+<span class="nc" id="L218">                  response.write(&quot;\n&quot;);</span>
+                }
+<span class="fc" id="L220">                first = false;</span>
+<span class="fc" id="L221">                response.write(value);</span>
+<span class="fc" id="L222">              }</span>
+<span class="fc" id="L223">              response.write(&quot;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&quot;);</span>
+<span class="fc" id="L224">            }</span>
+          }
+<span class="fc" id="L226">          response.write(&quot;&lt;/table&gt;&lt;/td&gt;&lt;/tr&gt;&quot;);</span>
+
+<span class="fc" id="L228">          response.write(&quot;&lt;/table&gt;&lt;/td&gt;&lt;/tr&gt;\n&quot;);</span>
+        }
+        
+<span class="fc" id="L231">        response.write(&quot;&lt;/tbody&gt;&quot;);</span>
+        
+<span class="fc" id="L233">        response.write(&quot;&lt;/table&gt;&quot;);</span>
+        
+<span class="fc" id="L235">        response.write(&quot;&lt;/body&gt;&quot;);</span>
+<span class="fc" id="L236">        response.write(&quot;&lt;/html&gt;&quot;);</span>
+        
+<span class="fc" id="L238">        response.end();</span>
+<span class="fc" id="L239">      } else {</span>
+<span class="fc" id="L240">        HttpServerResponse response = rc.response();</span>
+<span class="fc" id="L241">        response.setStatusCode(200);</span>
+<span class="fc" id="L242">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_PLAIN);</span>
+<span class="fc" id="L243">        response.setChunked(true);</span>
+        
+<span class="fc bfc" id="L245" title="All 2 branches covered.">        for (AccessLogCaptureRoute.AccessLogData record : data) {</span>
+<span class="fc" id="L246">          response.write(buildStringLog(record.getRequest(), record.getResponse(), record.getTimestamp()));</span>
+<span class="fc" id="L247">          response.write(&quot;\n&quot;);</span>
+        }
+        
+<span class="fc" id="L250">        response.end();</span>
+      }
+<span class="fc" id="L252">    } else {</span>
+<span class="nc" id="L253">      rc.next();</span>
+    }
+<span class="fc" id="L255">  }</span>
+  
+  private String getClientAddress(SocketAddress inetSocketAddress) {
+<span class="pc bpc" id="L258" title="1 of 2 branches missed.">    if (inetSocketAddress == null) {</span>
+<span class="nc" id="L259">      return null;</span>
+    }
+<span class="fc" id="L261">    return inetSocketAddress.host();</span>
+  }
+  
+  private String buildStringLog(HttpServerRequest request, HttpServerResponse response, long timestamp) {
+    
+<span class="fc" id="L266">    String versionFormatted = getVersionFormatted(request);</span>
+    
+<span class="fc" id="L268">    Integer status = null;</span>
+<span class="fc" id="L269">    Long contentLength = null;</span>
+    
+<span class="fc bfc" id="L271" title="All 2 branches covered.">    if (response != null) {</span>
+<span class="fc" id="L272">      status = response.getStatusCode();</span>
+<span class="fc" id="L273">      contentLength = response.bytesWritten();</span>
+    }
+    
+<span class="fc" id="L276">    MultiMap headers = request.headers();</span>
+
+    // as per RFC1945 the header is referer but it is not mandatory some implementations use referrer
+<span class="pc bpc" id="L279" title="1 of 2 branches missed.">    String referrer = headers.contains(&quot;referrer&quot;) ? headers.get(&quot;referrer&quot;) : headers.get(&quot;referer&quot;);</span>
+<span class="fc" id="L280">    String userAgent = request.headers().get(&quot;user-agent&quot;);</span>
+<span class="pc bpc" id="L281" title="1 of 2 branches missed.">    referrer = referrer == null ? &quot;-&quot; : referrer;</span>
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">    userAgent = userAgent == null ? &quot;-&quot; : userAgent;</span>
+
+<span class="fc" id="L284">    return String.format(&quot;%s - - [%s] \&quot;%s %s %s\&quot; %d %d \&quot;%s\&quot; \&quot;%s\&quot;&quot;,</span>
+<span class="fc" id="L285">      getClientAddress(request.remoteAddress()),</span>
+<span class="fc" id="L286">      Utils.formatRFC1123DateTime(timestamp),</span>
+<span class="fc" id="L287">      request.method(),</span>
+<span class="fc" id="L288">      request.absoluteURI(),</span>
+      versionFormatted,
+      status,
+      contentLength,
+      referrer,
+      userAgent);
+  }
+
+  String getVersionFormatted(HttpServerRequest request) {
+    String versionFormatted;
+<span class="pc bpc" id="L298" title="3 of 4 branches missed.">    switch (request.version()){</span>
+      case HTTP_1_0:
+<span class="nc" id="L300">        versionFormatted = &quot;HTTP/1.0&quot;;</span>
+<span class="nc" id="L301">        break;</span>
+      case HTTP_1_1:
+<span class="fc" id="L303">        versionFormatted = &quot;HTTP/1.1&quot;;</span>
+<span class="fc" id="L304">        break;</span>
+      case HTTP_2:
+<span class="nc" id="L306">        versionFormatted = &quot;HTTP/2.0&quot;;</span>
+<span class="nc" id="L307">        break;</span>
+      default:
+<span class="nc" id="L309">        versionFormatted = &quot;-&quot;;</span>
+    }
+<span class="fc" id="L311">    return versionFormatted;</span>
+  }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

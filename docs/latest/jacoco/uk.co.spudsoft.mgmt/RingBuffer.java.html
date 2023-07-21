@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RingBuffer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Vertx Management Endpoints</a> &gt; <a href="index.source.html" class="el_package">uk.co.spudsoft.mgmt</a> &gt; <span class="el_source">RingBuffer.java</span></div><h1>RingBuffer.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2023 jtalbut
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package uk.co.spudsoft.mgmt;
+
+import java.util.function.IntFunction;
+
+/**
+ *  A FIFO queue of bounded size that automatically removes the oldest item when adding a new one would exceed the capacity.
+ * 
+ *
+ * @param &lt;T&gt; The type of object stored in the RingBuffer.
+ * @author jtalbut
+ */
+public class RingBuffer&lt;T&gt; {
+  
+  private final int capacity;
+  private final Object[] array;
+<span class="fc" id="L32">  private int insert = 0;</span>
+<span class="fc" id="L33">  private int size = 0;</span>
+
+  /**
+   * Constructor.
+   * 
+   * @param capacity The size of the rung buffer.
+   */
+<span class="fc" id="L40">  public RingBuffer(int capacity) {</span>
+<span class="fc" id="L41">    this.capacity = capacity;</span>
+<span class="fc" id="L42">    this.array = new Object[capacity + 1];</span>
+<span class="fc" id="L43">  }</span>
+  
+  /**
+   * Add an item to the ring buffer.
+   * @param item The item to add to the ring buffer.
+   */
+  public void add(T item) {
+<span class="fc" id="L50">    synchronized (array) {</span>
+<span class="fc" id="L51">      array[insert] = item;</span>
+<span class="fc" id="L52">      ++insert;</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">      if (insert == capacity + 1) {</span>
+<span class="fc" id="L54">        insert = 0;</span>
+      }
+<span class="fc" id="L56">      array[insert] = null;</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">      if (size &lt; capacity) {</span>
+<span class="fc" id="L58">        ++size;</span>
+      }
+<span class="fc" id="L60">    }</span>
+<span class="fc" id="L61">  }</span>
+
+  /**
+   * Get the size of the ring buffer.
+   * @return the size of the ring buffer.
+   */
+  public int size() {
+<span class="fc" id="L68">    return size;</span>
+  }
+  
+  /**
+   * Copy the contents of the RingBuffer into a newly allocated array.
+   * @param generator Generator for the allocation of the array.
+   * @return the contents of the RingBuffer in a newly allocated array.
+   */
+  @SuppressWarnings(&quot;unchecked&quot;)
+  public T[] toArray(IntFunction&lt;T[]&gt; generator) {   
+<span class="fc" id="L78">    T[] result = generator.apply(size);</span>
+<span class="fc" id="L79">    synchronized (array) {</span>
+<span class="fc" id="L80">      int start = insert + 1;</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">      if (start == size + 1) {</span>
+<span class="fc" id="L82">        start = 0;</span>
+      }
+
+<span class="fc bfc" id="L85" title="All 2 branches covered.">      for (int i = start, j = 0; array[i] != null; ++i, ++j) {</span>
+<span class="fc" id="L86">        result[j] = (T) array[i];</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        if (i == capacity) {</span>
+<span class="fc" id="L88">          i = -1;</span>
+        }
+      }
+        
+<span class="fc" id="L92">      return result;</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
