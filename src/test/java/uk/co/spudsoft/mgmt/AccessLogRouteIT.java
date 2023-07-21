@@ -35,26 +35,29 @@ import org.junit.jupiter.api.Test;
  * @author jtalbut
  */
 @ExtendWith(VertxExtension.class)
-public class DumpEnvRouteIT {
+public class AccessLogRouteIT {
   
   @SuppressWarnings("constantname")
-  private static final Logger logger = LoggerFactory.getLogger(DumpEnvRouteIT.class);
+  private static final Logger logger = LoggerFactory.getLogger(AccessLogRouteIT.class);
   
   private int port;
     
-  public DumpEnvRouteIT() {
+  public AccessLogRouteIT() {
   }
 
   @Test
   public void testHandle(Vertx vertx, VertxTestContext testContext) throws Throwable {
 
+    AccessLogCaptureRoute capture = new AccessLogCaptureRoute(4);
+    
     Router router = Router.router(vertx);
+    router.route("/*").handler(capture);
 
     Router mgmtRouter = Router.router(vertx);
     router.route("/manage/*").subRouter(mgmtRouter);
     HttpServerVerticle httperServerVerticle = new HttpServerVerticle(router);
     
-    DumpEnvRoute.createAndDeploy(mgmtRouter);
+    AccessLogOutputRoute.createAndDeploy(mgmtRouter, capture.getBuffer());
     
     vertx
             .deployVerticle(httperServerVerticle)
@@ -66,39 +69,49 @@ public class DumpEnvRouteIT {
                 testContext.verify(() -> {
 
                   String body = given()
-                      .get("/manage/dumpenv")
+                      .get("/manage/accesslog")
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
                       ;                  
-                  logger.debug("Env vars (any): {}", body);
+                  logger.debug("Access log (any): {}", body);
 
                   body = given()
                       .accept(ContentType.HTML)
-                      .get("/manage/dumpenv")
+                      .get("/manage/accesslog")
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
                       ;                  
-                  logger.debug("Env vars (html): {}", body);
+                  logger.debug("Access log (html): {}", body);
 
                   body = given()
                       .accept(ContentType.JSON)
-                      .get("/manage/dumpenv")
+                      .get("/manage/accesslog")
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
                       ;                  
-                  logger.debug("Env vars (json): {}", body);
+                  logger.debug("Access log (json): {}", body);
 
                   body = given()
                       .accept(ContentType.TEXT)
-                      .get("/manage/dumpenv")
+                      .get("/manage/accesslog")
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
                       ;                  
-                  logger.debug("Env vars (plain): {}", body);
+                  logger.debug("Access log (plain): {}", body);
+
+                  body = given()
+                      .accept(ContentType.HTML)
+                      .get("/manage/accesslog")
+                      .then()
+                      .statusCode(200)
+                      .extract().body().asString()
+                      ;                  
+                  logger.debug("Access log (html): {}", body);
+
                 });
                         
                 testContext.completeNow();
