@@ -49,13 +49,18 @@ public class HeapDumpRoute implements Handler&lt;RoutingContext&gt; {
 
 <span class="fc" id="L50">  private static final Logger logger = LoggerFactory.getLogger(HeapDumpRoute.class);</span>
 
+  /**
+   * The path at which the standardDeploy method will put the router.
+   */
+  public static final String PATH = &quot;heapdump&quot;;
+  
   private static final String TYPE_BINARY = &quot;application/octet-stream&quot;;
   private static final String TYPE_HTML = &quot;text/html&quot;;
   /**
    * Constructor.
    */
-<span class="fc" id="L57">  public HeapDumpRoute() {</span>
-<span class="fc" id="L58">  }  </span>
+<span class="fc" id="L62">  public HeapDumpRoute() {</span>
+<span class="fc" id="L63">  }  </span>
   
   /**
    * Deploy the route to the router passed in at the normal endpoint.
@@ -65,13 +70,13 @@ public class HeapDumpRoute implements Handler&lt;RoutingContext&gt; {
    * @param router The router that this handler will be attached to.
    */
   public void standardDeploy(Router router) {
-<span class="fc" id="L68">    router.route(HttpMethod.GET, &quot;/heapdump&quot;)</span>
-<span class="fc" id="L69">            .handler(this::handle)</span>
-<span class="fc" id="L70">            .setName(&quot;Heap Dump&quot;)</span>
-<span class="fc" id="L71">            .produces(TYPE_BINARY)</span>
-<span class="fc" id="L72">            .produces(TYPE_HTML)</span>
+<span class="fc" id="L73">    router.route(HttpMethod.GET, &quot;/&quot; + PATH)</span>
+<span class="fc" id="L74">            .handler(this::handle)</span>
+<span class="fc" id="L75">            .setName(&quot;Heap Dump&quot;)</span>
+<span class="fc" id="L76">            .produces(TYPE_BINARY)</span>
+<span class="fc" id="L77">            .produces(TYPE_HTML)</span>
             ;
-<span class="fc" id="L74">  }</span>
+<span class="fc" id="L79">  }</span>
   
   /**
    * Factory method to do standard deployment on newly constructed route.
@@ -81,116 +86,116 @@ public class HeapDumpRoute implements Handler&lt;RoutingContext&gt; {
    * @param router The router that this handler will be attached to.
    */
   public static void createAndDeploy(Router router) {
-<span class="fc" id="L84">    HeapDumpRoute route = new HeapDumpRoute();</span>
-<span class="fc" id="L85">    route.standardDeploy(router);</span>
-<span class="fc" id="L86">  }</span>
+<span class="fc" id="L89">    HeapDumpRoute route = new HeapDumpRoute();</span>
+<span class="fc" id="L90">    route.standardDeploy(router);</span>
+<span class="fc" id="L91">  }</span>
   
   @Override
   public void handle(RoutingContext rc) {
   
-<span class="fc" id="L91">    HttpServerResponse response = rc.response();</span>
+<span class="fc" id="L96">    HttpServerResponse response = rc.response();</span>
     
-<span class="fc" id="L93">    HttpServerRequest request = rc.request();</span>
+<span class="fc" id="L98">    HttpServerRequest request = rc.request();</span>
     
-<span class="pc bpc" id="L95" title="1 of 2 branches missed.">    if (request.method() == HttpMethod.GET) {</span>
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">    if (request.method() == HttpMethod.GET) {</span>
       
-<span class="fc bfc" id="L97" title="All 2 branches covered.">      if (TYPE_HTML.equals(rc.getAcceptableContentType())) {</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">      if (TYPE_HTML.equals(rc.getAcceptableContentType())) {</span>
         
-<span class="fc" id="L99">        response.setStatusCode(200);</span>
-<span class="fc" id="L100">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_HTML);</span>
-<span class="fc" id="L101">        response.setChunked(true);</span>
+<span class="fc" id="L104">        response.setStatusCode(200);</span>
+<span class="fc" id="L105">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_HTML);</span>
+<span class="fc" id="L106">        response.setChunked(true);</span>
         
-<span class="fc" id="L103">        response.write(&quot;&lt;html&gt;&quot;);</span>
-<span class="fc" id="L104">        response.write(&quot;&lt;head&gt;&quot;);</span>
-<span class="fc" id="L105">        response.write(&quot;&lt;/head&gt;&quot;);</span>
-<span class="fc" id="L106">        response.write(&quot;&lt;body&gt;&quot;);</span>
+<span class="fc" id="L108">        response.write(&quot;&lt;html&gt;&quot;);</span>
+<span class="fc" id="L109">        response.write(&quot;&lt;head&gt;&quot;);</span>
+<span class="fc" id="L110">        response.write(&quot;&lt;/head&gt;&quot;);</span>
+<span class="fc" id="L111">        response.write(&quot;&lt;body&gt;&quot;);</span>
         
-<span class="fc" id="L108">        response.write(&quot;&lt;A target=\&quot;_blank\&quot; href=\&quot;&quot;);</span>
-<span class="fc" id="L109">        response.write(request.path());</span>
-<span class="fc" id="L110">        response.write(&quot;\&quot;&gt;Click to download heap dump file&lt;/A&gt;&quot;);</span>
+<span class="fc" id="L113">        response.write(&quot;&lt;A target=\&quot;_blank\&quot; href=\&quot;&quot;);</span>
+<span class="fc" id="L114">        response.write(request.path());</span>
+<span class="fc" id="L115">        response.write(&quot;\&quot;&gt;Click to download heap dump file&lt;/A&gt;&quot;);</span>
         
-<span class="fc" id="L112">        response.write(&quot;&lt;/body&gt;&quot;);</span>
-<span class="fc" id="L113">        response.write(&quot;&lt;/html&gt;&quot;);</span>
+<span class="fc" id="L117">        response.write(&quot;&lt;/body&gt;&quot;);</span>
+<span class="fc" id="L118">        response.write(&quot;&lt;/html&gt;&quot;);</span>
         
-<span class="fc" id="L115">        response.end();</span>
+<span class="fc" id="L120">        response.end();</span>
         
       } else {
-<span class="fc" id="L118">        String processName = getProcessName();</span>
+<span class="fc" id="L123">        String processName = getProcessName();</span>
         String timestamp = LocalDateTime
-<span class="fc" id="L120">                .now(Clock.systemUTC())</span>
-<span class="fc" id="L121">                .withNano(0)</span>
-<span class="fc" id="L122">                .toString()</span>
-<span class="fc" id="L123">                .replace(&quot;:&quot;, &quot;-&quot;)</span>
+<span class="fc" id="L125">                .now(Clock.systemUTC())</span>
+<span class="fc" id="L126">                .withNano(0)</span>
+<span class="fc" id="L127">                .toString()</span>
+<span class="fc" id="L128">                .replace(&quot;:&quot;, &quot;-&quot;)</span>
                 ;
 
-<span class="fc" id="L126">        String filename = processName + &quot;-&quot; + timestamp;</span>
+<span class="fc" id="L131">        String filename = processName + &quot;-&quot; + timestamp;</span>
 
         File tempFile;
         try {
-<span class="fc" id="L130">          tempFile = File.createTempFile(filename, &quot;.hprof&quot;);</span>
-<span class="fc" id="L131">          tempFile.delete();</span>
-<span class="nc" id="L132">        } catch (IOException ex) {</span>
-<span class="nc" id="L133">          reportError(&quot;Failed to create temporary file: &quot;, ex, response);</span>
-<span class="nc" id="L134">          return ;</span>
-<span class="fc" id="L135">        }</span>
+<span class="fc" id="L135">          tempFile = File.createTempFile(filename, &quot;.hprof&quot;);</span>
+<span class="fc" id="L136">          tempFile.delete();</span>
+<span class="nc" id="L137">        } catch (IOException ex) {</span>
+<span class="nc" id="L138">          reportError(&quot;Failed to create temporary file: &quot;, ex, response);</span>
+<span class="nc" id="L139">          return ;</span>
+<span class="fc" id="L140">        }</span>
 
         try {
-<span class="fc" id="L138">          HotSpotDiagnosticMXBean mxBean = ManagementFactory.getPlatformMXBean(HotSpotDiagnosticMXBean.class);</span>
-<span class="fc" id="L139">          mxBean.dumpHeap(tempFile.getAbsolutePath(), false);</span>
-<span class="nc" id="L140">        } catch (Throwable ex) {</span>
-<span class="nc" id="L141">          reportError(&quot;Failed to generate heap dump: &quot;, ex, response);</span>
-<span class="nc" id="L142">          return ;</span>
-<span class="fc" id="L143">        }</span>
+<span class="fc" id="L143">          HotSpotDiagnosticMXBean mxBean = ManagementFactory.getPlatformMXBean(HotSpotDiagnosticMXBean.class);</span>
+<span class="fc" id="L144">          mxBean.dumpHeap(tempFile.getAbsolutePath(), false);</span>
+<span class="nc" id="L145">        } catch (Throwable ex) {</span>
+<span class="nc" id="L146">          reportError(&quot;Failed to generate heap dump: &quot;, ex, response);</span>
+<span class="nc" id="L147">          return ;</span>
+<span class="fc" id="L148">        }</span>
 
-<span class="fc" id="L145">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_BINARY);</span>
-<span class="fc" id="L146">        response.putHeader(&quot;Content-Disposition&quot;, &quot;attachment; filename=\&quot;&quot; + filename + &quot;.hprof\&quot;&quot;);</span>
+<span class="fc" id="L150">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_BINARY);</span>
+<span class="fc" id="L151">        response.putHeader(&quot;Content-Disposition&quot;, &quot;attachment; filename=\&quot;&quot; + filename + &quot;.hprof\&quot;&quot;);</span>
 
-<span class="fc" id="L148">        response.sendFile(tempFile.getAbsolutePath(), (ar) -&gt; {</span>
-<span class="pc bpc" id="L149" title="1 of 2 branches missed.">          if (!tempFile.delete()) {</span>
-<span class="nc" id="L150">            logger.error(&quot;Failed to delete temporary files: {}&quot;, tempFile);</span>
+<span class="fc" id="L153">        response.sendFile(tempFile.getAbsolutePath(), (ar) -&gt; {</span>
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">          if (!tempFile.delete()) {</span>
+<span class="nc" id="L155">            logger.error(&quot;Failed to delete temporary files: {}&quot;, tempFile);</span>
           } else {
-<span class="fc" id="L152">            logger.debug(&quot;Deleted temporary file: {}&quot;, tempFile);</span>
+<span class="fc" id="L157">            logger.debug(&quot;Deleted temporary file: {}&quot;, tempFile);</span>
           }
-<span class="fc" id="L154">        });</span>
-<span class="fc" id="L155">      }</span>
+<span class="fc" id="L159">        });</span>
+<span class="fc" id="L160">      }</span>
       
     } else {
-<span class="nc" id="L158">      rc.next();</span>
+<span class="nc" id="L163">      rc.next();</span>
     }
-<span class="fc" id="L160">  }</span>
+<span class="fc" id="L165">  }</span>
 
   static void reportError(String message, Throwable ex, HttpServerResponse response) {
-<span class="fc" id="L163">    logger.error(message, ex);</span>
-<span class="fc" id="L164">    response.setStatusCode(500);</span>
-<span class="fc" id="L165">    response.end(&quot;Failed to generate heap dump&quot;);</span>
-<span class="fc" id="L166">  }</span>
+<span class="fc" id="L168">    logger.error(message, ex);</span>
+<span class="fc" id="L169">    response.setStatusCode(500);</span>
+<span class="fc" id="L170">    response.end(&quot;Failed to generate heap dump&quot;);</span>
+<span class="fc" id="L171">  }</span>
 
   static String getProcessName() {
-<span class="pc" id="L169">    return getProcessName(System.getProperty(&quot;sun.java.command&quot;), () -&gt; ProcessHandle.current());</span>
+<span class="pc" id="L174">    return getProcessName(System.getProperty(&quot;sun.java.command&quot;), () -&gt; ProcessHandle.current());</span>
   }
   
   static String getProcessName(String sunJavaCommand, Supplier&lt;ProcessHandle&gt; processHandleSupplier) {
-<span class="fc" id="L173">    String processName = sunJavaCommand;</span>
-<span class="fc bfc" id="L174" title="All 2 branches covered.">    int idx = processName == null ? 0 : processName.indexOf(&quot; &quot;);</span>
-<span class="fc bfc" id="L175" title="All 2 branches covered.">    if (idx &gt; 0) {</span>
-<span class="fc" id="L176">      processName = processName.substring(0, idx);</span>
+<span class="fc" id="L178">    String processName = sunJavaCommand;</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">    int idx = processName == null ? 0 : processName.indexOf(&quot; &quot;);</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">    if (idx &gt; 0) {</span>
+<span class="fc" id="L181">      processName = processName.substring(0, idx);</span>
     }
-<span class="fc bfc" id="L178" title="All 4 branches covered.">    if (processName == null || processName.isEmpty()) {</span>
-<span class="fc" id="L179">      processName = processHandleSupplier.get().info().command().orElse(&quot;heap&quot;);</span>
+<span class="fc bfc" id="L183" title="All 4 branches covered.">    if (processName == null || processName.isEmpty()) {</span>
+<span class="fc" id="L184">      processName = processHandleSupplier.get().info().command().orElse(&quot;heap&quot;);</span>
     }
-<span class="fc" id="L181">    idx = processName.lastIndexOf(&quot;/&quot;);</span>
-<span class="fc bfc" id="L182" title="All 2 branches covered.">    if (idx &gt; 0) {</span>
-<span class="fc" id="L183">      processName = processName.substring(idx + 1);</span>
+<span class="fc" id="L186">    idx = processName.lastIndexOf(&quot;/&quot;);</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">    if (idx &gt; 0) {</span>
+<span class="fc" id="L188">      processName = processName.substring(idx + 1);</span>
     }
-<span class="fc" id="L185">    idx = processName.lastIndexOf(&quot;\\&quot;);</span>
-<span class="fc bfc" id="L186" title="All 2 branches covered.">    if (idx &gt; 0) {</span>
-<span class="fc" id="L187">      processName = processName.substring(idx + 1);</span>
+<span class="fc" id="L190">    idx = processName.lastIndexOf(&quot;\\&quot;);</span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">    if (idx &gt; 0) {</span>
+<span class="fc" id="L192">      processName = processName.substring(idx + 1);</span>
     }
-<span class="fc" id="L189">    idx = processName.lastIndexOf(&quot;.jar&quot;);</span>
-<span class="fc bfc" id="L190" title="All 2 branches covered.">    if (idx &gt; 0) {</span>
-<span class="fc" id="L191">      processName = processName.substring(0, idx);</span>
+<span class="fc" id="L194">    idx = processName.lastIndexOf(&quot;.jar&quot;);</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">    if (idx &gt; 0) {</span>
+<span class="fc" id="L196">      processName = processName.substring(0, idx);</span>
     }
-<span class="fc" id="L193">    return processName;</span>
+<span class="fc" id="L198">    return processName;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

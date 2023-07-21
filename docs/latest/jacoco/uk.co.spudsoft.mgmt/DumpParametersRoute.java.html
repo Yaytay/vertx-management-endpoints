@@ -36,6 +36,11 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class DumpParametersRoute implements Handler&lt;RoutingContext&gt; {
 
+  /**
+   * The path at which the standardDeploy method will put the router.
+   */
+  public static final String PATH = &quot;parameters&quot;;
+  
   private static final String TYPE_JSON = &quot;application/json&quot;;
   private static final String TYPE_HTML = &quot;text/html&quot;;
   private static final String TYPE_PLAIN = &quot;text/plain&quot;;
@@ -47,9 +52,9 @@ public class DumpParametersRoute implements Handler&lt;RoutingContext&gt; {
    * @param reference to the service, as a single object that will be JSON encoded.
    * The reference is passed in as an AtomicReference so that it may be changed.
    */
-<span class="fc" id="L50">  public DumpParametersRoute(AtomicReference&lt;Object&gt; reference) {</span>
-<span class="fc" id="L51">    this.reference = reference;</span>
-<span class="fc" id="L52">  }</span>
+<span class="fc" id="L55">  public DumpParametersRoute(AtomicReference&lt;Object&gt; reference) {</span>
+<span class="fc" id="L56">    this.reference = reference;</span>
+<span class="fc" id="L57">  }</span>
 
   /**
    * Deploy the route to the router passed in at the normal endpoint.
@@ -59,14 +64,14 @@ public class DumpParametersRoute implements Handler&lt;RoutingContext&gt; {
    * @param router The router that this handler will be attached to.
    */
   public void standardDeploy(Router router) {
-<span class="fc" id="L62">    router.route(HttpMethod.GET, &quot;/dumpparams&quot;)</span>
-<span class="fc" id="L63">            .handler(this::handle)</span>
-<span class="fc" id="L64">            .setName(&quot;Parameters&quot;)</span>
-<span class="fc" id="L65">            .produces(TYPE_JSON)</span>
-<span class="fc" id="L66">            .produces(TYPE_HTML)</span>
-<span class="fc" id="L67">            .produces(TYPE_PLAIN)</span>
+<span class="fc" id="L67">    router.route(HttpMethod.GET, &quot;/&quot; + PATH)</span>
+<span class="fc" id="L68">            .handler(this::handle)</span>
+<span class="fc" id="L69">            .setName(&quot;Parameters&quot;)</span>
+<span class="fc" id="L70">            .produces(TYPE_JSON)</span>
+<span class="fc" id="L71">            .produces(TYPE_HTML)</span>
+<span class="fc" id="L72">            .produces(TYPE_PLAIN)</span>
             ;
-<span class="fc" id="L69">  }</span>
+<span class="fc" id="L74">  }</span>
   
   /**
    * Factory method to do standard deployment on newly constructed route.
@@ -78,56 +83,56 @@ public class DumpParametersRoute implements Handler&lt;RoutingContext&gt; {
    * The reference is passed in as an AtomicReference so that it may be changed.
    */
   public static void createAndDeploy(Router router, AtomicReference&lt;Object&gt; reference) {
-<span class="fc" id="L81">    DumpParametersRoute route = new DumpParametersRoute(reference);</span>
-<span class="fc" id="L82">    route.standardDeploy(router);</span>
-<span class="fc" id="L83">  }  </span>
+<span class="fc" id="L86">    DumpParametersRoute route = new DumpParametersRoute(reference);</span>
+<span class="fc" id="L87">    route.standardDeploy(router);</span>
+<span class="fc" id="L88">  }  </span>
   
   @Override
   public void handle(RoutingContext rc) {
     
-<span class="fc" id="L88">    HttpServerRequest request = rc.request();</span>
+<span class="fc" id="L93">    HttpServerRequest request = rc.request();</span>
     
-<span class="fc" id="L90">    Object value = reference.get();</span>
+<span class="fc" id="L95">    Object value = reference.get();</span>
     
-<span class="pc bpc" id="L92" title="1 of 2 branches missed.">    if (request.method() == HttpMethod.GET) {</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">    if (request.method() == HttpMethod.GET) {</span>
       
-<span class="fc bfc" id="L94" title="All 2 branches covered.">      if (TYPE_JSON.equals(rc.getAcceptableContentType())) {</span>
-<span class="fc" id="L95">        HttpServerResponse response = rc.response();</span>
-<span class="fc" id="L96">        response.setStatusCode(200);</span>
-<span class="fc" id="L97">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_JSON);</span>
-<span class="fc" id="L98">        response.end(Json.encode(value));</span>
-<span class="fc bfc" id="L99" title="All 2 branches covered.">      } else if (TYPE_HTML.equals(rc.getAcceptableContentType())) {</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">      if (TYPE_JSON.equals(rc.getAcceptableContentType())) {</span>
 <span class="fc" id="L100">        HttpServerResponse response = rc.response();</span>
 <span class="fc" id="L101">        response.setStatusCode(200);</span>
-<span class="fc" id="L102">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_HTML);</span>
-<span class="fc" id="L103">        response.setChunked(true);</span>
+<span class="fc" id="L102">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_JSON);</span>
+<span class="fc" id="L103">        response.end(Json.encode(value));</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">      } else if (TYPE_HTML.equals(rc.getAcceptableContentType())) {</span>
+<span class="fc" id="L105">        HttpServerResponse response = rc.response();</span>
+<span class="fc" id="L106">        response.setStatusCode(200);</span>
+<span class="fc" id="L107">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_HTML);</span>
+<span class="fc" id="L108">        response.setChunked(true);</span>
         
-<span class="fc" id="L105">        response.write(&quot;&lt;html&gt;&quot;);</span>
-<span class="fc" id="L106">        response.write(&quot;&lt;head&gt;&quot;);</span>
-<span class="fc" id="L107">        response.write(&quot;&lt;/head&gt;&quot;);</span>
-<span class="fc" id="L108">        response.write(&quot;&lt;body&gt;&quot;);</span>
+<span class="fc" id="L110">        response.write(&quot;&lt;html&gt;&quot;);</span>
+<span class="fc" id="L111">        response.write(&quot;&lt;head&gt;&quot;);</span>
+<span class="fc" id="L112">        response.write(&quot;&lt;/head&gt;&quot;);</span>
+<span class="fc" id="L113">        response.write(&quot;&lt;body&gt;&quot;);</span>
         
-<span class="fc" id="L110">        response.write(&quot;&lt;pre&gt;&quot;);</span>
+<span class="fc" id="L115">        response.write(&quot;&lt;pre&gt;&quot;);</span>
         
-<span class="fc" id="L112">        response.write(Json.encodePrettily(value));</span>
+<span class="fc" id="L117">        response.write(Json.encodePrettily(value));</span>
         
-<span class="fc" id="L114">        response.write(&quot;&lt;/pre&gt;&quot;);</span>
+<span class="fc" id="L119">        response.write(&quot;&lt;/pre&gt;&quot;);</span>
         
-<span class="fc" id="L116">        response.write(&quot;&lt;/body&gt;&quot;);</span>
-<span class="fc" id="L117">        response.write(&quot;&lt;/html&gt;&quot;);</span>
+<span class="fc" id="L121">        response.write(&quot;&lt;/body&gt;&quot;);</span>
+<span class="fc" id="L122">        response.write(&quot;&lt;/html&gt;&quot;);</span>
         
-<span class="fc" id="L119">        response.end();</span>
-<span class="fc" id="L120">      } else {</span>
-<span class="fc" id="L121">        HttpServerResponse response = rc.response();</span>
-<span class="fc" id="L122">        response.setStatusCode(200);</span>
-<span class="fc" id="L123">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_PLAIN);</span>
+<span class="fc" id="L124">        response.end();</span>
+<span class="fc" id="L125">      } else {</span>
+<span class="fc" id="L126">        HttpServerResponse response = rc.response();</span>
+<span class="fc" id="L127">        response.setStatusCode(200);</span>
+<span class="fc" id="L128">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_PLAIN);</span>
         
-<span class="fc" id="L125">        response.end(Json.encodePrettily(value));</span>
-<span class="fc" id="L126">      }</span>
+<span class="fc" id="L130">        response.end(Json.encodePrettily(value));</span>
+<span class="fc" id="L131">      }</span>
     } else {
-<span class="nc" id="L128">      rc.next();</span>
+<span class="nc" id="L133">      rc.next();</span>
     }
-<span class="fc" id="L130">  }</span>
+<span class="fc" id="L135">  }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

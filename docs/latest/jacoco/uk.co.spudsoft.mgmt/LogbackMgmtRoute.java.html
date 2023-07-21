@@ -62,19 +62,24 @@ import org.slf4j.LoggerFactory;
  */
 public class LogbackMgmtRoute implements Handler&lt;RoutingContext&gt; {
 
-  @SuppressWarnings(&quot;constantname&quot;)
-<span class="fc" id="L66">  private static final Logger logger = LoggerFactory.getLogger(LogbackMgmtRoute.class);</span>
+  /**
+   * The path at which the standardDeploy method will put the router.
+   */
+  public static final String PATH = &quot;logback&quot;;
 
-<span class="fc" id="L68">  private static final ParsedHeaderValue HTML = new ParsableMIMEValue(&quot;text/html&quot;);</span>
-<span class="fc" id="L69">  private static final ParsedHeaderValue JSON = new ParsableMIMEValue(&quot;application/json&quot;);</span>
+  @SuppressWarnings(&quot;constantname&quot;)
+<span class="fc" id="L71">  private static final Logger logger = LoggerFactory.getLogger(LogbackMgmtRoute.class);</span>
+
+<span class="fc" id="L73">  private static final ParsedHeaderValue HTML = new ParsableMIMEValue(&quot;text/html&quot;);</span>
+<span class="fc" id="L74">  private static final ParsedHeaderValue JSON = new ParsableMIMEValue(&quot;application/json&quot;);</span>
   
   private String htmlContents;    
 
   /**
    * Constructor.
    */
-<span class="fc" id="L76">  public LogbackMgmtRoute() {</span>
-<span class="fc" id="L77">  }</span>
+<span class="fc" id="L81">  public LogbackMgmtRoute() {</span>
+<span class="fc" id="L82">  }</span>
   
   /**
    * Deploy the route to the router passed in at the normal endpoint.
@@ -84,9 +89,9 @@ public class LogbackMgmtRoute implements Handler&lt;RoutingContext&gt; {
    * @param router The router that this handler will be attached to.
    */
   public void standardDeploy(Router router) {
-<span class="fc" id="L87">    router.route(HttpMethod.GET, &quot;/logback&quot;).handler(this::handle).setName(&quot;Logback Management&quot;);</span>
-<span class="fc" id="L88">    router.route(HttpMethod.PUT, &quot;/logback/:logger&quot;).handler(this::handle).setName(&quot;Logback Management&quot;);</span>
-<span class="fc" id="L89">  }</span>
+<span class="fc" id="L92">    router.route(HttpMethod.GET, &quot;/&quot; + PATH).handler(this::handle).setName(&quot;Logback Management&quot;);</span>
+<span class="fc" id="L93">    router.route(HttpMethod.PUT, &quot;/&quot; + PATH + &quot;/:logger&quot;).handler(this::handle).setName(&quot;Logback Management&quot;);</span>
+<span class="fc" id="L94">  }</span>
   
   /**
    * Factory method to do standard deployment on newly constructed route.
@@ -96,42 +101,42 @@ public class LogbackMgmtRoute implements Handler&lt;RoutingContext&gt; {
    * @param router The router that this handler will be attached to.
    */
   public static void createAndDeploy(Router router) {
-<span class="fc" id="L99">    LogbackMgmtRoute route = new LogbackMgmtRoute();</span>
-<span class="fc" id="L100">    route.standardDeploy(router);</span>
-<span class="fc" id="L101">  }</span>
+<span class="fc" id="L104">    LogbackMgmtRoute route = new LogbackMgmtRoute();</span>
+<span class="fc" id="L105">    route.standardDeploy(router);</span>
+<span class="fc" id="L106">  }</span>
 
   
   @Override
   public void handle(RoutingContext event) {
-<span class="fc" id="L106">    HttpServerRequest request = event.request();</span>
-<span class="fc bfc" id="L107" title="All 2 branches covered.">    if (request.method() == HttpMethod.GET) {</span>
-<span class="fc bfc" id="L108" title="All 2 branches covered.">      if (wantsHtml(event)) {</span>
-<span class="fc" id="L109">        getHtml(request, event.response());</span>
+<span class="fc" id="L111">    HttpServerRequest request = event.request();</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">    if (request.method() == HttpMethod.GET) {</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">      if (wantsHtml(event)) {</span>
+<span class="fc" id="L114">        getHtml(request, event.response());</span>
       } else {
-<span class="fc" id="L111">        getLogLevelsJson(event.response());</span>
+<span class="fc" id="L116">        getLogLevelsJson(event.response());</span>
       }
-<span class="pc bpc" id="L113" title="1 of 2 branches missed.">    } else if (request.method() == HttpMethod.PUT) {</span>
-<span class="fc" id="L114">      updateLogLevel(event.pathParam(&quot;logger&quot;), request, event.response());</span>
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">    } else if (request.method() == HttpMethod.PUT) {</span>
+<span class="fc" id="L119">      updateLogLevel(event.pathParam(&quot;logger&quot;), request, event.response());</span>
     } else {
-<span class="nc" id="L116">      event.next();</span>
+<span class="nc" id="L121">      event.next();</span>
     }
-<span class="fc" id="L118">  }</span>
+<span class="fc" id="L123">  }</span>
   
   static boolean wantsHtml(RoutingContext event) {
     try {
-<span class="fc" id="L122">      ParsedHeaderValues phv = event.parsedHeaders();</span>
-<span class="fc" id="L123">      List&lt;MIMEHeader&gt; types = phv.accept();</span>
-<span class="pc bpc" id="L124" title="1 of 2 branches missed.">      for (MIMEHeader type : types) {</span>
-<span class="fc bfc" id="L125" title="All 2 branches covered.">        if (type.isMatchedBy(JSON)) {</span>
-<span class="fc" id="L126">          return false;</span>
-<span class="pc bpc" id="L127" title="1 of 2 branches missed.">        } else if (type.isMatchedBy(HTML)) {</span>
-<span class="fc" id="L128">          return true;</span>
+<span class="fc" id="L127">      ParsedHeaderValues phv = event.parsedHeaders();</span>
+<span class="fc" id="L128">      List&lt;MIMEHeader&gt; types = phv.accept();</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">      for (MIMEHeader type : types) {</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        if (type.isMatchedBy(JSON)) {</span>
+<span class="fc" id="L131">          return false;</span>
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">        } else if (type.isMatchedBy(HTML)) {</span>
+<span class="fc" id="L133">          return true;</span>
         }
-<span class="nc" id="L130">      }    </span>
-<span class="nc" id="L131">      return false;</span>
-<span class="nc" id="L132">    } catch (Throwable ex) {</span>
-<span class="nc" id="L133">      logger.debug(&quot;Failed to determine whether request wants HTML: &quot;, ex);</span>
-<span class="nc" id="L134">      return false;</span>
+<span class="nc" id="L135">      }    </span>
+<span class="nc" id="L136">      return false;</span>
+<span class="nc" id="L137">    } catch (Throwable ex) {</span>
+<span class="nc" id="L138">      logger.debug(&quot;Failed to determine whether request wants HTML: &quot;, ex);</span>
+<span class="nc" id="L139">      return false;</span>
     }
   }
 
@@ -143,41 +148,41 @@ public class LogbackMgmtRoute implements Handler&lt;RoutingContext&gt; {
    * @return the current log levels as a JsonObject.
    */
   public static JsonObject getLogLevels() {
-<span class="fc" id="L146">    LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();</span>
-<span class="fc" id="L147">    JsonObject json = new JsonObject();</span>
+<span class="fc" id="L151">    LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();</span>
+<span class="fc" id="L152">    JsonObject json = new JsonObject();</span>
 
-<span class="fc" id="L149">    JsonObject appenders = new JsonObject();</span>
-<span class="fc" id="L150">    json.put(&quot;appenders&quot;, appenders);</span>
-<span class="fc" id="L151">    JsonObject loggers = new JsonObject();</span>
-<span class="fc" id="L152">    json.put(&quot;loggers&quot;, loggers);</span>
-<span class="fc bfc" id="L153" title="All 2 branches covered.">    for (ch.qos.logback.classic.Logger curLogger : loggerContext.getLoggerList()) {</span>
-<span class="fc" id="L154">      Iterator&lt;Appender&lt;ILoggingEvent&gt;&gt; appenderIterator = curLogger.iteratorForAppenders();</span>
-<span class="fc" id="L155">      List&lt;String&gt; appendersForLogger = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L156" title="All 2 branches covered.">      while (appenderIterator.hasNext()) {</span>
-<span class="fc" id="L157">        Appender&lt;ILoggingEvent&gt; appender = appenderIterator.next();</span>
-<span class="fc" id="L158">        appendersForLogger.add(appender.getName());</span>
-<span class="fc bfc" id="L159" title="All 2 branches covered.">        if (!appenders.containsKey(appender.getName())) {</span>
-<span class="fc" id="L160">          JsonObject jsonAppender = new JsonObject();</span>
-<span class="fc" id="L161">          jsonAppender.put(&quot;name&quot;, appender.getName());</span>
-<span class="fc" id="L162">          jsonAppender.put(&quot;type&quot;, appender.getClass().toString());</span>
-<span class="fc" id="L163">          jsonAppender.put(&quot;started&quot;, appender.isStarted());</span>
-<span class="fc" id="L164">          appenders.put(appender.getName(), jsonAppender);</span>
+<span class="fc" id="L154">    JsonObject appenders = new JsonObject();</span>
+<span class="fc" id="L155">    json.put(&quot;appenders&quot;, appenders);</span>
+<span class="fc" id="L156">    JsonObject loggers = new JsonObject();</span>
+<span class="fc" id="L157">    json.put(&quot;loggers&quot;, loggers);</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">    for (ch.qos.logback.classic.Logger curLogger : loggerContext.getLoggerList()) {</span>
+<span class="fc" id="L159">      Iterator&lt;Appender&lt;ILoggingEvent&gt;&gt; appenderIterator = curLogger.iteratorForAppenders();</span>
+<span class="fc" id="L160">      List&lt;String&gt; appendersForLogger = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">      while (appenderIterator.hasNext()) {</span>
+<span class="fc" id="L162">        Appender&lt;ILoggingEvent&gt; appender = appenderIterator.next();</span>
+<span class="fc" id="L163">        appendersForLogger.add(appender.getName());</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">        if (!appenders.containsKey(appender.getName())) {</span>
+<span class="fc" id="L165">          JsonObject jsonAppender = new JsonObject();</span>
+<span class="fc" id="L166">          jsonAppender.put(&quot;name&quot;, appender.getName());</span>
+<span class="fc" id="L167">          jsonAppender.put(&quot;type&quot;, appender.getClass().toString());</span>
+<span class="fc" id="L168">          jsonAppender.put(&quot;started&quot;, appender.isStarted());</span>
+<span class="fc" id="L169">          appenders.put(appender.getName(), jsonAppender);</span>
         }
-<span class="fc" id="L166">      }</span>
-<span class="fc" id="L167">      JsonObject jsonLogger = new JsonObject();</span>
-<span class="fc" id="L168">      jsonLogger.put(&quot;name&quot;, curLogger.getName());</span>
-<span class="fc bfc" id="L169" title="All 2 branches covered.">      if (curLogger.getLevel() != null) {</span>
-<span class="fc" id="L170">        jsonLogger.put(&quot;level&quot;, curLogger.getLevel().levelStr);</span>
+<span class="fc" id="L171">      }</span>
+<span class="fc" id="L172">      JsonObject jsonLogger = new JsonObject();</span>
+<span class="fc" id="L173">      jsonLogger.put(&quot;name&quot;, curLogger.getName());</span>
+<span class="fc bfc" id="L174" title="All 2 branches covered.">      if (curLogger.getLevel() != null) {</span>
+<span class="fc" id="L175">        jsonLogger.put(&quot;level&quot;, curLogger.getLevel().levelStr);</span>
       }
-<span class="pc bpc" id="L172" title="1 of 2 branches missed.">      if (curLogger.getEffectiveLevel() != null) {</span>
-<span class="fc" id="L173">        jsonLogger.put(&quot;effectiveLevel&quot;, curLogger.getEffectiveLevel().levelStr);</span>
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">      if (curLogger.getEffectiveLevel() != null) {</span>
+<span class="fc" id="L178">        jsonLogger.put(&quot;effectiveLevel&quot;, curLogger.getEffectiveLevel().levelStr);</span>
       }
-<span class="fc" id="L175">      jsonLogger.put(&quot;additive&quot;, curLogger.isAdditive());</span>
-<span class="fc" id="L176">      jsonLogger.put(&quot;appenders&quot;, appendersForLogger);</span>
-<span class="fc" id="L177">      loggers.put(curLogger.getName(), jsonLogger);</span>
-<span class="fc" id="L178">    }</span>
+<span class="fc" id="L180">      jsonLogger.put(&quot;additive&quot;, curLogger.isAdditive());</span>
+<span class="fc" id="L181">      jsonLogger.put(&quot;appenders&quot;, appendersForLogger);</span>
+<span class="fc" id="L182">      loggers.put(curLogger.getName(), jsonLogger);</span>
+<span class="fc" id="L183">    }</span>
     
-<span class="fc" id="L180">    return json;</span>
+<span class="fc" id="L185">    return json;</span>
   }
 
   /**
@@ -190,68 +195,68 @@ public class LogbackMgmtRoute implements Handler&lt;RoutingContext&gt; {
    * @param levelName The desired target level (will default to Debug if not recognised as a valid level).
    */
   public static void setLogLevel(String loggerName, String levelName) {
-<span class="fc" id="L193">    Object loggerFactory = LoggerFactory.getILoggerFactory();</span>
-<span class="fc" id="L194">    ch.qos.logback.classic.Logger lg = null;</span>
-<span class="pc bpc" id="L195" title="1 of 2 branches missed.">    if (loggerFactory instanceof LoggerContext) {</span>
-<span class="fc" id="L196">      LoggerContext lc = (LoggerContext) loggerFactory;</span>
-<span class="fc" id="L197">      lg = lc.exists(loggerName);</span>
+<span class="fc" id="L198">    Object loggerFactory = LoggerFactory.getILoggerFactory();</span>
+<span class="fc" id="L199">    ch.qos.logback.classic.Logger lg = null;</span>
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">    if (loggerFactory instanceof LoggerContext) {</span>
+<span class="fc" id="L201">      LoggerContext lc = (LoggerContext) loggerFactory;</span>
+<span class="fc" id="L202">      lg = lc.exists(loggerName);</span>
     }
-<span class="fc bfc" id="L199" title="All 2 branches covered.">    if (lg != null) {</span>
-<span class="fc" id="L200">      Level level = Level.toLevel(levelName);</span>
-<span class="fc" id="L201">      logger.info(&quot;Changing {} log level to {}&quot;, lg, level);</span>
-<span class="fc" id="L202">      lg.setLevel(level);</span>
-<span class="fc" id="L203">    } else {</span>
-<span class="fc" id="L204">      logger.info(&quot;Not changing the level of {} because it does not already exist&quot;, loggerName);</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">    if (lg != null) {</span>
+<span class="fc" id="L205">      Level level = Level.toLevel(levelName);</span>
+<span class="fc" id="L206">      logger.info(&quot;Changing {} log level to {}&quot;, lg, level);</span>
+<span class="fc" id="L207">      lg.setLevel(level);</span>
+<span class="fc" id="L208">    } else {</span>
+<span class="fc" id="L209">      logger.info(&quot;Not changing the level of {} because it does not already exist&quot;, loggerName);</span>
     }
-<span class="fc" id="L206">  }</span>
+<span class="fc" id="L211">  }</span>
   
   private void getLogLevelsJson(HttpServerResponse response) {
     try {
-<span class="fc" id="L210">      JsonObject json = getLogLevels();</span>
-<span class="fc" id="L211">      response.putHeader(HttpHeaderNames.CONTENT_TYPE, &quot;application/json&quot;);</span>
-<span class="fc" id="L212">      response.setStatusCode(200);</span>
-<span class="fc" id="L213">      response.end(json.toBuffer());</span>
-<span class="nc" id="L214">    } catch (Throwable ex) {</span>
-<span class="nc" id="L215">      logger.error(&quot;Failed to get logback configuration: &quot;, ex);</span>
-<span class="nc" id="L216">      response.setStatusCode(500);</span>
-<span class="nc" id="L217">      response.end();</span>
-<span class="fc" id="L218">    }</span>
-<span class="fc" id="L219">  }</span>
+<span class="fc" id="L215">      JsonObject json = getLogLevels();</span>
+<span class="fc" id="L216">      response.putHeader(HttpHeaderNames.CONTENT_TYPE, &quot;application/json&quot;);</span>
+<span class="fc" id="L217">      response.setStatusCode(200);</span>
+<span class="fc" id="L218">      response.end(json.toBuffer());</span>
+<span class="nc" id="L219">    } catch (Throwable ex) {</span>
+<span class="nc" id="L220">      logger.error(&quot;Failed to get logback configuration: &quot;, ex);</span>
+<span class="nc" id="L221">      response.setStatusCode(500);</span>
+<span class="nc" id="L222">      response.end();</span>
+<span class="fc" id="L223">    }</span>
+<span class="fc" id="L224">  }</span>
   
   private void getHtml(HttpServerRequest request, HttpServerResponse response) {
-<span class="fc" id="L222">    Future&lt;String&gt; loadFuture = Future.succeededFuture(htmlContents);</span>
-<span class="fc bfc" id="L223" title="All 2 branches covered.">    if (loadFuture.result() == null) {</span>
-<span class="fc" id="L224">      loadFuture = Vertx.currentContext().executeBlocking(promise -&gt; {</span>
-<span class="fc" id="L225">        try (InputStream stream = this.getClass().getResourceAsStream(&quot;/logback.html&quot;)) {</span>
-<span class="fc" id="L226">          String newHtml = new String(stream.readAllBytes(), StandardCharsets.UTF_8);</span>
-<span class="fc" id="L227">          this.htmlContents = newHtml;</span>
-<span class="fc" id="L228">          promise.complete(newHtml);</span>
-<span class="nc" id="L229">        } catch (Throwable ex) {</span>
-<span class="nc" id="L230">          logger.error(&quot;Failed to load HTML: &quot;, ex);</span>
-<span class="nc" id="L231">          getLogLevelsJson(response);</span>
-<span class="fc" id="L232">        }</span>
-<span class="fc" id="L233">      });</span>
+<span class="fc" id="L227">    Future&lt;String&gt; loadFuture = Future.succeededFuture(htmlContents);</span>
+<span class="fc bfc" id="L228" title="All 2 branches covered.">    if (loadFuture.result() == null) {</span>
+<span class="fc" id="L229">      loadFuture = Vertx.currentContext().executeBlocking(promise -&gt; {</span>
+<span class="fc" id="L230">        try (InputStream stream = this.getClass().getResourceAsStream(&quot;/logback.html&quot;)) {</span>
+<span class="fc" id="L231">          String newHtml = new String(stream.readAllBytes(), StandardCharsets.UTF_8);</span>
+<span class="fc" id="L232">          this.htmlContents = newHtml;</span>
+<span class="fc" id="L233">          promise.complete(newHtml);</span>
+<span class="nc" id="L234">        } catch (Throwable ex) {</span>
+<span class="nc" id="L235">          logger.error(&quot;Failed to load HTML: &quot;, ex);</span>
+<span class="nc" id="L236">          getLogLevelsJson(response);</span>
+<span class="fc" id="L237">        }</span>
+<span class="fc" id="L238">      });</span>
     }
-<span class="fc" id="L235">    loadFuture.map(html -&gt; html.replaceAll(&quot;URL&quot;, &quot;'&quot; + request.absoluteURI() + &quot;'&quot;))</span>
-<span class="fc" id="L236">            .compose(html -&gt; {</span>
-<span class="fc" id="L237">              response.putHeader(HttpHeaderNames.CONTENT_TYPE, &quot;text/html&quot;);</span>
-<span class="fc" id="L238">              response.setStatusCode(200);</span>
-<span class="fc" id="L239">              response.end(html);</span>
-<span class="fc" id="L240">              return Future.succeededFuture();</span>
+<span class="fc" id="L240">    loadFuture.map(html -&gt; html.replaceAll(&quot;URL&quot;, &quot;'&quot; + request.absoluteURI() + &quot;'&quot;))</span>
+<span class="fc" id="L241">            .compose(html -&gt; {</span>
+<span class="fc" id="L242">              response.putHeader(HttpHeaderNames.CONTENT_TYPE, &quot;text/html&quot;);</span>
+<span class="fc" id="L243">              response.setStatusCode(200);</span>
+<span class="fc" id="L244">              response.end(html);</span>
+<span class="fc" id="L245">              return Future.succeededFuture();</span>
             });
-<span class="fc" id="L242">  }</span>
+<span class="fc" id="L247">  }</span>
 
   private void updateLogLevel(String loggerName, HttpServerRequest request, HttpServerResponse response) {
-<span class="fc" id="L245">    request.body()</span>
-<span class="fc" id="L246">            .compose(buffer -&gt; {</span>
-<span class="fc" id="L247">              JsonObject jo = buffer.toJsonObject();</span>
-<span class="fc" id="L248">              String newLevel = jo.getString(&quot;level&quot;);</span>
-<span class="fc" id="L249">              setLogLevel(loggerName, newLevel);</span>
-<span class="fc" id="L250">              getLogLevelsJson(response);</span>
-<span class="fc" id="L251">              return Future.succeededFuture();</span>
+<span class="fc" id="L250">    request.body()</span>
+<span class="fc" id="L251">            .compose(buffer -&gt; {</span>
+<span class="fc" id="L252">              JsonObject jo = buffer.toJsonObject();</span>
+<span class="fc" id="L253">              String newLevel = jo.getString(&quot;level&quot;);</span>
+<span class="fc" id="L254">              setLogLevel(loggerName, newLevel);</span>
+<span class="fc" id="L255">              getLogLevelsJson(response);</span>
+<span class="fc" id="L256">              return Future.succeededFuture();</span>
             });
     
-<span class="fc" id="L254">  }</span>
+<span class="fc" id="L259">  }</span>
   
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
