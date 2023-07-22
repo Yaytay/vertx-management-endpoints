@@ -43,15 +43,11 @@ public class DumpSysPropsRoute implements Handler&lt;RoutingContext&gt; {
    */
   public static final String PATH = &quot;sysprops&quot;;
   
-  private static final String TYPE_JSON = &quot;application/json&quot;;
-  private static final String TYPE_HTML = &quot;text/html&quot;;
-  private static final String TYPE_PLAIN = &quot;text/plain&quot;;
-  
   /**
    * Constructor.
    */
-<span class="fc" id="L53">  public DumpSysPropsRoute() {</span>
-<span class="fc" id="L54">  }</span>
+<span class="fc" id="L49">  public DumpSysPropsRoute() {</span>
+<span class="fc" id="L50">  }</span>
 
   /**
    * Deploy the route to the router passed in at the normal endpoint.
@@ -61,14 +57,14 @@ public class DumpSysPropsRoute implements Handler&lt;RoutingContext&gt; {
    * @param router The router that this handler will be attached to.
    */
   public void standardDeploy(Router router) {
-<span class="fc" id="L64">    router.route(HttpMethod.GET, &quot;/&quot; + PATH)</span>
-<span class="fc" id="L65">            .handler(this::handle)</span>
-<span class="fc" id="L66">            .setName(&quot;System Properties&quot;)</span>
-<span class="fc" id="L67">            .produces(TYPE_JSON)</span>
-<span class="fc" id="L68">            .produces(TYPE_HTML)</span>
-<span class="fc" id="L69">            .produces(TYPE_PLAIN)</span>
+<span class="fc" id="L60">    router.route(HttpMethod.GET, &quot;/&quot; + PATH)</span>
+<span class="fc" id="L61">            .handler(this::handle)</span>
+<span class="fc" id="L62">            .setName(&quot;System Properties&quot;)</span>
+<span class="fc" id="L63">            .produces(ContentTypes.TYPE_JSON)</span>
+<span class="fc" id="L64">            .produces(ContentTypes.TYPE_HTML)</span>
+<span class="fc" id="L65">            .produces(ContentTypes.TYPE_PLAIN)</span>
             ;
-<span class="fc" id="L71">  }</span>
+<span class="fc" id="L67">  }</span>
   
   /**
    * Factory method to do standard deployment on newly constructed route.
@@ -78,28 +74,28 @@ public class DumpSysPropsRoute implements Handler&lt;RoutingContext&gt; {
    * @param router The router that this handler will be attached to.
    */
   public static void createAndDeploy(Router router) {
-<span class="fc" id="L81">    DumpSysPropsRoute route = new DumpSysPropsRoute();</span>
-<span class="fc" id="L82">    route.standardDeploy(router);</span>
-<span class="fc" id="L83">  }</span>
+<span class="fc" id="L77">    DumpSysPropsRoute route = new DumpSysPropsRoute();</span>
+<span class="fc" id="L78">    route.standardDeploy(router);</span>
+<span class="fc" id="L79">  }</span>
   
   static class Property {
     
     private final String name;
     private final String value;
 
-<span class="fc" id="L90">    Property(String name, String value) {</span>
-<span class="fc" id="L91">      this.name = name;</span>
-<span class="fc" id="L92">      this.value = value;</span>
-<span class="fc" id="L93">    }</span>
+<span class="fc" id="L86">    Property(String name, String value) {</span>
+<span class="fc" id="L87">      this.name = name;</span>
+<span class="fc" id="L88">      this.value = value;</span>
+<span class="fc" id="L89">    }</span>
 
     @JsonProperty(value = &quot;name&quot;)
     String getName() {
-<span class="fc" id="L97">      return name;</span>
+<span class="fc" id="L93">      return name;</span>
     }
 
     @JsonProperty(value = &quot;value&quot;)
     String getValue() {
-<span class="fc" id="L102">      return value;</span>
+<span class="fc" id="L98">      return value;</span>
     }
   }
   
@@ -107,90 +103,92 @@ public class DumpSysPropsRoute implements Handler&lt;RoutingContext&gt; {
   @Override
   public void handle(RoutingContext rc) {
     
-<span class="fc" id="L110">    HttpServerRequest request = rc.request();</span>
+<span class="fc" id="L106">    HttpServerRequest request = rc.request();</span>
     
-<span class="pc bpc" id="L112" title="1 of 2 branches missed.">    if (request.method() == HttpMethod.GET) {</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">    if (request.method() == HttpMethod.GET) {</span>
       
-<span class="fc" id="L114">      List&lt;Property&gt; properties = getProperties();</span>
+<span class="fc" id="L110">      List&lt;Property&gt; properties = getProperties();</span>
       
-<span class="fc bfc" id="L116" title="All 2 branches covered.">      if (TYPE_JSON.equals(rc.getAcceptableContentType())) {</span>
-<span class="fc" id="L117">        HttpServerResponse response = rc.response();</span>
-<span class="fc" id="L118">        response.setStatusCode(200);</span>
-<span class="fc" id="L119">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_JSON);</span>
-<span class="fc" id="L120">        response.end(Json.encode(properties));</span>
-<span class="fc bfc" id="L121" title="All 2 branches covered.">      } else if (TYPE_HTML.equals(rc.getAcceptableContentType())) {</span>
-<span class="fc" id="L122">        HttpServerResponse response = rc.response();</span>
-<span class="fc" id="L123">        response.setStatusCode(200);</span>
-<span class="fc" id="L124">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_HTML);</span>
-<span class="fc" id="L125">        response.setChunked(true);</span>
+<span class="fc" id="L112">      ContentTypes.adjustFromParams(rc);</span>
+      
+<span class="fc bfc" id="L114" title="All 2 branches covered.">      if (ContentTypes.TYPE_JSON.equals(rc.getAcceptableContentType())) {</span>
+<span class="fc" id="L115">        HttpServerResponse response = rc.response();</span>
+<span class="fc" id="L116">        response.setStatusCode(200);</span>
+<span class="fc" id="L117">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_JSON);</span>
+<span class="fc" id="L118">        response.end(Json.encode(properties));</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">      } else if (ContentTypes.TYPE_HTML.equals(rc.getAcceptableContentType())) {</span>
+<span class="fc" id="L120">        HttpServerResponse response = rc.response();</span>
+<span class="fc" id="L121">        response.setStatusCode(200);</span>
+<span class="fc" id="L122">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_HTML);</span>
+<span class="fc" id="L123">        response.setChunked(true);</span>
         
-<span class="fc" id="L127">        response.write(&quot;&lt;html&gt;&quot;);</span>
-<span class="fc" id="L128">        response.write(&quot;&lt;head&gt;&quot;);</span>
-<span class="fc" id="L129">        response.write(&quot;&lt;/head&gt;&quot;);</span>
-<span class="fc" id="L130">        response.write(&quot;&lt;body&gt;&quot;);</span>
+<span class="fc" id="L125">        response.write(&quot;&lt;html&gt;&quot;);</span>
+<span class="fc" id="L126">        response.write(&quot;&lt;head&gt;&quot;);</span>
+<span class="fc" id="L127">        response.write(&quot;&lt;/head&gt;&quot;);</span>
+<span class="fc" id="L128">        response.write(&quot;&lt;body&gt;&quot;);</span>
         
-<span class="fc" id="L132">        response.write(&quot;&lt;table&gt;&quot;);</span>
+<span class="fc" id="L130">        response.write(&quot;&lt;table&gt;&quot;);</span>
         
-<span class="fc" id="L134">        response.write(&quot;&lt;thead&gt;&quot;);        </span>
-<span class="fc" id="L135">        response.write(&quot;&lt;tr&gt;&quot;);</span>
-<span class="fc" id="L136">        response.write(&quot;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Value&lt;/th&gt;&quot;);</span>
-<span class="fc" id="L137">        response.write(&quot;&lt;/tr&gt;&quot;);</span>
-<span class="fc" id="L138">        response.write(&quot;&lt;/thead&gt;&quot;);</span>
+<span class="fc" id="L132">        response.write(&quot;&lt;thead&gt;&quot;);        </span>
+<span class="fc" id="L133">        response.write(&quot;&lt;tr&gt;&quot;);</span>
+<span class="fc" id="L134">        response.write(&quot;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Value&lt;/th&gt;&quot;);</span>
+<span class="fc" id="L135">        response.write(&quot;&lt;/tr&gt;&quot;);</span>
+<span class="fc" id="L136">        response.write(&quot;&lt;/thead&gt;&quot;);</span>
         
-<span class="fc" id="L140">        response.write(&quot;&lt;tbody&gt;&quot;);</span>
+<span class="fc" id="L138">        response.write(&quot;&lt;tbody&gt;&quot;);</span>
         
-<span class="fc bfc" id="L142" title="All 2 branches covered.">        for (Property prop : properties) {</span>
-<span class="fc" id="L143">          response.write(&quot;&lt;tr&gt;&lt;td&gt;&quot;);</span>
-<span class="fc" id="L144">          response.write(prop.name);</span>
-<span class="fc" id="L145">          response.write(&quot;&lt;/td&gt;&lt;td&gt;&quot;);</span>
-<span class="fc" id="L146">          response.write(prop.value);</span>
-<span class="fc" id="L147">          response.write(&quot;&lt;/td&gt;&quot;);</span>
-<span class="fc" id="L148">          response.write(&quot;&lt;/tr&gt;&quot;);</span>
-<span class="fc" id="L149">        }</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        for (Property prop : properties) {</span>
+<span class="fc" id="L141">          response.write(&quot;&lt;tr&gt;&lt;td&gt;&quot;);</span>
+<span class="fc" id="L142">          response.write(prop.name);</span>
+<span class="fc" id="L143">          response.write(&quot;&lt;/td&gt;&lt;td&gt;&quot;);</span>
+<span class="fc" id="L144">          response.write(prop.value);</span>
+<span class="fc" id="L145">          response.write(&quot;&lt;/td&gt;&quot;);</span>
+<span class="fc" id="L146">          response.write(&quot;&lt;/tr&gt;&quot;);</span>
+<span class="fc" id="L147">        }</span>
         
-<span class="fc" id="L151">        response.write(&quot;&lt;/tbody&gt;&quot;);</span>
+<span class="fc" id="L149">        response.write(&quot;&lt;/tbody&gt;&quot;);</span>
         
-<span class="fc" id="L153">        response.write(&quot;&lt;/table&gt;&quot;);</span>
+<span class="fc" id="L151">        response.write(&quot;&lt;/table&gt;&quot;);</span>
         
-<span class="fc" id="L155">        response.write(&quot;&lt;/body&gt;&quot;);</span>
-<span class="fc" id="L156">        response.write(&quot;&lt;/html&gt;&quot;);</span>
+<span class="fc" id="L153">        response.write(&quot;&lt;/body&gt;&quot;);</span>
+<span class="fc" id="L154">        response.write(&quot;&lt;/html&gt;&quot;);</span>
         
-<span class="fc" id="L158">        response.end();</span>
-<span class="fc" id="L159">      } else {</span>
-<span class="fc" id="L160">        HttpServerResponse response = rc.response();</span>
-<span class="fc" id="L161">        response.setStatusCode(200);</span>
-<span class="fc" id="L162">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_PLAIN);</span>
-<span class="fc" id="L163">        response.setChunked(true);</span>
+<span class="fc" id="L156">        response.end();</span>
+<span class="fc" id="L157">      } else {</span>
+<span class="fc" id="L158">        HttpServerResponse response = rc.response();</span>
+<span class="fc" id="L159">        response.setStatusCode(200);</span>
+<span class="fc" id="L160">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_PLAIN);</span>
+<span class="fc" id="L161">        response.setChunked(true);</span>
         
-<span class="fc bfc" id="L165" title="All 2 branches covered.">        for (Property prop : properties) {</span>
-<span class="fc" id="L166">          response.write(prop.name);</span>
-<span class="fc" id="L167">          response.write(&quot;: &quot;);</span>
-<span class="fc" id="L168">          response.write(prop.value);</span>
-<span class="fc" id="L169">          response.write(&quot;\n&quot;);</span>
-<span class="fc" id="L170">        }</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        for (Property prop : properties) {</span>
+<span class="fc" id="L164">          response.write(prop.name);</span>
+<span class="fc" id="L165">          response.write(&quot;: &quot;);</span>
+<span class="fc" id="L166">          response.write(prop.value);</span>
+<span class="fc" id="L167">          response.write(&quot;\n&quot;);</span>
+<span class="fc" id="L168">        }</span>
         
-<span class="fc" id="L172">        response.end();</span>
+<span class="fc" id="L170">        response.end();</span>
       }
     }
-<span class="fc" id="L175">  }</span>
+<span class="fc" id="L173">  }</span>
   
   static String toString(Object value) {
-<span class="pc bpc" id="L178" title="1 of 2 branches missed.">    if (value == null) {</span>
-<span class="nc" id="L179">      return &quot;&lt;null&gt;&quot;;</span>
-<span class="pc bpc" id="L180" title="1 of 2 branches missed.">    } else if (value instanceof String) {</span>
-<span class="fc" id="L181">      return (String) value;</span>
+<span class="pc bpc" id="L176" title="1 of 2 branches missed.">    if (value == null) {</span>
+<span class="nc" id="L177">      return &quot;&lt;null&gt;&quot;;</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">    } else if (value instanceof String) {</span>
+<span class="fc" id="L179">      return (String) value;</span>
     } else {
-<span class="nc" id="L183">      return value.toString();</span>
+<span class="nc" id="L181">      return value.toString();</span>
     }
   }
   
   static List&lt;Property&gt; getProperties() {
-<span class="fc" id="L188">    return System.getProperties()</span>
-<span class="fc" id="L189">            .entrySet()</span>
-<span class="fc" id="L190">            .stream()</span>
-<span class="fc" id="L191">            .map((entry) -&gt; new Property(toString(entry.getKey()), toString(entry.getValue())))</span>
-<span class="fc" id="L192">            .sorted((a, b) -&gt; a.name.compareTo(b.name))</span>
-<span class="fc" id="L193">            .collect(Collectors.toList());</span>
+<span class="fc" id="L186">    return System.getProperties()</span>
+<span class="fc" id="L187">            .entrySet()</span>
+<span class="fc" id="L188">            .stream()</span>
+<span class="fc" id="L189">            .map((entry) -&gt; new Property(toString(entry.getKey()), toString(entry.getValue())))</span>
+<span class="fc" id="L190">            .sorted((a, b) -&gt; a.name.compareTo(b.name))</span>
+<span class="fc" id="L191">            .collect(Collectors.toList());</span>
   }
 
 

@@ -73,8 +73,14 @@ public class InFlightRoute implements Handler&lt;RoutingContext&gt; {
   public void standardDeploy(Router rootRouter, Router manageRouter) {
 <span class="fc" id="L74">    rootRouter.route().handler(this::record);</span>
 <span class="fc" id="L75">    manageRouter.route().handler(this::record);</span>
-<span class="fc" id="L76">    manageRouter.route(HttpMethod.GET, &quot;/&quot; + PATH).handler(this::handle).setName(&quot;In Flight&quot;);</span>
-<span class="fc" id="L77">  }</span>
+<span class="fc" id="L76">    manageRouter.route(HttpMethod.GET, &quot;/&quot; + PATH)</span>
+<span class="fc" id="L77">            .handler(this::handle)</span>
+<span class="fc" id="L78">            .setName(&quot;In Flight&quot;)</span>
+<span class="fc" id="L79">            .produces(ContentTypes.TYPE_JSON)</span>
+<span class="fc" id="L80">            .produces(ContentTypes.TYPE_HTML)</span>
+<span class="fc" id="L81">            .produces(ContentTypes.TYPE_PLAIN)</span>
+            ;
+<span class="fc" id="L83">  }</span>
   
   /**
    * Factory method to do standard deployment on newly constructed route.
@@ -85,50 +91,50 @@ public class InFlightRoute implements Handler&lt;RoutingContext&gt; {
    * @param manageRouter The router that this handler will be attached to.
    */
   public static void createAndDeploy(Router rootRouter, Router manageRouter) {
-<span class="fc" id="L88">    InFlightRoute route = new InFlightRoute();</span>
-<span class="fc" id="L89">    route.standardDeploy(rootRouter, manageRouter);</span>
-<span class="fc" id="L90">  }</span>
+<span class="fc" id="L94">    InFlightRoute route = new InFlightRoute();</span>
+<span class="fc" id="L95">    route.standardDeploy(rootRouter, manageRouter);</span>
+<span class="fc" id="L96">  }</span>
   
   
   @Override
   public void handle(RoutingContext event) {
-<span class="fc" id="L95">    JsonArray result = new JsonArray();</span>
-<span class="fc" id="L96">    synchronized (map) {</span>
-<span class="fc bfc" id="L97" title="All 2 branches covered.">      for (RoutingContext rc : map.values()) {</span>
+<span class="fc" id="L101">    JsonArray result = new JsonArray();</span>
+<span class="fc" id="L102">    synchronized (map) {</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">      for (RoutingContext rc : map.values()) {</span>
         try {
-<span class="fc" id="L99">          JsonObject data = new JsonObject();</span>
-<span class="fc" id="L100">          Object timestampObject = rc.get(TIMESTAMP_KEY);</span>
-<span class="pc bpc" id="L101" title="1 of 2 branches missed.">          if (timestampObject instanceof Long) {</span>
-<span class="fc" id="L102">            Long timestamp = (Long) timestampObject;</span>
-<span class="fc" id="L103">            data.put(&quot;StartTimestamp&quot;, Instant.ofEpochMilli(timestamp).atOffset(ZoneOffset.UTC).toLocalDateTime().toString());</span>
-<span class="fc" id="L104">            data.put(&quot;SecondsSoFar&quot;, (System.currentTimeMillis() - timestamp) / 1000.0);</span>
+<span class="fc" id="L105">          JsonObject data = new JsonObject();</span>
+<span class="fc" id="L106">          Object timestampObject = rc.get(TIMESTAMP_KEY);</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">          if (timestampObject instanceof Long) {</span>
+<span class="fc" id="L108">            Long timestamp = (Long) timestampObject;</span>
+<span class="fc" id="L109">            data.put(&quot;StartTimestamp&quot;, Instant.ofEpochMilli(timestamp).atOffset(ZoneOffset.UTC).toLocalDateTime().toString());</span>
+<span class="fc" id="L110">            data.put(&quot;SecondsSoFar&quot;, (System.currentTimeMillis() - timestamp) / 1000.0);</span>
           } 
-<span class="fc" id="L106">          data.put(&quot;LocalAddress&quot;, Objects.toString(event.request().localAddress()));</span>
-<span class="fc" id="L107">          data.put(&quot;RemoteAddress&quot;, Objects.toString(event.request().remoteAddress()));</span>
-<span class="fc" id="L108">          data.put(&quot;AbsoluteUri&quot;, event.request().absoluteURI());</span>
-<span class="fc" id="L109">          data.put(&quot;Query&quot;, event.request().query());</span>
-<span class="fc" id="L110">          result.add(data);</span>
-<span class="nc" id="L111">        } catch (Throwable ex) {</span>
-<span class="nc" id="L112">          logger.warn(&quot;Failed to generate JSON for RoutingContext ({}): &quot;, rc, ex);</span>
-<span class="fc" id="L113">        }</span>
-<span class="fc" id="L114">      }</span>
-<span class="fc" id="L115">    }</span>
-<span class="fc" id="L116">    event.end(result.toString());    </span>
-<span class="fc" id="L117">  }</span>
+<span class="fc" id="L112">          data.put(&quot;LocalAddress&quot;, Objects.toString(event.request().localAddress()));</span>
+<span class="fc" id="L113">          data.put(&quot;RemoteAddress&quot;, Objects.toString(event.request().remoteAddress()));</span>
+<span class="fc" id="L114">          data.put(&quot;AbsoluteUri&quot;, event.request().absoluteURI());</span>
+<span class="fc" id="L115">          data.put(&quot;Query&quot;, event.request().query());</span>
+<span class="fc" id="L116">          result.add(data);</span>
+<span class="nc" id="L117">        } catch (Throwable ex) {</span>
+<span class="nc" id="L118">          logger.warn(&quot;Failed to generate JSON for RoutingContext ({}): &quot;, rc, ex);</span>
+<span class="fc" id="L119">        }</span>
+<span class="fc" id="L120">      }</span>
+<span class="fc" id="L121">    }</span>
+<span class="fc" id="L122">    event.end(result.toString());    </span>
+<span class="fc" id="L123">  }</span>
 
   private void record(RoutingContext event) {
-<span class="fc" id="L120">    SocketAddress localAddress = event.request().localAddress();</span>
-<span class="fc" id="L121">    synchronized (map) {</span>
-<span class="fc" id="L122">      event.put(TIMESTAMP_KEY, System.currentTimeMillis());</span>
-<span class="fc" id="L123">      map.put(localAddress, event);</span>
-<span class="fc" id="L124">    }</span>
-<span class="fc" id="L125">    event.addEndHandler(ar -&gt; {</span>
-<span class="fc" id="L126">      synchronized (map) {</span>
-<span class="fc" id="L127">        map.remove(localAddress);</span>
-<span class="fc" id="L128">      }</span>
-<span class="fc" id="L129">    });</span>
-<span class="fc" id="L130">    event.next();</span>
-<span class="fc" id="L131">  }</span>
+<span class="fc" id="L126">    SocketAddress localAddress = event.request().localAddress();</span>
+<span class="fc" id="L127">    synchronized (map) {</span>
+<span class="fc" id="L128">      event.put(TIMESTAMP_KEY, System.currentTimeMillis());</span>
+<span class="fc" id="L129">      map.put(localAddress, event);</span>
+<span class="fc" id="L130">    }</span>
+<span class="fc" id="L131">    event.addEndHandler(ar -&gt; {</span>
+<span class="fc" id="L132">      synchronized (map) {</span>
+<span class="fc" id="L133">        map.remove(localAddress);</span>
+<span class="fc" id="L134">      }</span>
+<span class="fc" id="L135">    });</span>
+<span class="fc" id="L136">    event.next();</span>
+<span class="fc" id="L137">  }</span>
   
 
 }
