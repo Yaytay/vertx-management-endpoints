@@ -28,9 +28,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.MIMEHeader;
 import io.vertx.ext.web.ParsedHeaderValue;
-import io.vertx.ext.web.ParsedHeaderValues;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.impl.ParsableMIMEValue;
@@ -89,8 +87,17 @@ public class LogbackMgmtRoute implements Handler<RoutingContext> {
    * @param router The router that this handler will be attached to.
    */
   public void standardDeploy(Router router) {
-    router.route(HttpMethod.GET, "/" + PATH).handler(this::handle).setName("Logback Management");
-    router.route(HttpMethod.PUT, "/" + PATH + "/:logger").handler(this::handle).setName("Logback Management");
+    router.route(HttpMethod.GET, "/" + PATH)
+            .handler(this::handle)
+            .setName("Logback Management")
+            .produces(ContentTypes.TYPE_JSON)
+            .produces(ContentTypes.TYPE_HTML)
+            .produces(ContentTypes.TYPE_PLAIN)
+            ;
+    router.route(HttpMethod.PUT, "/" + PATH + "/:logger")
+            .handler(this::handle)
+            .setName("Logback Management")
+            ;
   }
   
   /**
@@ -107,38 +114,26 @@ public class LogbackMgmtRoute implements Handler<RoutingContext> {
 
   
   @Override
-  public void handle(RoutingContext event) {
-    HttpServerRequest request = event.request();
+  public void handle(RoutingContext rc) {
+    HttpServerRequest request = rc.request();
     if (request.method() == HttpMethod.GET) {
-      if (wantsHtml(event)) {
-        getHtml(request, event.response());
+      
+      ContentTypes.adjustFromParams(rc);
+      
+      if (ContentTypes.TYPE_JSON.equals(rc.getAcceptableContentType())) {
+        getLogLevelsJson(rc.response());
+      } else if (ContentTypes.TYPE_HTML.equals(rc.getAcceptableContentType())) {
+        getHtml(request, rc.response());
       } else {
-        getLogLevelsJson(event.response());
+        getLogLevelsText(rc.response());
       }
     } else if (request.method() == HttpMethod.PUT) {
-      updateLogLevel(event.pathParam("logger"), request, event.response());
+      updateLogLevel(rc.pathParam("logger"), request, rc.response());
     } else {
-      event.next();
+      rc.next();
     }
   }
   
-  static boolean wantsHtml(RoutingContext event) {
-    try {
-      ParsedHeaderValues phv = event.parsedHeaders();
-      List<MIMEHeader> types = phv.accept();
-      for (MIMEHeader type : types) {
-        if (type.isMatchedBy(JSON)) {
-          return false;
-        } else if (type.isMatchedBy(HTML)) {
-          return true;
-        }
-      }    
-      return false;
-    } catch (Throwable ex) {
-      logger.debug("Failed to determine whether request wants HTML: ", ex);
-      return false;
-    }
-  }
 
   /**
    * Get the current log levels as a JsonObject.
@@ -213,7 +208,7 @@ public class LogbackMgmtRoute implements Handler<RoutingContext> {
   private void getLogLevelsJson(HttpServerResponse response) {
     try {
       JsonObject json = getLogLevels();
-      response.putHeader(HttpHeaderNames.CONTENT_TYPE, "application/json");
+      response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_JSON);
       response.setStatusCode(200);
       response.end(json.toBuffer());
     } catch (Throwable ex) {
@@ -223,6 +218,24 @@ public class LogbackMgmtRoute implements Handler<RoutingContext> {
     }
   }
   
+  private void getLogLevelsText(HttpServerResponse response) {
+    try {
+      JsonObject json = getLogLevels();
+      
+      response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_PLAIN);
+      response.setStatusCode(200);
+      response.setChunked(true);
+
+      response.write("appenders:");
+
+      response.end();
+    } catch (Throwable ex) {
+      logger.error("Failed to get logback configuration: ", ex);
+      response.setStatusCode(500);
+      response.end();
+    }
+  }
+
   private void getHtml(HttpServerRequest request, HttpServerResponse response) {
     Future<String> loadFuture = Future.succeededFuture(htmlContents);
     if (loadFuture.result() == null) {

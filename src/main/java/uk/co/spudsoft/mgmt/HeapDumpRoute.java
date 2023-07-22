@@ -54,8 +54,6 @@ public class HeapDumpRoute implements Handler<RoutingContext> {
    */
   public static final String PATH = "heapdump";
   
-  private static final String TYPE_BINARY = "application/octet-stream";
-  private static final String TYPE_HTML = "text/html";
   /**
    * Constructor.
    */
@@ -73,8 +71,8 @@ public class HeapDumpRoute implements Handler<RoutingContext> {
     router.route(HttpMethod.GET, "/" + PATH)
             .handler(this::handle)
             .setName("Heap Dump")
-            .produces(TYPE_BINARY)
-            .produces(TYPE_HTML)
+            .produces(ContentTypes.TYPE_BINARY)
+            .produces(ContentTypes.TYPE_HTML)
             ;
   }
   
@@ -99,10 +97,12 @@ public class HeapDumpRoute implements Handler<RoutingContext> {
     
     if (request.method() == HttpMethod.GET) {
       
-      if (TYPE_HTML.equals(rc.getAcceptableContentType())) {
+      ContentTypes.adjustFromParams(rc);
+      
+      if (ContentTypes.TYPE_HTML.equals(rc.getAcceptableContentType())) {
         
         response.setStatusCode(200);
-        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_HTML);
+        response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_HTML);
         response.setChunked(true);
         
         response.write("<html>");
@@ -112,7 +112,7 @@ public class HeapDumpRoute implements Handler<RoutingContext> {
         
         response.write("<A target=\"_blank\" href=\"");
         response.write(request.path());
-        response.write("\">Click to download heap dump file</A>");
+        response.write("?_fmt=binary\">Click to download heap dump file</A>");
         
         response.write("</body>");
         response.write("</html>");
@@ -147,7 +147,7 @@ public class HeapDumpRoute implements Handler<RoutingContext> {
           return ;
         }
 
-        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_BINARY);
+        response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_BINARY);
         response.putHeader("Content-Disposition", "attachment; filename=\"" + filename + ".hprof\"");
 
         response.sendFile(tempFile.getAbsolutePath(), (ar) -> {

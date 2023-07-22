@@ -65,7 +65,13 @@ public class ManagementRoute implements Handler<RoutingContext> {
    */
   public void standardDeploy(Router router) {
     router.route("/manage/*").subRouter(mgmtRouter);
-    router.route(HttpMethod.GET, "/" + PATH).handler(this::handle);
+    router.route(HttpMethod.GET, "/" + PATH)
+            .handler(this::handle)
+            .setName("Management Routes")
+            .produces(ContentTypes.TYPE_JSON)
+            .produces(ContentTypes.TYPE_HTML)
+            .produces(ContentTypes.TYPE_PLAIN)            
+            ;
   }
   
   /**
@@ -85,20 +91,29 @@ public class ManagementRoute implements Handler<RoutingContext> {
   }
 
   @Override
-  public void handle(RoutingContext event) {
+  public void handle(RoutingContext rc) {
     
-    if (LogbackMgmtRoute.wantsHtml(event)) {
-      returnHtml(event);
-    } else {
-      returnJson(event);
+    HttpServerResponse response = rc.response();
+    
+    HttpServerRequest request = rc.request();
+    
+    if (request.method() == HttpMethod.GET) {
+      
+      ContentTypes.adjustFromParams(rc);
+      
+      if (ContentTypes.TYPE_HTML.equals(rc.getAcceptableContentType())) {
+        returnHtml(request, response);
+      } else if (ContentTypes.TYPE_JSON.equals(rc.getAcceptableContentType())) {
+        returnJson(request, response);
+      } else {
+        returnText(request, response);
+      }
     }
   }
   
-  private void returnJson(RoutingContext event) {
+  private void returnJson(HttpServerRequest request, HttpServerResponse response) {
     
     JsonArray result = new JsonArray();
-    
-    HttpServerRequest request = event.request();
     
     for (Route route : mgmtRouter.getRoutes()) {
       if (route.isExactPath() && route.methods() != null && route.methods().contains(HttpMethod.GET)) {
@@ -109,30 +124,43 @@ public class ManagementRoute implements Handler<RoutingContext> {
       }
     }
 
-    event.end(result.toString());    
+    response.setStatusCode(200);
+    response.putHeader("Content-Type", ContentTypes.TYPE_JSON);
+    response.end(result.toString());    
+    
+  }
+
+  private void returnText(HttpServerRequest request, HttpServerResponse response) {
+    
+    StringBuilder result = new StringBuilder();
+    for (Route route : mgmtRouter.getRoutes()) {
+      if (route.isExactPath() && route.methods() != null && route.methods().contains(HttpMethod.GET)) {
+        result.append(route.getName()).append(": ").append(request.absoluteURI()).append(route.getPath());
+      }
+    }
+
+    response.setStatusCode(200);
+    response.putHeader("Content-Type", ContentTypes.TYPE_PLAIN);
+    response.end(result.toString());    
     
   }
 
   private static final String HEAD = "<html><head><title>Management Endpoints</title><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"></head><body><table><tr><th>Route</th><th>Link</th></tr>";
   private static final String TAIL = "</table></body></html>";
   
-  private void returnHtml(RoutingContext event) {
+  private void returnHtml(HttpServerRequest request, HttpServerResponse response) {
 
-    HttpServerResponse response = event.response();
-    
-    response.putHeader("Content-Type", "text/html");
+    response.putHeader("Content-Type", ContentTypes.TYPE_HTML);
     response.setChunked(true);
     response.write(HEAD);
-    
-    HttpServerRequest request = event.request();
-    
+
     for (Route route : mgmtRouter.getRoutes()) {
       if (route.isExactPath() && route.methods() != null && route.methods().contains(HttpMethod.GET)) {
         response.write("<tr><td>" + route.getName() + "</td><td><a href=\"" + request.absoluteURI() + route.getPath() + "\">" + request.absoluteURI() + route.getPath() + "</td></tr>");
       }
     }
 
-    event.end(TAIL);    
+    response.end(TAIL);    
     
   }
   

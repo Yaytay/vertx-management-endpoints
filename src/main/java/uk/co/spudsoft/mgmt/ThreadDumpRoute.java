@@ -46,10 +46,6 @@ public class ThreadDumpRoute implements Handler<RoutingContext> {
    */
   public static final String PATH = "threads";
   
-  private static final String TYPE_JSON = "application/json";
-  private static final String TYPE_HTML = "text/html";
-  private static final String TYPE_PLAIN = "text/plain";
-  
   /**
    * Constructor.
    */
@@ -67,9 +63,9 @@ public class ThreadDumpRoute implements Handler<RoutingContext> {
     router.route(HttpMethod.GET, "/" + PATH)
             .handler(this::handle)
             .setName("Thread Dump")
-            .produces(TYPE_JSON)
-            .produces(TYPE_HTML)
-            .produces(TYPE_PLAIN)
+            .produces(ContentTypes.TYPE_JSON)
+            .produces(ContentTypes.TYPE_HTML)
+            .produces(ContentTypes.TYPE_PLAIN)
             ;
   }
   
@@ -91,21 +87,23 @@ public class ThreadDumpRoute implements Handler<RoutingContext> {
     HttpServerRequest request = rc.request();
     
     if (request.method() == HttpMethod.GET) {
+      
+      ContentTypes.adjustFromParams(rc);
 
-      if (TYPE_JSON.equals(rc.getAcceptableContentType())) {
+      if (ContentTypes.TYPE_JSON.equals(rc.getAcceptableContentType())) {
         HttpServerResponse response = rc.response();
         response.setStatusCode(200);
-        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_PLAIN);
+        response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_JSON);
         response.end(buildStackTraceJson().toBuffer());
-      } else if (TYPE_HTML.equals(rc.getAcceptableContentType())) {
+      } else if (ContentTypes.TYPE_HTML.equals(rc.getAcceptableContentType())) {
         HttpServerResponse response = rc.response();
         response.setStatusCode(200);
-        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_PLAIN);
+        response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_HTML);
         response.end(buildStackTraceHtml());
       } else {
         HttpServerResponse response = rc.response();
         response.setStatusCode(200);
-        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_PLAIN);
+        response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_PLAIN);
         response.end(buildStackTraceText());
       }
     } else {

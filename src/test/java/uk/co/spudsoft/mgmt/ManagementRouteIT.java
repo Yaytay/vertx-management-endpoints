@@ -64,13 +64,15 @@ public class ManagementRouteIT {
                 testContext.verify(() -> {
 
                   String body = given()
+                      .accept("")
                       .get("/manage")
                       .then()
                       .statusCode(200)
+                      .log().all()
+                      .contentType(ContentType.TEXT)
                       .extract().body().asString()
                       ;                  
                   logger.debug("Response: {}", body);
-
 
                   body = given()
                       .accept(ContentType.HTML)
@@ -78,6 +80,29 @@ public class ManagementRouteIT {
                       .then()
                       .statusCode(200)
                       .log().all()
+                      .contentType(ContentType.HTML)
+                      .extract().body().asString()
+                      ;                  
+                  logger.debug("Response: {}", body);
+
+                  body = given()
+                      .accept(ContentType.HTML)
+                      .get("/manage?_fmt=text")
+                      .then()
+                      .statusCode(200)
+                      .log().all()
+                      .contentType(ContentType.TEXT)
+                      .extract().body().asString()
+                      ;                  
+                  logger.debug("Response: {}", body);
+
+                  body = given()
+                      .accept(ContentType.JSON)
+                      .get("/manage?_fmt=wibble")
+                      .then()
+                      .statusCode(200)
+                      .log().all()
+                      .contentType(ContentType.JSON)
                       .extract().body().asString()
                       ;                  
                   logger.debug("Response: {}", body);

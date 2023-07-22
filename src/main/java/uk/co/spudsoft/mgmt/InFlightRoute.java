@@ -73,7 +73,13 @@ public class InFlightRoute implements Handler<RoutingContext> {
   public void standardDeploy(Router rootRouter, Router manageRouter) {
     rootRouter.route().handler(this::record);
     manageRouter.route().handler(this::record);
-    manageRouter.route(HttpMethod.GET, "/" + PATH).handler(this::handle).setName("In Flight");
+    manageRouter.route(HttpMethod.GET, "/" + PATH)
+            .handler(this::handle)
+            .setName("In Flight")
+            .produces(ContentTypes.TYPE_JSON)
+            .produces(ContentTypes.TYPE_HTML)
+            .produces(ContentTypes.TYPE_PLAIN)
+            ;
   }
   
   /**

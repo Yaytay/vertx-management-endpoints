@@ -49,11 +49,7 @@ public class AccessLogOutputRoute implements Handler<RoutingContext> {
    * The path at which the standardDeploy method will put the router.
    */
   public static final String PATH = "accesslog";
-  
-  private static final String TYPE_JSON = "application/json";
-  private static final String TYPE_HTML = "text/html";
-  private static final String TYPE_PLAIN = "text/plain";
-  
+    
   private final RingBuffer<AccessLogCaptureRoute.AccessLogData> buffer;
 
   /**
@@ -75,9 +71,9 @@ public class AccessLogOutputRoute implements Handler<RoutingContext> {
     router.route(HttpMethod.GET, "/" + PATH)
             .handler(this::handle)
             .setName("Access Log")
-            .produces(TYPE_JSON)
-            .produces(TYPE_HTML)
-            .produces(TYPE_PLAIN)
+            .produces(ContentTypes.TYPE_JSON)
+            .produces(ContentTypes.TYPE_HTML)
+            .produces(ContentTypes.TYPE_PLAIN)
             ;
   }
   
@@ -123,7 +119,9 @@ public class AccessLogOutputRoute implements Handler<RoutingContext> {
       
       AccessLogCaptureRoute.AccessLogData data[] = buffer.toArray(i -> new AccessLogCaptureRoute.AccessLogData[i]);
       
-      if (TYPE_JSON.equals(rc.getAcceptableContentType())) {
+      ContentTypes.adjustFromParams(rc);
+      
+      if (ContentTypes.TYPE_JSON.equals(rc.getAcceptableContentType())) {
         
         JsonArray ja = new JsonArray();
         for (AccessLogCaptureRoute.AccessLogData record : data) {
@@ -132,12 +130,12 @@ public class AccessLogOutputRoute implements Handler<RoutingContext> {
         
         HttpServerResponse response = rc.response();
         response.setStatusCode(200);
-        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_JSON);
+        response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_JSON);
         response.end(Json.encode(ja));
-      } else if (TYPE_HTML.equals(rc.getAcceptableContentType())) {
+      } else if (ContentTypes.TYPE_HTML.equals(rc.getAcceptableContentType())) {
         HttpServerResponse response = rc.response();
         response.setStatusCode(200);
-        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_HTML);
+        response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_HTML);
         response.setChunked(true);
         
         response.write("<html>");
@@ -244,7 +242,7 @@ public class AccessLogOutputRoute implements Handler<RoutingContext> {
       } else {
         HttpServerResponse response = rc.response();
         response.setStatusCode(200);
-        response.putHeader(HttpHeaderNames.CONTENT_TYPE, TYPE_PLAIN);
+        response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_PLAIN);
         response.setChunked(true);
         
         for (AccessLogCaptureRoute.AccessLogData record : data) {
