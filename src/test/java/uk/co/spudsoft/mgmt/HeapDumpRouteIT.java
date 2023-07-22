@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import static io.restassured.RestAssured.given;
 import io.restassured.http.ContentType;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
 
 /**
@@ -89,6 +90,16 @@ public class HeapDumpRouteIT {
                           .contentType(ContentType.HTML)
                           .extract().body().asString();
                   logger.debug("HTML: {}", body);
+                  assertThat(body, containsString("?_fmt=binary"));
+
+                  byte[] bytes = given()
+                          .accept(ContentType.HTML)
+                          .get("/manage/" + HeapDumpRoute.PATH + "?_fmt=binary")
+                          .then()
+                          .statusCode(200)
+                          .contentType("application/octet-stream")
+                          .extract().body().asByteArray();
+                  logger.debug("Downloaded {} bytes", bytes.length);
 
                 });
                         

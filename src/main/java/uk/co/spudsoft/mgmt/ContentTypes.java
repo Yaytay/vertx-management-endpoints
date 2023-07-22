@@ -49,7 +49,7 @@ public final class ContentTypes {
   /**.
    * Binary stream content type.
    */
-  public static final String TYPE_BINARY = "application/octet_stream";
+  public static final String TYPE_BINARY = "application/octet-stream";
   
   private static final Map<String, String> PARAM_TO_TYPE = buildParamTypeMap();
 
