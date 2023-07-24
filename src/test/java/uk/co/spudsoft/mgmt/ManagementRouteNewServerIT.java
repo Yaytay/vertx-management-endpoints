@@ -205,7 +205,6 @@ public class ManagementRouteNewServerIT {
                         ;
                     logger.debug("Response: {}", body);
 
-                  
                     RestAssured.port = rootPort;
                     body = given()
                         .accept(ContentType.JSON)
