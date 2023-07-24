@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ParametersRoute.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Vertx Management Endpoints</a> &gt; <a href="index.source.html" class="el_package">uk.co.spudsoft.mgmt</a> &gt; <span class="el_source">ParametersRoute.java</span></div><h1>ParametersRoute.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2022 jtalbut
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package uk.co.spudsoft.mgmt;
+
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.vertx.core.Handler;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.Json;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
+import java.util.concurrent.atomic.AtomicReference;
+
+/**
+ * A Vertx HTTP Server route for allowing users to download a thread dump of the process.
+ *
+ * It is strongly recommended that this endpoint be mounted on via a subrouter, the path to which is only accessible from authorised personnel.
+ * The integration tests demonstrate the use of a suitable subrouter to locate the endpoint at /manage/threaddump.
+ * 
+ * @author jtalbut
+ */
+public class ParametersRoute implements Handler&lt;RoutingContext&gt; {
+
+  /**
+   * The path at which the standardDeploy method will put the router.
+   */
+  public static final String PATH = &quot;parameters&quot;;
+    
+  private final AtomicReference&lt;Object&gt; reference;
+  
+  /**
+   * Constructor.
+   * @param reference to the service, as a single object that will be JSON encoded.
+   * The reference is passed in as an AtomicReference so that it may be changed.
+   */
+<span class="fc" id="L51">  public ParametersRoute(AtomicReference&lt;Object&gt; reference) {</span>
+<span class="fc" id="L52">    this.reference = reference;</span>
+<span class="fc" id="L53">  }</span>
+
+  /**
+   * Deploy the route to the router passed in at the normal endpoint.
+   * 
+   * The router passed in should be a sub router that is inaccessible to normal users.
+   * 
+   * @param router The router that this handler will be attached to.
+   */
+  public void standardDeploy(Router router) {
+<span class="fc" id="L63">    router.route(HttpMethod.GET, &quot;/&quot; + PATH)</span>
+<span class="fc" id="L64">            .handler(this::handle)</span>
+<span class="fc" id="L65">            .setName(&quot;Parameters&quot;)</span>
+<span class="fc" id="L66">            .produces(ContentTypes.TYPE_JSON)</span>
+<span class="fc" id="L67">            .produces(ContentTypes.TYPE_HTML)</span>
+<span class="fc" id="L68">            .produces(ContentTypes.TYPE_PLAIN)</span>
+            ;
+<span class="fc" id="L70">  }</span>
+  
+  /**
+   * Factory method to do standard deployment on newly constructed route.
+   * 
+   * The router passed in should be a sub router that is inaccessible to normal users.
+   * 
+   * @param router The router that this handler will be attached to.
+   * @param reference to the service, as a single object that will be JSON encoded.
+   * The reference is passed in as an AtomicReference so that it may be changed.
+   */
+  public static void createAndDeploy(Router router, AtomicReference&lt;Object&gt; reference) {
+<span class="fc" id="L82">    ParametersRoute route = new ParametersRoute(reference);</span>
+<span class="fc" id="L83">    route.standardDeploy(router);</span>
+<span class="fc" id="L84">  }  </span>
+  
+  @Override
+  public void handle(RoutingContext rc) {
+    
+<span class="fc" id="L89">    HttpServerRequest request = rc.request();</span>
+    
+<span class="fc" id="L91">    Object value = reference.get();</span>
+    
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">    if (request.method() == HttpMethod.GET) {</span>
+      
+<span class="fc" id="L95">      ContentTypes.adjustFromParams(rc);</span>
+      
+<span class="fc bfc" id="L97" title="All 2 branches covered.">      if (ContentTypes.TYPE_JSON.equals(rc.getAcceptableContentType())) {</span>
+<span class="fc" id="L98">        HttpServerResponse response = rc.response();</span>
+<span class="fc" id="L99">        response.setStatusCode(200);</span>
+<span class="fc" id="L100">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_JSON);</span>
+<span class="fc" id="L101">        response.end(Json.encode(value));</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">      } else if (ContentTypes.TYPE_HTML.equals(rc.getAcceptableContentType())) {</span>
+<span class="fc" id="L103">        HttpServerResponse response = rc.response();</span>
+<span class="fc" id="L104">        response.setStatusCode(200);</span>
+<span class="fc" id="L105">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_HTML);</span>
+<span class="fc" id="L106">        response.setChunked(true);</span>
+        
+<span class="fc" id="L108">        response.write(&quot;&lt;html&gt;&quot;);</span>
+<span class="fc" id="L109">        response.write(&quot;&lt;head&gt;&quot;);</span>
+<span class="fc" id="L110">        response.write(&quot;&lt;/head&gt;&quot;);</span>
+<span class="fc" id="L111">        response.write(&quot;&lt;body&gt;&quot;);</span>
+        
+<span class="fc" id="L113">        response.write(&quot;&lt;pre&gt;&quot;);</span>
+        
+<span class="fc" id="L115">        response.write(Json.encodePrettily(value));</span>
+        
+<span class="fc" id="L117">        response.write(&quot;&lt;/pre&gt;&quot;);</span>
+        
+<span class="fc" id="L119">        response.write(&quot;&lt;/body&gt;&quot;);</span>
+<span class="fc" id="L120">        response.write(&quot;&lt;/html&gt;&quot;);</span>
+        
+<span class="fc" id="L122">        response.end();</span>
+<span class="fc" id="L123">      } else {</span>
+<span class="fc" id="L124">        HttpServerResponse response = rc.response();</span>
+<span class="fc" id="L125">        response.setStatusCode(200);</span>
+<span class="fc" id="L126">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_PLAIN);</span>
+        
+<span class="fc" id="L128">        response.end(Json.encodePrettily(value));</span>
+<span class="fc" id="L129">      }</span>
+    } else {
+<span class="nc" id="L131">      rc.next();</span>
+    }
+<span class="fc" id="L133">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
