@@ -24,8 +24,8 @@ import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
-import java.io.IOException;
-import java.net.ServerSocket;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -53,6 +53,77 @@ public class ManagementRouteIT {
     LogbackMgmtRoute.createAndDeploy(mgmtRouter);    
     ManagementRoute.createAndDeploy(null, router, null, null, null, mgmtRouter, null);
     ThreadDumpRoute.createAndDeploy(router);
+
+    HttpServerVerticle httperServerVerticle = new HttpServerVerticle(router);
+    
+    vertx
+            .deployVerticle(httperServerVerticle)
+            .compose(verticleName -> {
+                port = httperServerVerticle.getPort();
+                RestAssured.port = port;
+                logger.debug("Listening on port {}", port);
+    
+                testContext.verify(() -> {
+
+                  String body = given()
+                      .accept("")
+                      .get("/manage")
+                      .then()
+                      .statusCode(200)
+                      .log().all()
+                      .contentType(ContentType.TEXT)
+                      .extract().body().asString()
+                      ;                  
+                  logger.debug("Response: {}", body);
+
+                  body = given()
+                      .accept(ContentType.HTML)
+                      .get("/manage")
+                      .then()
+                      .statusCode(200)
+                      .log().all()
+                      .contentType(ContentType.HTML)
+                      .extract().body().asString()
+                      ;                  
+                  logger.debug("Response: {}", body);
+
+                  body = given()
+                      .accept(ContentType.HTML)
+                      .get("/manage?_fmt=text")
+                      .then()
+                      .statusCode(200)
+                      .log().all()
+                      .contentType(ContentType.TEXT)
+                      .extract().body().asString()
+                      ;                  
+                  logger.debug("Response: {}", body);
+
+                  body = given()
+                      .accept(ContentType.JSON)
+                      .get("/manage?_fmt=wibble")
+                      .then()
+                      .statusCode(200)
+                      .log().all()
+                      .contentType(ContentType.JSON)
+                      .extract().body().asString()
+                      ;                  
+                  logger.debug("Response: {}", body);
+                });
+                        
+                testContext.completeNow();
+                return Future.succeededFuture();
+                
+            });
+  }
+
+  @Test
+  public void testHandleSpecificPaths(Vertx vertx, VertxTestContext testContext) {
+
+    Router router = Router.router(vertx);
+    Router mgmtRouter = Router.router(vertx);
+    
+    ManagementRoute.deployStandardMgmtEndpoints(mgmtRouter, router, Arrays.asList(ParametersRoute.PATH), new AtomicReference<>("Hello"));
+    ManagementRoute.createAndDeploy(null, router, null, null, null, mgmtRouter, null);
 
     HttpServerVerticle httperServerVerticle = new HttpServerVerticle(router);
     

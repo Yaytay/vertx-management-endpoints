@@ -21,14 +21,17 @@ import static io.restassured.RestAssured.given;
 import io.restassured.http.ContentType;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Collections;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,6 +48,7 @@ public class ManagementRouteNewServerIT {
   private static final Logger logger = LoggerFactory.getLogger(ManagementRouteNewServerIT.class);
   
   private int port;
+  private int rootPort;
   
   private int findPort() throws IOException {
     try (ServerSocket socket = new ServerSocket(0)) {
@@ -116,6 +120,105 @@ public class ManagementRouteNewServerIT {
                         .extract().body().asString()
                         ;                  
                     logger.debug("Response: {}", body);
+                  });
+                  testContext.completeNow();
+                });
+
+                return Future.succeededFuture();
+            });
+                
+  }
+  
+  
+  @Test
+  public void testHttpServerWithCors(Vertx vertx, VertxTestContext testContext) throws IOException {
+
+    Router rootRouter = Router.router(vertx);
+    Router mgmtRouter = Router.router(vertx);
+    
+    CorsHandler corsHandler = CorsHandler.create().addRelativeOrigin(".*");
+    corsHandler.allowedMethod(HttpMethod.GET);
+    rootRouter.route("/*").handler(corsHandler); 
+    
+    port = findPort();
+    ManagementRoute.deployStandardMgmtEndpoints(mgmtRouter, rootRouter, Collections.emptyList(), null);
+    Future<HttpServer> serverFuture = ManagementRoute.createAndDeploy(vertx, rootRouter, new HttpServerOptions(), port, corsHandler, mgmtRouter, "http://fred/");
+    
+    Future<HttpServer> rootServerFuture = vertx.createHttpServer().requestHandler(rootRouter).listen(0);
+
+    rootServerFuture
+            .compose(rootServer -> {
+              rootPort = rootServer.actualPort();
+              return serverFuture;
+            })
+            .compose(server -> {
+                RestAssured.port = port;
+                logger.debug("Listening on port {}", port);
+    
+                testContext.verify(() -> {
+                  assertEquals(port, server.actualPort());
+                });
+                
+                vertx.executeBlocking(promise -> {
+                  testContext.verify(() -> {
+                    String body = given()
+                        .accept("")
+                        .get("/manage")
+                        .then()
+                        .statusCode(200)
+                        .log().all()
+                        .contentType(ContentType.TEXT)
+                        .extract().body().asString()
+                        ;                  
+                    logger.debug("Response: {}", body);
+
+                    body = given()
+                        .accept(ContentType.HTML)
+                        .get("/manage")
+                        .then()
+                        .statusCode(200)
+                        .log().all()
+                        .contentType(ContentType.HTML)
+                        .extract().body().asString()
+                        ;                  
+                    logger.debug("Response: {}", body);
+
+                    body = given()
+                        .accept(ContentType.HTML)
+                        .get("/manage?_fmt=text")
+                        .then()
+                        .statusCode(200)
+                        .log().all()
+                        .contentType(ContentType.TEXT)
+                        .extract().body().asString()
+                        ;                  
+                    logger.debug("Response: {}", body);
+
+                    body = given()
+                        .accept(ContentType.JSON)
+                        .get("/manage?_fmt=wibble")
+                        .then()
+                        .statusCode(200)
+                        .log().all()
+                        .contentType(ContentType.JSON)
+                        .extract().body().asString()
+                        ;
+                    logger.debug("Response: {}", body);
+
+                  
+                    RestAssured.port = rootPort;
+                    body = given()
+                        .accept(ContentType.JSON)
+                        .get("/manage")
+                        .then()
+                        .statusCode(200)
+                        .log().all()
+                        .contentType(ContentType.JSON)
+                        .body(equalTo("{\"location\":\"http://fred/\"}"))
+                        .extract().body().asString()
+                        ;                  
+                    logger.debug("Response from root: {}", body);
+
                   });
                   testContext.completeNow();
                 });

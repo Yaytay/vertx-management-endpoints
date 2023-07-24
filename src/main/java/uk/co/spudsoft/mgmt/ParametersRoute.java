@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * 
  * @author jtalbut
  */
-public class DumpParametersRoute implements Handler<RoutingContext> {
+public class ParametersRoute implements Handler<RoutingContext> {
 
   /**
    * The path at which the standardDeploy method will put the router.
@@ -48,7 +48,7 @@ public class DumpParametersRoute implements Handler<RoutingContext> {
    * @param reference to the service, as a single object that will be JSON encoded.
    * The reference is passed in as an AtomicReference so that it may be changed.
    */
-  public DumpParametersRoute(AtomicReference<Object> reference) {
+  public ParametersRoute(AtomicReference<Object> reference) {
     this.reference = reference;
   }
 
@@ -79,7 +79,7 @@ public class DumpParametersRoute implements Handler<RoutingContext> {
    * The reference is passed in as an AtomicReference so that it may be changed.
    */
   public static void createAndDeploy(Router router, AtomicReference<Object> reference) {
-    DumpParametersRoute route = new DumpParametersRoute(reference);
+    ParametersRoute route = new ParametersRoute(reference);
     route.standardDeploy(router);
   }  
   

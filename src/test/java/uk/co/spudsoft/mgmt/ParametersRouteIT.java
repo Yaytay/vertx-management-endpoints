@@ -36,14 +36,14 @@ import org.junit.jupiter.api.Test;
  * @author jtalbut
  */
 @ExtendWith(VertxExtension.class)
-public class DumpParametersRouteIT {
+public class ParametersRouteIT {
   
   @SuppressWarnings("constantname")
-  private static final Logger logger = LoggerFactory.getLogger(DumpParametersRouteIT.class);
+  private static final Logger logger = LoggerFactory.getLogger(ParametersRouteIT.class);
   
   private int port;
     
-  public DumpParametersRouteIT() {
+  public ParametersRouteIT() {
   }
 
   @Test
@@ -56,7 +56,7 @@ public class DumpParametersRouteIT {
     
     AtomicReference<Object> ref = new AtomicReference<>("Hello");
     
-    DumpParametersRoute.createAndDeploy(mgmtRouter, ref);
+    ParametersRoute.createAndDeploy(mgmtRouter, ref);
     
     vertx
             .deployVerticle(httperServerVerticle)
@@ -68,7 +68,7 @@ public class DumpParametersRouteIT {
                 testContext.verify(() -> {
 
                   String body = given()
-                      .get("/manage/" + DumpParametersRoute.PATH)
+                      .get("/manage/" + ParametersRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -77,7 +77,7 @@ public class DumpParametersRouteIT {
 
                   body = given()
                       .accept(ContentType.HTML)
-                      .get("/manage/" + DumpParametersRoute.PATH)
+                      .get("/manage/" + ParametersRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -86,7 +86,7 @@ public class DumpParametersRouteIT {
 
                   body = given()
                       .accept(ContentType.JSON)
-                      .get("/manage/" + DumpParametersRoute.PATH)
+                      .get("/manage/" + ParametersRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -95,7 +95,7 @@ public class DumpParametersRouteIT {
 
                   body = given()
                       .accept(ContentType.TEXT)
-                      .get("/manage/" + DumpParametersRoute.PATH)
+                      .get("/manage/" + ParametersRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -105,7 +105,7 @@ public class DumpParametersRouteIT {
                   ref.set("Goodbye");
                         
                   body = given()
-                      .get("/manage/" + DumpParametersRoute.PATH)
+                      .get("/manage/" + ParametersRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -114,7 +114,7 @@ public class DumpParametersRouteIT {
 
                   body = given()
                       .accept(ContentType.HTML)
-                      .get("/manage/" + DumpParametersRoute.PATH)
+                      .get("/manage/" + ParametersRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -123,7 +123,7 @@ public class DumpParametersRouteIT {
 
                   body = given()
                       .accept(ContentType.JSON)
-                      .get("/manage/" + DumpParametersRoute.PATH)
+                      .get("/manage/" + ParametersRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()
@@ -132,7 +132,7 @@ public class DumpParametersRouteIT {
 
                   body = given()
                       .accept(ContentType.TEXT)
-                      .get("/manage/" + DumpParametersRoute.PATH)
+                      .get("/manage/" + ParametersRoute.PATH)
                       .then()
                       .statusCode(200)
                       .extract().body().asString()

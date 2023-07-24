@@ -284,8 +284,8 @@ public class ManagementRoute implements Handler<RoutingContext> {
     if (mgmtEndpointPermitted(enabledEndpoints, DumpSysPropsRoute.PATH)) {
       DumpSysPropsRoute.createAndDeploy(mgmtRouter);
     }
-    if (mgmtEndpointPermitted(enabledEndpoints, DumpParametersRoute.PATH) && params != null) {
-      DumpParametersRoute.createAndDeploy(mgmtRouter, params);
+    if (mgmtEndpointPermitted(enabledEndpoints, ParametersRoute.PATH) && params != null) {
+      ParametersRoute.createAndDeploy(mgmtRouter, params);
     }
   }
   
