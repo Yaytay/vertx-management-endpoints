@@ -24,6 +24,8 @@ import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
+import java.io.IOException;
+import java.net.ServerSocket;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -49,7 +51,7 @@ public class ManagementRouteIT {
     InFlightRoute.createAndDeploy(router, mgmtRouter);
     HeapDumpRoute.createAndDeploy(mgmtRouter);
     LogbackMgmtRoute.createAndDeploy(mgmtRouter);    
-    ManagementRoute.createAndDeploy(router, mgmtRouter);
+    ManagementRoute.createAndDeploy(null, router, null, null, null, mgmtRouter, null);
     ThreadDumpRoute.createAndDeploy(router);
 
     HttpServerVerticle httperServerVerticle = new HttpServerVerticle(router);
@@ -113,5 +115,4 @@ public class ManagementRouteIT {
                 
             });
   }
-  
 }
