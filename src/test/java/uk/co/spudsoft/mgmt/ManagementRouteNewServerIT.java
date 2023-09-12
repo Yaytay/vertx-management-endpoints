@@ -75,7 +75,7 @@ public class ManagementRouteNewServerIT {
                   assertEquals(port, server.actualPort());
                 });
                 
-                vertx.executeBlocking(promise -> {
+                vertx.executeBlocking(() -> {
                   testContext.verify(() -> {
                     String body = given()
                         .accept("")
@@ -122,6 +122,7 @@ public class ManagementRouteNewServerIT {
                     logger.debug("Response: {}", body);
                   });
                   testContext.completeNow();
+                  return null;
                 });
 
                 return Future.succeededFuture();
@@ -159,7 +160,7 @@ public class ManagementRouteNewServerIT {
                   assertEquals(port, server.actualPort());
                 });
                 
-                vertx.executeBlocking(promise -> {
+                vertx.executeBlocking(() -> {
                   testContext.verify(() -> {
                     String body = given()
                         .accept("")
@@ -220,6 +221,7 @@ public class ManagementRouteNewServerIT {
 
                   });
                   testContext.completeNow();
+                  return null;
                 });
 
                 return Future.succeededFuture();

@@ -239,14 +239,15 @@ public class LogbackMgmtRoute implements Handler<RoutingContext> {
   private void getHtml(HttpServerRequest request, HttpServerResponse response) {
     Future<String> loadFuture = Future.succeededFuture(htmlContents);
     if (loadFuture.result() == null) {
-      loadFuture = Vertx.currentContext().executeBlocking(promise -> {
+      loadFuture = Vertx.currentContext().executeBlocking(() -> {
         try (InputStream stream = this.getClass().getResourceAsStream("/logback.html")) {
           String newHtml = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
           this.htmlContents = newHtml;
-          promise.complete(newHtml);
+          return newHtml;
         } catch (Throwable ex) {
           logger.error("Failed to load HTML: ", ex);
           getLogLevelsJson(response);
+          return null;
         }
       });
     }
