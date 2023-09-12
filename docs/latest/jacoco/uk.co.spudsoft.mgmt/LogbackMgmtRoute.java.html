@@ -239,37 +239,38 @@ public class LogbackMgmtRoute implements Handler&lt;RoutingContext&gt; {
   private void getHtml(HttpServerRequest request, HttpServerResponse response) {
 <span class="fc" id="L240">    Future&lt;String&gt; loadFuture = Future.succeededFuture(htmlContents);</span>
 <span class="fc bfc" id="L241" title="All 2 branches covered.">    if (loadFuture.result() == null) {</span>
-<span class="fc" id="L242">      loadFuture = Vertx.currentContext().executeBlocking(promise -&gt; {</span>
+<span class="fc" id="L242">      loadFuture = Vertx.currentContext().executeBlocking(() -&gt; {</span>
 <span class="fc" id="L243">        try (InputStream stream = this.getClass().getResourceAsStream(&quot;/logback.html&quot;)) {</span>
 <span class="fc" id="L244">          String newHtml = new String(stream.readAllBytes(), StandardCharsets.UTF_8);</span>
 <span class="fc" id="L245">          this.htmlContents = newHtml;</span>
-<span class="fc" id="L246">          promise.complete(newHtml);</span>
+<span class="fc" id="L246">          return newHtml;</span>
 <span class="nc" id="L247">        } catch (Throwable ex) {</span>
 <span class="nc" id="L248">          logger.error(&quot;Failed to load HTML: &quot;, ex);</span>
 <span class="nc" id="L249">          getLogLevelsJson(response);</span>
-<span class="fc" id="L250">        }</span>
-<span class="fc" id="L251">      });</span>
+<span class="nc" id="L250">          return null;</span>
+        }
+      });
     }
-<span class="fc" id="L253">    loadFuture.map(html -&gt; html.replaceAll(&quot;URL&quot;, &quot;'&quot; + request.absoluteURI() + &quot;'&quot;))</span>
-<span class="fc" id="L254">            .compose(html -&gt; {</span>
-<span class="fc" id="L255">              response.putHeader(HttpHeaderNames.CONTENT_TYPE, &quot;text/html&quot;);</span>
-<span class="fc" id="L256">              response.setStatusCode(200);</span>
-<span class="fc" id="L257">              response.end(html);</span>
-<span class="fc" id="L258">              return Future.succeededFuture();</span>
+<span class="fc" id="L254">    loadFuture.map(html -&gt; html.replaceAll(&quot;URL&quot;, &quot;'&quot; + request.absoluteURI() + &quot;'&quot;))</span>
+<span class="fc" id="L255">            .compose(html -&gt; {</span>
+<span class="fc" id="L256">              response.putHeader(HttpHeaderNames.CONTENT_TYPE, &quot;text/html&quot;);</span>
+<span class="fc" id="L257">              response.setStatusCode(200);</span>
+<span class="fc" id="L258">              response.end(html);</span>
+<span class="fc" id="L259">              return Future.succeededFuture();</span>
             });
-<span class="fc" id="L260">  }</span>
+<span class="fc" id="L261">  }</span>
 
   private void updateLogLevel(String loggerName, HttpServerRequest request, HttpServerResponse response) {
-<span class="fc" id="L263">    request.body()</span>
-<span class="fc" id="L264">            .compose(buffer -&gt; {</span>
-<span class="fc" id="L265">              JsonObject jo = buffer.toJsonObject();</span>
-<span class="fc" id="L266">              String newLevel = jo.getString(&quot;level&quot;);</span>
-<span class="fc" id="L267">              setLogLevel(loggerName, newLevel);</span>
-<span class="fc" id="L268">              getLogLevelsJson(response);</span>
-<span class="fc" id="L269">              return Future.succeededFuture();</span>
+<span class="fc" id="L264">    request.body()</span>
+<span class="fc" id="L265">            .compose(buffer -&gt; {</span>
+<span class="fc" id="L266">              JsonObject jo = buffer.toJsonObject();</span>
+<span class="fc" id="L267">              String newLevel = jo.getString(&quot;level&quot;);</span>
+<span class="fc" id="L268">              setLogLevel(loggerName, newLevel);</span>
+<span class="fc" id="L269">              getLogLevelsJson(response);</span>
+<span class="fc" id="L270">              return Future.succeededFuture();</span>
             });
     
-<span class="fc" id="L272">  }</span>
+<span class="fc" id="L273">  }</span>
   
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
