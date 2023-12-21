@@ -29,9 +29,12 @@ import org.slf4j.LoggerFactory;
 
 import static io.restassured.RestAssured.given;
 import io.restassured.http.ContentType;
+import io.vertx.junit5.Timeout;
+import java.util.concurrent.TimeUnit;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -48,7 +51,8 @@ public class HeapDumpRouteIT {
   public HeapDumpRouteIT() {
   }
 
-  @org.junit.jupiter.api.Test
+  @Test
+  @Timeout(value = 6, timeUnit = TimeUnit.MINUTES)
   public void testHandle(Vertx vertx, VertxTestContext testContext) throws Throwable {
 
     Router router = Router.router(vertx);
