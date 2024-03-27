@@ -640,7 +640,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.2.1</version>
+            <version>3.2.2</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -649,11 +649,9 @@
                   <goal>sign</goal>
                 </goals>
                 <configuration>
-                  <keyname>Jim E. Talbut</keyname>
-                  <gpgArguments>
-                    <arg>--pinentry-mode</arg>
-                    <arg>loopback</arg>
-                  </gpgArguments>
+                  <signer>bc</signer>
+                  <keyEnvName>GPG_PRIVATEKEY</keyEnvName>
+                  <passphraseEnvName>GPG_PASSPHRASE</passphraseEnvName>
                 </configuration>
               </execution>
             </executions>
