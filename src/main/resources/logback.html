@@ -12,13 +12,15 @@ td, th {
   padding-right: 8px;
 }
 </style>
-<script src="https://unpkg.com/react@18.1.0/umd/react.development.js"></script>
-<script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
 </head>
 <body>
   <div id="root"></div>
-<script>
-  data = {"appenders":{},"loggers":{}};
+<script type="module">
+  import React from "https://esm.sh/react@19.0.0-beta-04b058868c-20240508/?dev"
+  import ReactDOMClient from "https://esm.sh/react-dom@19.0.0-beta-04b058868c-20240508/client/?dev"
+  
+  const data = {"appenders":{},"loggers":{}};
+  const baseurl = URL;
 
   class Appender extends React.Component {
     render() {
@@ -155,11 +157,12 @@ td, th {
       ];
     }
   }
-
-  const baseurl = URL;
-  const root = ReactDOM.createRoot(document.getElementById("root"));
-  const logbackDetails = React.createElement(LogbackDetails, data, null);
-  root.render(logbackDetails);
+  
+  window.onload = () => {
+    const root = ReactDOMClient.createRoot(document.getElementById("root"));
+    const logbackDetails = React.createElement(LogbackDetails, data, null);
+    root.render(logbackDetails);
+  }
 </script>
 </body>
 </html>

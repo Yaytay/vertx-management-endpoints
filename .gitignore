@@ -1,3 +1,6 @@
 /target/
 /nbproject/
 /nb-configuration.xml
+.m2
+.mvn
+codecov*
