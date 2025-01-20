@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"uk.co.spudsoft.mgmt"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"uk.co.spudsoft.mgmt"},{"l":"uk.co.spudsoft.mgmt.sandbox"}];updateSearchResults();
