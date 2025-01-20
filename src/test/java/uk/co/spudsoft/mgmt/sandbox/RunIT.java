@@ -55,8 +55,9 @@ public class RunIT {
     InFlightRoute.createAndDeploy(router, mgmtRouter);
     HeapDumpRoute.createAndDeploy(mgmtRouter);
     LogbackMgmtRoute.createAndDeploy(mgmtRouter);    
+    ThreadDumpRoute.createAndDeploy(mgmtRouter);
     ManagementRoute.createAndDeploy(null, router, null, null, null, mgmtRouter, null);
-    ThreadDumpRoute.createAndDeploy(router);
+    
     
     HttpServerVerticle httperServerVerticle = new HttpServerVerticle(router);
     
