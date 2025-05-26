@@ -150,13 +150,14 @@ public class HeapDumpRoute implements Handler<RoutingContext> {
         response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_BINARY);
         response.putHeader("Content-Disposition", "attachment; filename=\"" + filename + ".hprof\"");
 
-        response.sendFile(tempFile.getAbsolutePath(), (ar) -> {
-          if (!tempFile.delete()) {
-            logger.error("Failed to delete temporary files: {}", tempFile);
-          } else {
-            logger.debug("Deleted temporary file: {}", tempFile);
-          }
-        });
+        response.sendFile(tempFile.getAbsolutePath())
+                .onComplete((ar) -> {
+                  if (!tempFile.delete()) {
+                    logger.error("Failed to delete temporary files: {}", tempFile);
+                  } else {
+                    logger.debug("Deleted temporary file: {}", tempFile);
+                  }
+                });
       }
       
     } else {

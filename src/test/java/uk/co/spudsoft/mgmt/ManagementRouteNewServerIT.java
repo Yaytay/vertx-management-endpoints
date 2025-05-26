@@ -137,7 +137,7 @@ public class ManagementRouteNewServerIT {
     Router rootRouter = Router.router(vertx);
     Router mgmtRouter = Router.router(vertx);
     
-    CorsHandler corsHandler = CorsHandler.create().addRelativeOrigin(".*");
+    CorsHandler corsHandler = CorsHandler.create().addOriginWithRegex(".*");
     corsHandler.allowedMethod(HttpMethod.GET);
     rootRouter.route("/*").handler(corsHandler); 
     

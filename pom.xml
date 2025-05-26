@@ -46,7 +46,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jdk.version>11</jdk.version>
     <jackson.version>[2.15,]</jackson.version>
-    <vertx.version>[4.4.2,4.999)</vertx.version>
+    <vertx.version>[5.0.0,)</vertx.version>
     <slf4j.version>[2.0,)</slf4j.version>
     <logback.version>[1.4,)</logback.version>
     <junit-jupiter.version>5.12.2</junit-jupiter.version>
@@ -124,7 +124,7 @@
     <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
-      <version>5.5.1</version>
+      <version>5.5.5</version>
       <exclusions>
         <exclusion>
           <groupId>commons-logging</groupId>
@@ -192,7 +192,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>5.17.0</version>
+      <version>5.18.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -338,7 +338,7 @@
             <plugin>
               <groupId>com.h3xstream.findsecbugs</groupId>
               <artifactId>findsecbugs-plugin</artifactId>
-              <version>1.13.0</version>
+              <version>1.14.0</version>
             </plugin>
           </plugins>
         </configuration>
@@ -376,7 +376,7 @@
           <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
-            <version>10.23.0</version>
+            <version>10.24.0</version>
           </dependency>
         </dependencies>
       </plugin>
