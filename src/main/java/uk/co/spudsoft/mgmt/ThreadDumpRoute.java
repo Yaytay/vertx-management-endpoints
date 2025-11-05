@@ -242,11 +242,8 @@ public class ThreadDumpRoute implements Handler<RoutingContext> {
                 .append("\t(").append(t.getThreadState()).append(")")
                 .append(t.isDaemon() ? " Daemon" : " User")
                 ;
-        if (stackTrace.length > 0) {
-          stackTraceString.append("\t").append(stackTrace[0].toString());
-        }
-        if (stackTrace.length > 1) {
-          stackTraceString.append("\t").append(stackTrace[1].toString());
+        for (StackTraceElement s : stackTrace) {
+          stackTraceString.append("\t").append(s.toString());
         }
       } else {
         stackTraceString.append(t.getThreadName())
