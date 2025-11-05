@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ContentTypes.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Vertx Management Endpoints</a> &gt; <a href="index.source.html" class="el_package">uk.co.spudsoft.mgmt</a> &gt; <span class="el_source">ContentTypes.java</span></div><h1>ContentTypes.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2023 jtalbut
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package uk.co.spudsoft.mgmt;
+
+import io.vertx.ext.web.RoutingContext;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Helper class for handling content types consistently across management routes.
+ * 
+ * @author jtalbut
+ */
+public final class ContentTypes {
+  
+  /**
+   * Query string parameter that can be used to override Accept header for management routes.
+   */
+  public static final String PARAM = &quot;_fmt&quot;;
+  
+  /**
+   * JSON content type.
+   */
+  public static final String TYPE_JSON = &quot;application/json&quot;;
+  /**.
+   * HTML content type.
+   */
+  public static final String TYPE_HTML = &quot;text/html&quot;;
+  /**.
+   * Plain text content type.
+   */
+  public static final String TYPE_PLAIN = &quot;text/plain&quot;;
+  /**.
+   * Binary stream content type.
+   */
+  public static final String TYPE_BINARY = &quot;application/octet-stream&quot;;
+  
+<span class="fc" id="L54">  private static final Map&lt;String, String&gt; PARAM_TO_TYPE = buildParamTypeMap();</span>
+
+  private static Map&lt;String, String&gt; buildParamTypeMap() {
+<span class="fc" id="L57">    Map&lt;String, String&gt; result = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L58">    result.put(&quot;html&quot;, TYPE_HTML);</span>
+<span class="fc" id="L59">    result.put(&quot;text&quot;, TYPE_PLAIN);</span>
+<span class="fc" id="L60">    result.put(&quot;json&quot;, TYPE_JSON);</span>
+<span class="fc" id="L61">    result.put(&quot;binary&quot;, TYPE_JSON);</span>
+<span class="fc" id="L62">    return Collections.unmodifiableMap(result);</span>
+  }
+
+  private ContentTypes() {
+  }
+  
+  /**
+   * If the PARAM ('_fmt') argument is found in the query string parameters and the value of that parameter is found in PARAM_TO_TYPE then replace
+   * the AcceptableContentType with the value from the PARAM_TO_TYPE map.
+   * 
+   * The there are multiple '_fmt' arguments then only the first usable one is used.
+   * 
+   * @param rc The routing context.
+   */
+  public static void adjustFromParams(RoutingContext rc) {
+    
+<span class="fc" id="L78">    List&lt;String&gt; values = rc.queryParam(PARAM);</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">    if (values != null) {</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">      for (String value : values) {</span>
+<span class="fc" id="L81">        String type = PARAM_TO_TYPE.get(value);</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        if (type != null) {</span>
+<span class="fc" id="L83">          rc.setAcceptableContentType(type);</span>
+<span class="fc" id="L84">          return ;</span>
+        }
+<span class="fc" id="L86">      }</span>
+    }
+    
+<span class="fc" id="L89">  }</span>
+  
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

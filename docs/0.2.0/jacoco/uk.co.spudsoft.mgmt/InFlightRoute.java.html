@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InFlightRoute.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Vertx Management Endpoints</a> &gt; <a href="index.source.html" class="el_package">uk.co.spudsoft.mgmt</a> &gt; <span class="el_source">InFlightRoute.java</span></div><h1>InFlightRoute.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2022 njt
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package uk.co.spudsoft.mgmt;
+
+import io.vertx.core.Handler;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.core.net.SocketAddress;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * A Vertx HTTP Server route for allowing users to download information about all HTTP requests currently being processed by the server.
+ * 
+ * It is probably very important, for obvious security reasons, that this endpoint is not accessible to end users.
+ * It is strongly recommended that this endpoint be mounted on via a subrouter, the path to which is only accessible from authorised personnel.
+ * The integration tests demonstrate the use of a suitable subrouter to locate the endpoint at /manage/heapdump.
+ * 
+ * @author njt
+ */
+public class InFlightRoute implements Handler&lt;RoutingContext&gt; {
+  
+  /**
+   * The path at which the standardDeploy method will put the router.
+   */
+  public static final String PATH = &quot;inflight&quot;;
+  
+  /**
+   * The key value that will be used for storing the timestamp of the start of processing in the RoutingContext.
+   */
+<span class="fc" id="L53">  public static final String TIMESTAMP_KEY = InFlightRoute.class.getCanonicalName() + &quot;_StartTimestamp&quot;;</span>
+          
+<span class="fc" id="L55">  private static final Logger logger = LoggerFactory.getLogger(InFlightRoute.class);</span>
+
+<span class="fc" id="L57">  private final Map&lt;SocketAddress, RoutingContext&gt; map = new HashMap&lt;&gt;();  </span>
+
+  /**
+   * Constructor.
+   */
+<span class="fc" id="L62">  public InFlightRoute() {</span>
+<span class="fc" id="L63">  }</span>
+  
+  /**
+   * Deploy the route to the router passed in at the normal endpoint.
+   * 
+   * The manageRouter passed in should be a sub router that is inaccessible to normal users.
+   * 
+   * @param rootRouter The top level router for the HttpServer that will be monitored.
+   * @param manageRouter The router that this handler will be attached to.
+   */
+  public void standardDeploy(Router rootRouter, Router manageRouter) {
+<span class="fc" id="L74">    rootRouter.route().handler(this::record);</span>
+<span class="fc" id="L75">    manageRouter.route().handler(this::record);</span>
+<span class="fc" id="L76">    manageRouter.route(HttpMethod.GET, &quot;/&quot; + PATH)</span>
+<span class="fc" id="L77">            .handler(this::handle)</span>
+<span class="fc" id="L78">            .setName(&quot;In Flight&quot;)</span>
+<span class="fc" id="L79">            .produces(ContentTypes.TYPE_JSON)</span>
+<span class="fc" id="L80">            .produces(ContentTypes.TYPE_HTML)</span>
+<span class="fc" id="L81">            .produces(ContentTypes.TYPE_PLAIN)</span>
+            ;
+<span class="fc" id="L83">  }</span>
+  
+  /**
+   * Factory method to do standard deployment on newly constructed route.
+   * 
+   * The manageRouter passed in should be a sub router that is inaccessible to normal users.
+   * 
+   * @param rootRouter The top level router for the HttpServer that will be monitored.
+   * @param manageRouter The router that this handler will be attached to.
+   */
+  public static void createAndDeploy(Router rootRouter, Router manageRouter) {
+<span class="fc" id="L94">    InFlightRoute route = new InFlightRoute();</span>
+<span class="fc" id="L95">    route.standardDeploy(rootRouter, manageRouter);</span>
+<span class="fc" id="L96">  }</span>
+  
+  
+  @Override
+  public void handle(RoutingContext event) {
+<span class="fc" id="L101">    JsonArray result = new JsonArray();</span>
+<span class="fc" id="L102">    synchronized (map) {</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">      for (RoutingContext rc : map.values()) {</span>
+        try {
+<span class="fc" id="L105">          JsonObject data = new JsonObject();</span>
+<span class="fc" id="L106">          Object timestampObject = rc.get(TIMESTAMP_KEY);</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">          if (timestampObject instanceof Long) {</span>
+<span class="fc" id="L108">            Long timestamp = (Long) timestampObject;</span>
+<span class="fc" id="L109">            data.put(&quot;StartTimestamp&quot;, Instant.ofEpochMilli(timestamp).atOffset(ZoneOffset.UTC).toLocalDateTime().toString());</span>
+<span class="fc" id="L110">            data.put(&quot;SecondsSoFar&quot;, (System.currentTimeMillis() - timestamp) / 1000.0);</span>
+          } 
+<span class="fc" id="L112">          data.put(&quot;LocalAddress&quot;, Objects.toString(event.request().localAddress()));</span>
+<span class="fc" id="L113">          data.put(&quot;RemoteAddress&quot;, Objects.toString(event.request().remoteAddress()));</span>
+<span class="fc" id="L114">          data.put(&quot;AbsoluteUri&quot;, event.request().absoluteURI());</span>
+<span class="fc" id="L115">          data.put(&quot;Query&quot;, event.request().query());</span>
+<span class="fc" id="L116">          result.add(data);</span>
+<span class="nc" id="L117">        } catch (Throwable ex) {</span>
+<span class="nc" id="L118">          logger.warn(&quot;Failed to generate JSON for RoutingContext ({}): &quot;, rc, ex);</span>
+<span class="fc" id="L119">        }</span>
+<span class="fc" id="L120">      }</span>
+<span class="fc" id="L121">    }</span>
+<span class="fc" id="L122">    event.end(result.toString());    </span>
+<span class="fc" id="L123">  }</span>
+
+  private void record(RoutingContext event) {
+<span class="fc" id="L126">    SocketAddress localAddress = event.request().localAddress();</span>
+<span class="fc" id="L127">    synchronized (map) {</span>
+<span class="fc" id="L128">      event.put(TIMESTAMP_KEY, System.currentTimeMillis());</span>
+<span class="fc" id="L129">      map.put(localAddress, event);</span>
+<span class="fc" id="L130">    }</span>
+<span class="fc" id="L131">    event.addEndHandler(ar -&gt; {</span>
+<span class="fc" id="L132">      synchronized (map) {</span>
+<span class="fc" id="L133">        map.remove(localAddress);</span>
+<span class="fc" id="L134">      }</span>
+<span class="fc" id="L135">    });</span>
+<span class="fc" id="L136">    event.next();</span>
+<span class="fc" id="L137">  }</span>
+  
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

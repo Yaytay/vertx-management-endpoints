@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ManagementRoute.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Vertx Management Endpoints</a> &gt; <a href="index.source.html" class="el_package">uk.co.spudsoft.mgmt</a> &gt; <span class="el_source">ManagementRoute.java</span></div><h1>ManagementRoute.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2022 jtalbut
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package uk.co.spudsoft.mgmt;
+
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServer;
+import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Route;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.CorsHandler;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+  * A Vertx HTTP Server route for providing easy access to other &quot;management&quot; routes.
+ * &lt;p&gt;
+ * It is strongly recommended that this endpoint is not accessible to end users.
+ * &lt;p&gt;
+ * A typical deployment of the management endpoints should look something like this:
+ * &lt;pre&gt;
+     // Create the root router
+     Router router = Router.router(vertx);
+    
+    // Create the management endpoints router
+    Router mgmtRouter = Router.router(vertx);
+     
+    // Deploy the management endpoints to the management endpoints router (potentially deploying capturing routes to the root router)
+    ManagementRoute.deployStandardMgmtEndpoints(mgmtRouter, router, params.getManagementEndpoints(), params);
+    // Add custom management endpoints.
+    if (ManagementRoute.mgmtEndpointPermitted(params.getManagementEndpoints(), &quot;up&quot;)) {
+      mgmtRouter.get(&quot;/up&quot;).handler(upCheckHandler).setName(&quot;Up&quot;);
+    }
+    if (ManagementRoute.mgmtEndpointPermitted(params.getManagementEndpoints(), &quot;health&quot;)) {
+      mgmtRouter.get(&quot;/health&quot;).handler(healthCheckHandler).setName(&quot;Health&quot;);
+    }
+    if (ManagementRoute.mgmtEndpointPermitted(params.getManagementEndpoints(), &quot;prometheus&quot;)) {
+      mgmtRouter.get(&quot;/prometheus&quot;).handler(new PrometheusScrapingHandlerImpl()).setName(&quot;Prometheus&quot;);
+    }
+    
+    // Set up CORS for the system
+    CorsHandler corsHandler = null;
+    if (!Strings.isNullOrEmpty(params.getCorsAllowedOriginRegex())) {
+      corsHandler = CorsHandler.create()
+              .addRelativeOrigin(params.getCorsAllowedOriginRegex());
+      corsHandler.allowedMethods(
+              ImmutableSet
+                      .&amp;lt;HttpMethod&gt;builder()
+                      .add(HttpMethod.GET)
+                      .add(HttpMethod.PUT)
+                      .add(HttpMethod.DELETE)
+                      .add(HttpMethod.POST)
+                      .build()
+      );
+      router.route(&quot;/*&quot;).handler(corsHandler); 
+    }
+    
+    // Deploy the management router, potentially creating a new HttpServer
+    ManagementRoute.createAndDeploy(this.vertx
+            , router
+            , params.getHttperServerOptions()
+            , params.getManagementEndpointPort()
+            , corsHandler
+            , mgmtRouter
+            , params.getManagementEndpointUrl()
+    );
+
+    // Deploy other routes
+    router.route(&quot;/api/*&quot;).handler(...);
+    router.route(&quot;/ui/*&quot;).handler(...);
+    router.getWithRegex(&quot;/openapi\\..*&quot;).blockingHandler(openApiHandler);
+    router.get(&quot;/openapi&quot;).handler(openApiHandler.getUiHandler());
+    router.route(&quot;/&quot;).handler(rc -&gt; {
+      rc.response().setStatusCode(307);
+      rc.redirect(&quot;/ui/&quot;);
+    });
+
+    // Start the primary HttpServer
+    httpServer
+            .requestHandler(router)
+            .listen()            
+ * &lt;/pre&gt;
+ * 
+ * @author jtalbut
+ */
+public class ManagementRoute implements Handler&lt;RoutingContext&gt; {
+  
+  /**
+   * The path at which the standardDeploy method will put the router.
+   */
+  public static final String PATH = &quot;manage&quot;;
+  
+<span class="fc" id="L116">  private static final Logger logger = LoggerFactory.getLogger(ManagementRoute.class);</span>
+  
+  private final Router mgmtRouter;
+
+  /**
+   * Constructor.
+   * 
+   * @param mgmtRouter The router that this route will report.
+   */
+<span class="fc" id="L125">  public ManagementRoute(Router mgmtRouter) {</span>
+<span class="fc" id="L126">    this.mgmtRouter = mgmtRouter;</span>
+<span class="fc" id="L127">  }</span>
+  
+  
+  /**
+   * Deploy the route to the router passed in at the normal endpoint.
+   * 
+   * The router passed in should be a sub router that is inaccessible to normal users.
+   * 
+   * @param router The router that this handler will be attached to.
+   */
+  public void standardDeploy(Router router) {
+<span class="fc" id="L138">    router.route(&quot;/&quot; + PATH + &quot;/*&quot;).subRouter(mgmtRouter);</span>
+<span class="fc" id="L139">    router.route(HttpMethod.GET, &quot;/&quot; + PATH)</span>
+<span class="fc" id="L140">            .handler(this::handle)</span>
+<span class="fc" id="L141">            .setName(&quot;Management Routes&quot;)</span>
+<span class="fc" id="L142">            .produces(ContentTypes.TYPE_JSON)</span>
+<span class="fc" id="L143">            .produces(ContentTypes.TYPE_HTML)</span>
+<span class="fc" id="L144">            .produces(ContentTypes.TYPE_PLAIN)            </span>
+            ;
+<span class="fc" id="L146">  }</span>
+  
+  /**
+   * Factory method to do standard deployment.
+   * &lt;p&gt;
+   * If the mgmtPort is null the management route will simply be created and added to the rootRouter.
+   * If the mgmtPort is positive a new HttpServer will be created on that port purely to serve the management endpoints.
+   * If the mgmtPort is not null or positive then the management route will not be created at all.
+   * &lt;p&gt;
+   * If a positive value is provided for mgmtPort a new route may be added to the rootRouter to tell client requests the 
+   * alternate location for the management endpoints.
+   * This cannot be done by a standard HTTP redirect because the client will not handle CORS in a usable manner on HTTP redirects
+   * , so it is instead done by providing a JSON object with a single 'location' value.
+   * The value used for the new URL is the mgmtEndpointUrl parameter and this redirection only happens if this value is not null (or empty).
+   * 
+   * @param vertx Vertx instance, needed for the creation of a new HttpServer.
+   * @param rootRouter The root router for the primary HttpServer.
+   * @param httperServerOptions HttpServerOptions used for the creation of a new HttpServer (will be copied and have the port set correctly).
+   * @param mgmtPort The port that should be used for the management endpoint - the key control value for this method.
+   * @param corsHandler The {@link io.vertx.ext.web.handler.CorsHandler} that can be added to the router of the new HttpServer.
+   * @param mgmtRouter The router that contains the management endpoints.
+   * @param mgmtEndpointUrl The URL that clients should use (instead of /manage on the standard port) for accessing the management endpoints.
+   * @return HttpServer A {@link io.vertx.core.Future} containing created HttpServer, if any (otherwise null).
+   */
+  public static Future&lt;HttpServer&gt; createAndDeploy(Vertx vertx, Router rootRouter, HttpServerOptions httperServerOptions, Integer mgmtPort, CorsHandler corsHandler, Router mgmtRouter, String mgmtEndpointUrl) {
+<span class="fc bfc" id="L171" title="All 2 branches covered.">    if (mgmtPort == null) {</span>
+<span class="fc" id="L172">      ManagementRoute route = new ManagementRoute(mgmtRouter);</span>
+<span class="fc" id="L173">      route.standardDeploy(rootRouter);</span>
+<span class="fc" id="L174">      return null;</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">    } else if (mgmtPort &gt; 0) {</span>
+<span class="fc" id="L176">      Router mgmtParentRouter = Router.router(vertx);</span>
+<span class="fc bfc" id="L177" title="All 2 branches covered.">      if (corsHandler != null) {</span>
+<span class="fc" id="L178">        mgmtParentRouter.route(&quot;/*&quot;).handler(corsHandler);</span>
+      }
+<span class="fc" id="L180">      ManagementRoute route = new ManagementRoute(mgmtRouter);</span>
+<span class="fc" id="L181">      route.standardDeploy(mgmtParentRouter);</span>
+<span class="fc" id="L182">      HttpServerOptions options = new HttpServerOptions(httperServerOptions);</span>
+<span class="fc" id="L183">      options.setPort(mgmtPort);</span>
+<span class="fc" id="L184">      HttpServer mgmtHttpServer = vertx.createHttpServer(options);</span>
+<span class="fc" id="L185">      mgmtHttpServer.requestHandler(mgmtParentRouter);</span>
+<span class="pc bpc" id="L186" title="3 of 6 branches missed.">      if (mgmtEndpointUrl != null &amp;&amp; !mgmtEndpointUrl.isEmpty() &amp;&amp; rootRouter != null) {</span>
+<span class="fc" id="L187">        rootRouter.get(&quot;/&quot; + PATH).handler(rc -&gt; {</span>
+<span class="fc" id="L188">          HttpServerResponse response = rc.response();</span>
+<span class="fc" id="L189">          response.setStatusCode(200);</span>
+<span class="fc" id="L190">          response.putHeader(&quot;Content-Type&quot;, &quot;application/json&quot;);</span>
+<span class="fc" id="L191">          JsonObject data = new JsonObject();</span>
+<span class="fc" id="L192">          data.put(&quot;location&quot;, mgmtEndpointUrl);</span>
+<span class="fc" id="L193">          rc.end(data.toBuffer());</span>
+<span class="fc" id="L194">        });</span>
+      }
+<span class="fc" id="L196">      return mgmtHttpServer.listen(mgmtPort);</span>
+    } else {
+<span class="fc" id="L198">      return null;</span>
+    }
+  }
+  
+  /**
+   * Simple helper method to determine whether path is in the enabledEndpoints.
+   * &lt;p&gt;
+   * Returns true if either enabledEndpoints is empty or it contains path.
+   * @param enabledEndpoints The list of enabled endpoints (may not be null, but if empty all endpoints are enabled).
+   * @param path The path being tested.
+   * @return true if either enabledEndpoints is empty or it contains path.
+   */
+  public static boolean mgmtEndpointPermitted(List&lt;String&gt; enabledEndpoints, String path) {
+<span class="fc bfc" id="L211" title="All 2 branches covered.">    if (enabledEndpoints.isEmpty()) {</span>
+<span class="fc" id="L212">      return true;</span>
+    } else {
+<span class="fc" id="L214">      return enabledEndpoints.contains(path);</span>
+    }
+  }
+  
+  /**
+   * Helper method that creates all the standard management routes.
+   * &lt;p&gt;
+   * Use of this method is entirely optional, but you are likely to end up with a similar implementation if you don't use it.
+   * &lt;p&gt;
+   * This should be called as the first thing you do after creating the rootRouter in order that the logging routes can capture all traffic.
+   * &lt;p&gt;
+   * It is not necessary for {@link createAndDeploy} to be called early, that can be left until later in your setup process.
+   * &lt;p&gt;
+   * This method primarily makes changes to the mgmtRouter, but routes are added the rootRouter for capturing purposes.
+   * &lt;p&gt;
+   * The enabledEndpoints parameter can be used to control which routes are enabled.
+   * If the list is empty all routes are enabled, otherwise only those routes whose sub path is in the list are enabled.
+   * The available values are:
+   * &lt;ul&gt;
+   * &lt;li&gt;parameters
+   * Dumps the full set of configuration parameters.
+   * &lt;li&gt;envvars
+   * Dumps all environment variables.
+   * &lt;li&gt;sysprops
+   * Dumps all system properties.
+   * &lt;li&gt;accesslog
+   * Reports the past few requests to the system.
+   * &lt;li&gt;inflight
+   * Reports all requests made to the system that have not yet completed.
+   * &lt;li&gt;threads
+   * Dump stack traces from all threads.
+   * &lt;li&gt;heapdump
+   * Download a heap dump.
+   * &lt;/ul&gt;
+   * &lt;p&gt;
+   * It is encouraged to add more routes to the mgmtRouter outside of this method for service-specific management endpoint 
+   * (such as health and metrics).
+   * 
+   * @param mgmtRouter The router that will have additional output routes added.
+   * @param rootRouter The root router on the primary endpoint for the service, this will have capturing routes added to it.
+   * @param enabledEndpoints A {@link java.util.List} of Strings that are the endpoints that should be enabled.
+   * @param params {@link java.util.concurrent.atomic.AtomicReference} to the parameters object that will be reported by the 'parameters' endpoint.
+   * If the parameters endpoint is enabled this must be a valid object that can be processed by the Vertx JSON object mapper.
+   */
+  public static void deployStandardMgmtEndpoints(Router mgmtRouter, Router rootRouter, List&lt;String&gt; enabledEndpoints, AtomicReference&lt;Object&gt; params) {
+    
+<span class="fc" id="L260">    AccessLogCaptureRoute capture = null;</span>
+<span class="fc bfc" id="L261" title="All 2 branches covered.">    if (mgmtEndpointPermitted(enabledEndpoints, AccessLogOutputRoute.PATH)) {</span>
+<span class="fc" id="L262">      capture = new AccessLogCaptureRoute(30);</span>
+<span class="fc" id="L263">      rootRouter.route(&quot;/*&quot;).handler(capture); </span>
+    }
+    
+<span class="fc bfc" id="L266" title="All 2 branches covered.">    if (mgmtEndpointPermitted(enabledEndpoints, HeapDumpRoute.PATH)) {</span>
+<span class="fc" id="L267">      HeapDumpRoute.createAndDeploy(mgmtRouter);</span>
+    }
+<span class="fc bfc" id="L269" title="All 2 branches covered.">    if (mgmtEndpointPermitted(enabledEndpoints, InFlightRoute.PATH)) {</span>
+<span class="fc" id="L270">      InFlightRoute.createAndDeploy(rootRouter, mgmtRouter);</span>
+    }
+<span class="fc bfc" id="L272" title="All 2 branches covered.">    if (mgmtEndpointPermitted(enabledEndpoints, LogbackMgmtRoute.PATH)) {</span>
+<span class="fc" id="L273">      LogbackMgmtRoute.createAndDeploy(mgmtRouter);</span>
+    }
+<span class="fc bfc" id="L275" title="All 2 branches covered.">    if (mgmtEndpointPermitted(enabledEndpoints, ThreadDumpRoute.PATH)) {</span>
+<span class="fc" id="L276">      ThreadDumpRoute.createAndDeploy(mgmtRouter);</span>
+    }
+<span class="fc bfc" id="L278" title="All 2 branches covered.">    if (capture != null) {</span>
+<span class="fc" id="L279">      AccessLogOutputRoute.createAndDeploy(mgmtRouter, capture.getBuffer());</span>
+    }
+<span class="fc bfc" id="L281" title="All 2 branches covered.">    if (mgmtEndpointPermitted(enabledEndpoints, DumpEnvRoute.PATH)) {</span>
+<span class="fc" id="L282">      DumpEnvRoute.createAndDeploy(mgmtRouter);</span>
+    }
+<span class="fc bfc" id="L284" title="All 2 branches covered.">    if (mgmtEndpointPermitted(enabledEndpoints, DumpSysPropsRoute.PATH)) {</span>
+<span class="fc" id="L285">      DumpSysPropsRoute.createAndDeploy(mgmtRouter);</span>
+    }
+<span class="pc bpc" id="L287" title="1 of 4 branches missed.">    if (mgmtEndpointPermitted(enabledEndpoints, ParametersRoute.PATH) &amp;&amp; params != null) {</span>
+<span class="fc" id="L288">      ParametersRoute.createAndDeploy(mgmtRouter, params);</span>
+    }
+<span class="fc" id="L290">  }</span>
+  
+  
+  @Override
+  public void handle(RoutingContext rc) {
+    
+<span class="fc" id="L296">    HttpServerResponse response = rc.response();</span>
+    
+<span class="fc" id="L298">    HttpServerRequest request = rc.request();</span>
+    
+<span class="pc bpc" id="L300" title="1 of 2 branches missed.">    if (request.method() == HttpMethod.GET) {</span>
+      
+<span class="fc" id="L302">      ContentTypes.adjustFromParams(rc);</span>
+      
+<span class="fc bfc" id="L304" title="All 2 branches covered.">      if (ContentTypes.TYPE_HTML.equals(rc.getAcceptableContentType())) {</span>
+<span class="fc" id="L305">        returnHtml(request, response);</span>
+<span class="fc bfc" id="L306" title="All 2 branches covered.">      } else if (ContentTypes.TYPE_JSON.equals(rc.getAcceptableContentType())) {</span>
+<span class="fc" id="L307">        returnJson(request, response);</span>
+      } else {
+<span class="fc" id="L309">        returnText(request, response);</span>
+      }
+    }
+<span class="fc" id="L312">  }</span>
+  
+  private void returnJson(HttpServerRequest request, HttpServerResponse response) {
+    
+<span class="fc" id="L316">    JsonArray result = new JsonArray();</span>
+    
+<span class="fc bfc" id="L318" title="All 2 branches covered.">    for (Route route : mgmtRouter.getRoutes()) {</span>
+<span class="pc bpc" id="L319" title="1 of 6 branches missed.">      if (route.isExactPath() &amp;&amp; route.methods() != null &amp;&amp; route.methods().contains(HttpMethod.GET)) {</span>
+<span class="fc" id="L320">        JsonObject object = new JsonObject();</span>
+<span class="fc" id="L321">        object.put(&quot;name&quot;, route.getName());</span>
+<span class="fc" id="L322">        object.put(&quot;url&quot;, request.absoluteURI() + route.getPath());</span>
+<span class="fc" id="L323">        result.add(object);</span>
+      }
+<span class="fc" id="L325">    }</span>
+
+<span class="fc" id="L327">    response.setStatusCode(200);</span>
+<span class="fc" id="L328">    response.putHeader(&quot;Content-Type&quot;, ContentTypes.TYPE_JSON);</span>
+<span class="fc" id="L329">    response.end(result.toString());    </span>
+    
+<span class="fc" id="L331">  }</span>
+
+  private void returnText(HttpServerRequest request, HttpServerResponse response) {
+    
+<span class="fc" id="L335">    StringBuilder result = new StringBuilder();</span>
+<span class="fc bfc" id="L336" title="All 2 branches covered.">    for (Route route : mgmtRouter.getRoutes()) {</span>
+<span class="pc bpc" id="L337" title="1 of 6 branches missed.">      if (route.isExactPath() &amp;&amp; route.methods() != null &amp;&amp; route.methods().contains(HttpMethod.GET)) {</span>
+<span class="fc" id="L338">        result.append(route.getName()).append(&quot;: &quot;).append(request.absoluteURI()).append(route.getPath());</span>
+      }
+<span class="fc" id="L340">    }</span>
+
+<span class="fc" id="L342">    response.setStatusCode(200);</span>
+<span class="fc" id="L343">    response.putHeader(&quot;Content-Type&quot;, ContentTypes.TYPE_PLAIN);</span>
+<span class="fc" id="L344">    response.end(result.toString());    </span>
+    
+<span class="fc" id="L346">  }</span>
+
+  private static final String HEAD = &quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;Management Endpoints&lt;/title&gt;&lt;meta http-equiv=\&quot;content-type\&quot; content=\&quot;text/html; charset=utf-8\&quot;&gt;&lt;/head&gt;&lt;body&gt;&lt;table&gt;&lt;tr&gt;&lt;th&gt;Route&lt;/th&gt;&lt;th&gt;Link&lt;/th&gt;&lt;/tr&gt;&quot;;
+  private static final String TAIL = &quot;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;&quot;;
+  
+  private void returnHtml(HttpServerRequest request, HttpServerResponse response) {
+
+<span class="fc" id="L353">    response.putHeader(&quot;Content-Type&quot;, ContentTypes.TYPE_HTML);</span>
+<span class="fc" id="L354">    response.setChunked(true);</span>
+<span class="fc" id="L355">    response.write(HEAD);</span>
+
+<span class="fc bfc" id="L357" title="All 2 branches covered.">    for (Route route : mgmtRouter.getRoutes()) {</span>
+<span class="pc bpc" id="L358" title="1 of 6 branches missed.">      if (route.isExactPath() &amp;&amp; route.methods() != null &amp;&amp; route.methods().contains(HttpMethod.GET)) {</span>
+<span class="fc" id="L359">        response.write(&quot;&lt;tr&gt;&lt;td&gt;&quot; + route.getName() + &quot;&lt;/td&gt;&lt;td&gt;&lt;a href=\&quot;&quot; + request.absoluteURI() + route.getPath() + &quot;\&quot;&gt;&quot; + request.absoluteURI() + route.getPath() + &quot;&lt;/td&gt;&lt;/tr&gt;&quot;);</span>
+      }
+<span class="fc" id="L361">    }</span>
+
+<span class="fc" id="L363">    response.end(TAIL);    </span>
+    
+<span class="fc" id="L365">  }</span>
+  
+  
+  
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
