@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 
 /**
  *
@@ -86,6 +87,49 @@ public class ThreadDumpRouteIT {
                       .body(
                           containsString("RUNNABLE")
                           , containsString("TIMED_WAIT")
+                          , not(containsString("\t"))
+                      )
+                      ;
+                  
+                  given()
+                      .log().all()
+                      .accept("text/plain")
+                      .get("/manage/" + ThreadDumpRoute.PATH + "?simple")
+                      .then()
+                      .statusCode(200)
+                      .log().body()
+                      .body(
+                          containsString("RUNNABLE")
+                          , containsString("TIMED_WAIT")
+                          , containsString("\t")
+                      )
+                      ;
+                  
+                  given()
+                      .log().all()
+                      .accept("text/plain")
+                      .get("/manage/" + ThreadDumpRoute.PATH + "?simple=true")
+                      .then()
+                      .statusCode(200)
+                      .log().body()
+                      .body(
+                          containsString("RUNNABLE")
+                          , containsString("TIMED_WAIT")
+                          , containsString("\t")
+                      )
+                      ;
+                  
+                  given()
+                      .log().all()
+                      .accept("text/plain")
+                      .get("/manage/" + ThreadDumpRoute.PATH + "?simple=false")
+                      .then()
+                      .statusCode(200)
+                      .log().body()
+                      .body(
+                          containsString("RUNNABLE")
+                          , containsString("TIMED_WAIT")
+                          , not(containsString("\t"))
                       )
                       ;
                   

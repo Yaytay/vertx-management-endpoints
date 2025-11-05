@@ -21,6 +21,8 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -29,10 +31,20 @@ import static org.hamcrest.Matchers.startsWith;
  */
 public class ThreadDumpRouteTest {
   
+  private static final Logger logger = LoggerFactory.getLogger(ThreadDumpRouteTest.class);
+  
   @Test
   public void testBuildStackTrace() {
-    String stackTrace = ThreadDumpRoute.buildStackTraceText();
+    String stackTrace = ThreadDumpRoute.buildStackTraceText(false);
     assertThat(stackTrace, startsWith("main (RUNNABLE)"));
+    assertThat(stackTrace, containsString("WAITING"));
+    assertThat(stackTrace, containsString("Daemon"));
+  }
+  
+  @Test
+  public void testBuildSimpleStackTrace() {
+    String stackTrace = ThreadDumpRoute.buildStackTraceText(true);
+    assertThat(stackTrace, startsWith("main\t(RUNNABLE)"));
     assertThat(stackTrace, containsString("WAITING"));
     assertThat(stackTrace, containsString("Daemon"));
   }

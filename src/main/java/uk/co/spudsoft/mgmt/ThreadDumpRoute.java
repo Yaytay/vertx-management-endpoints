@@ -81,6 +81,17 @@ public class ThreadDumpRoute implements Handler<RoutingContext> {
     route.standardDeploy(router);
   }
   
+  private boolean opt(HttpServerRequest request, String paramName) {
+    String param = request.getParam(paramName);
+    if (param == null) {
+      return false;
+    } else if (param.isEmpty()) {
+      return true;
+    } else {
+      return "true".equalsIgnoreCase(param);
+    }
+  }
+  
   @Override
   public void handle(RoutingContext rc) {
     
@@ -104,7 +115,7 @@ public class ThreadDumpRoute implements Handler<RoutingContext> {
         HttpServerResponse response = rc.response();
         response.setStatusCode(200);
         response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_PLAIN);
-        response.end(buildStackTraceText());
+        response.end(buildStackTraceText(opt(request, "simple")));
       }
     } else {
       rc.next();
@@ -219,41 +230,54 @@ public class ThreadDumpRoute implements Handler<RoutingContext> {
     }
   }
 
-  static String buildStackTraceText() {
+  static String buildStackTraceText(boolean simple) {
     ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean();
     ThreadInfo[] threadInfo = threadMxBean.dumpAllThreads(true, true);
 
     StringBuilder stackTraceString = new StringBuilder();
     for (ThreadInfo t : threadInfo) {
       StackTraceElement[] stackTrace = t.getStackTrace();
-      stackTraceString.append(t.getThreadName())
-              .append(" (").append(t.getThreadState()).append(")")
-              .append(t.isDaemon() ? " Daemon" : "")
-              .append("\n");
-      if (t.isSuspended()) {
-        stackTraceString.append("Suspended\n");
-      }
-      String lockName = t.getLockName();
-      if (lockName != null) {
-        stackTraceString
-                .append("Waiting for ")
-                .append(lockName)
+      if (simple) {
+        stackTraceString.append(t.getThreadName())
+                .append("\t(").append(t.getThreadState()).append(")")
+                .append(t.isDaemon() ? " Daemon" : " User")
                 ;
-        if (t.getLockOwnerId() >= 0) {
+        if (stackTrace.length > 0) {
+          stackTraceString.append("\t").append(stackTrace[0].toString());
+        }
+        if (stackTrace.length > 1) {
+          stackTraceString.append("\t").append(stackTrace[1].toString());
+        }
+      } else {
+        stackTraceString.append(t.getThreadName())
+                .append(" (").append(t.getThreadState()).append(")")
+                .append(t.isDaemon() ? " Daemon" : "")
+                .append("\n");
+        if (t.isSuspended()) {
+          stackTraceString.append("Suspended\n");
+        }
+        String lockName = t.getLockName();
+        if (lockName != null) {
           stackTraceString
-                  .append(" held by ")
-                  .append(t.getLockOwnerId())
-                  .append(" (")
-                  .append(t.getLockOwnerName())
-                  .append(")")
+                  .append("Waiting for ")
+                  .append(lockName)
+                  ;
+          if (t.getLockOwnerId() >= 0) {
+            stackTraceString
+                    .append(" held by ")
+                    .append(t.getLockOwnerId())
+                    .append(" (")
+                    .append(t.getLockOwnerName())
+                    .append(")")
+                    ;
+          }
+          stackTraceString
+                  .append("\n")
                   ;
         }
-        stackTraceString
-                .append("\n")
-                ;
-      }
-      for (StackTraceElement s : stackTrace) {
-        stackTraceString.append("  ").append(s.toString()).append("\n");
+        for (StackTraceElement s : stackTrace) {
+          stackTraceString.append("  ").append(s.toString()).append("\n");
+        }
       }
       stackTraceString.append("\n");
     }
