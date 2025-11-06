@@ -185,7 +185,11 @@ public class ThreadDumpRoute implements Handler<RoutingContext> {
     return stackTraceString.toString();
   }
 
-  static JsonObject buildStackTraceJson() {
+  /**
+   * Generate a JsonObject containing a dump of the stack in all threads in the process.
+   * @return a JsonObject containing a dump of the stack in all threads in the process.
+   */
+  public static JsonObject buildStackTraceJson() {
     ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean();
     ThreadInfo[] threadInfo = threadMxBean.dumpAllThreads(true, true);
 
