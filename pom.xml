@@ -241,6 +241,14 @@
             <goals>
               <goal>display-plugin-updates</goal>
             </goals>
+            <configuration>
+              <ruleSet>
+                <ignoreVersion>
+                  <type>regex</type>
+                  <version>(.+-RC\d+|.+-M\d+|.+-beta-?\d+)</version>
+                </ignoreVersion>
+              </ruleSet>
+            </configuration>
           </execution>      
           <execution>
             <id>display-dependency-updates</id>
@@ -248,6 +256,14 @@
             <goals>
               <goal>display-dependency-updates</goal>
             </goals>
+            <configuration>
+              <ruleSet>
+                <ignoreVersion>
+                  <type>regex</type>
+                  <version>(.+-RC\d+|.+-M\d+|.+-beta-?\d+)</version>
+                </ignoreVersion>
+              </ruleSet>
+            </configuration>
           </execution>      
         </executions>      
       </plugin>
