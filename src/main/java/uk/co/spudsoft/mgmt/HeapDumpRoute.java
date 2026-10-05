@@ -139,25 +139,28 @@ public class HeapDumpRoute implements Handler<RoutingContext> {
           return ;
         }
 
-        try {
+        rc.vertx().executeBlocking(() -> {
           HotSpotDiagnosticMXBean mxBean = ManagementFactory.getPlatformMXBean(HotSpotDiagnosticMXBean.class);
           mxBean.dumpHeap(tempFile.getAbsolutePath(), false);
-        } catch (Throwable ex) {
+          return tempFile;
+        }).onSuccess(dumpFile -> {
+          response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_BINARY);
+          response.putHeader("Content-Disposition", "attachment; filename=\"" + filename + ".hprof\"");
+
+          response.sendFile(dumpFile.getAbsolutePath())
+                  .onComplete((ar) -> {
+                    if (!dumpFile.delete()) {
+                      logger.error("Failed to delete temporary files: {}", dumpFile);
+                    } else {
+                      logger.debug("Deleted temporary file: {}", dumpFile);
+                    }
+                  });
+        }).onFailure(ex -> {
+          if (tempFile.exists() && !tempFile.delete()) {
+            logger.error("Failed to delete temporary file after heap dump failure: {}", tempFile);
+          }
           reportError("Failed to generate heap dump: ", ex, response);
-          return ;
-        }
-
-        response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_BINARY);
-        response.putHeader("Content-Disposition", "attachment; filename=\"" + filename + ".hprof\"");
-
-        response.sendFile(tempFile.getAbsolutePath())
-                .onComplete((ar) -> {
-                  if (!tempFile.delete()) {
-                    logger.error("Failed to delete temporary files: {}", tempFile);
-                  } else {
-                    logger.debug("Deleted temporary file: {}", tempFile);
-                  }
-                });
+        });
       }
       
     } else {
