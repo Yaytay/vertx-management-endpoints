@@ -4,30 +4,30 @@
           xsi:schemaLocation="https://jeremylong.github.io/DependencyCheck/dependency-check.4.1.xsd
                               https://dependency-check.github.io/DependencyCheck/dependency-check.4.1.xsd">
     <scanInfo>
-        <engineVersion>12.2.2</engineVersion>
+        <engineVersion>13.0.0</engineVersion>
         <dataSource>
             <name>NVD API Last Checked</name>
-            <timestamp>2026-07-26T07:15:48Z</timestamp>
+            <timestamp>2026-10-11T16:40:31Z</timestamp>
         </dataSource>
         <dataSource>
             <name>NVD API Last Modified</name>
-            <timestamp>2026-07-26T01:00:05-04</timestamp>
+            <timestamp>2026-10-11T12:00:05-04</timestamp>
         </dataSource>
         <dataSource>
             <name>NVD Cache Last Checked</name>
-            <timestamp>2026-07-26T07:15:48Z</timestamp>
+            <timestamp>2026-10-11T16:40:31Z</timestamp>
         </dataSource>
         <dataSource>
             <name>NVD Cache Last Modified</name>
-            <timestamp>2026-07-26T01:00:05-04</timestamp>
+            <timestamp>2026-10-11T12:00:05-04</timestamp>
         </dataSource>
     </scanInfo>
     <projectInfo>
         <name>Vertx Management Endpoints</name>
         <groupID>uk.co.spudsoft</groupID>
         <artifactID>vertx-management-endpoints</artifactID>
-        <version>0.2.3</version>
-        <reportDate>2026-07-26T07:21:59.713756733Z</reportDate>
+        <version>0.2.8</version>
+        <reportDate>2026-10-11T16:42:14.069040436Z</reportDate>
         <credits>This product uses the NVD API but is not endorsed or certified by the NVD. This report contains data retrieved from the National Vulnerability Database: https://nvd.nist.gov, Github Advisory Database (via NPM Audit API): https://github.com/advisories/, and the RetireJS community.</credits>
     </projectInfo>
     <dependencies>
@@ -44,7 +44,7 @@
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.22.1</reference>
+                <reference>pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.22.3</reference>
             </includedBy>
             <evidenceCollected>
                 <evidence type="vendor" confidence="HIGH">
@@ -242,18 +242,18 @@
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>jackson-core-2.22.1.jar</fileName>
-            <filePath>/home/runner/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.22.1/jackson-core-2.22.1.jar</filePath>
-            <md5>09e866bcd73613665ef49f5086704fb1</md5>
-            <sha1>da7ffb60088d7e8f37ecdd3b617520971cc7b9bf</sha1>
-            <sha256>941ff029bcdb93e83d209ce516c1a7fb8bbac07d0a2fa122f5bf194b2cd7b4f4</sha256>
+            <fileName>jackson-core-2.22.3.jar</fileName>
+            <filePath>/home/runner/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.22.3/jackson-core-2.22.3.jar</filePath>
+            <md5>75691eef4483b7eb0e1c43e08dcb6573</md5>
+            <sha1>8695aab38355c65b60e242ec62edf13c52916d88</sha1>
+            <sha256>8a501126a385b25841915d839508f8a66e2a0dbc8a6709d055ef3b3e852b094c</sha256>
             <description>Core Jackson processing abstractions (aka Streaming API), implementation for JSON</description>
             <license>The Apache Software License, Version 2.0: https://www.apache.org/licenses/LICENSE-2.0.txt</license>
             <projectReferences>
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/uk.co.spudsoft/vertx-management-endpoints@0.2.3</reference>
+                <reference>pkg:maven/uk.co.spudsoft/vertx-management-endpoints@0.2.8</reference>
             </includedBy>
             <evidenceCollected>
                 <evidence type="vendor" confidence="HIGH">
@@ -474,50 +474,50 @@
                 <evidence type="version" confidence="HIGH">
                     <source>file</source>
                     <name>version</name>
-                    <value>2.22.1</value>
+                    <value>2.22.3</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Bundle-Version</name>
-                    <value>2.22.1</value>
+                    <value>2.22.3</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Implementation-Version</name>
-                    <value>2.22.1</value>
+                    <value>2.22.3</value>
                 </evidence>
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>2.22.1</value>
+                    <value>2.22.3</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/com.fasterxml.jackson.core/jackson-core@2.22.1</id>
+                    <id>pkg:maven/com.fasterxml.jackson.core/jackson-core@2.22.3</id>
                 </package>
                 <vulnerabilityIds confidence="HIGHEST">
-                    <id>cpe:2.3:a:fasterxml:jackson-core:2.22.1:*:*:*:*:*:*:*</id>
-                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Afasterxml%3Ajackson-core%3A2.22.1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
+                    <id>cpe:2.3:a:fasterxml:jackson-core:2.22.3:*:*:*:*:*:*:*</id>
+                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Afasterxml%3Ajackson-core%3A2.22.3%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
                 </vulnerabilityIds>
                 <vulnerabilityIds confidence="LOW">
-                    <id>cpe:2.3:a:fasterxml:jackson-modules-java8:2.22.1:*:*:*:*:*:*:*</id>
+                    <id>cpe:2.3:a:fasterxml:jackson-modules-java8:2.22.3:*:*:*:*:*:*:*</id>
                 </vulnerabilityIds>
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>jackson-core-3.1.5.jar</fileName>
-            <filePath>/home/runner/.m2/repository/tools/jackson/core/jackson-core/3.1.5/jackson-core-3.1.5.jar</filePath>
-            <md5>ed1c26680ceec80183239a74ef15a838</md5>
-            <sha1>ccd7eb3269b8d33bc097b36770f367cdfe2f1150</sha1>
-            <sha256>9431b7fa2673bbb618c11d865fe15e13222fd182a214ff998cb7e56afd8f35d2</sha256>
+            <fileName>jackson-core-3.1.7.jar</fileName>
+            <filePath>/home/runner/.m2/repository/tools/jackson/core/jackson-core/3.1.7/jackson-core-3.1.7.jar</filePath>
+            <md5>4dcb2a5b488b0e020f6546a2973c0a28</md5>
+            <sha1>a2b54921d5528a9df7f014222d2d519a14858801</sha1>
+            <sha256>7608c367fd8a92666d28711519599543c180298259963184ce04d2947a8f71e7</sha256>
             <description>Core Jackson processing abstractions (aka Streaming API), implementation for JSON</description>
             <license>The Apache Software License, Version 2.0: https://www.apache.org/licenses/LICENSE-2.0.txt</license>
             <projectReferences>
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/io.vertx/vertx-web@5.1.5</reference>
+                <reference>pkg:maven/io.vertx/vertx-web@5.2.1</reference>
             </includedBy>
             <evidenceCollected>
                 <evidence type="vendor" confidence="HIGH">
@@ -753,47 +753,47 @@
                 <evidence type="version" confidence="HIGH">
                     <source>file</source>
                     <name>version</name>
-                    <value>3.1.5</value>
+                    <value>3.1.7</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Bundle-Version</name>
-                    <value>3.1.5</value>
+                    <value>3.1.7</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Implementation-Version</name>
-                    <value>3.1.5</value>
+                    <value>3.1.7</value>
                 </evidence>
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>3.1.5</value>
+                    <value>3.1.7</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/tools.jackson.core/jackson-core@3.1.5</id>
+                    <id>pkg:maven/tools.jackson.core/jackson-core@3.1.7</id>
                 </package>
                 <vulnerabilityIds confidence="HIGHEST">
-                    <id>cpe:2.3:a:fasterxml:jackson-core:3.1.5:*:*:*:*:*:*:*</id>
-                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Afasterxml%3Ajackson-core%3A3.1.5%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
+                    <id>cpe:2.3:a:fasterxml:jackson-core:3.1.7:*:*:*:*:*:*:*</id>
+                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Afasterxml%3Ajackson-core%3A3.1.7%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
                 </vulnerabilityIds>
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>jackson-databind-2.22.1.jar</fileName>
-            <filePath>/home/runner/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.22.1/jackson-databind-2.22.1.jar</filePath>
-            <md5>df2dcf8d581836d48aae7387311cba93</md5>
-            <sha1>9e2fb91831cce9cb9262909cd76647508949f232</sha1>
-            <sha256>7dcd7e53bec1f56c7ad278bd1ca0840bebcc595d61ce44d6a8439abb75b965b2</sha256>
+            <fileName>jackson-databind-2.22.3.jar</fileName>
+            <filePath>/home/runner/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.22.3/jackson-databind-2.22.3.jar</filePath>
+            <md5>e1fbe6bbbb606fad49068fd2670a5208</md5>
+            <sha1>d0d4b2cdb0a1440ac02178fc2ff01dfb05cd06a8</sha1>
+            <sha256>556db5439e206114346043f68d200497dc96a0bca62a360a81784092ebd0e0a9</sha256>
             <description>General data-binding functionality for Jackson: works on core streaming API</description>
             <license>The Apache Software License, Version 2.0: https://www.apache.org/licenses/LICENSE-2.0.txt</license>
             <projectReferences>
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/uk.co.spudsoft/vertx-management-endpoints@0.2.3</reference>
+                <reference>pkg:maven/uk.co.spudsoft/vertx-management-endpoints@0.2.8</reference>
             </includedBy>
             <evidenceCollected>
                 <evidence type="vendor" confidence="HIGH">
@@ -984,54 +984,54 @@
                 <evidence type="version" confidence="HIGH">
                     <source>file</source>
                     <name>version</name>
-                    <value>2.22.1</value>
+                    <value>2.22.3</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Bundle-Version</name>
-                    <value>2.22.1</value>
+                    <value>2.22.3</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Implementation-Version</name>
-                    <value>2.22.1</value>
+                    <value>2.22.3</value>
                 </evidence>
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>2.22.1</value>
+                    <value>2.22.3</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.22.1</id>
+                    <id>pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.22.3</id>
                 </package>
                 <vulnerabilityIds confidence="HIGHEST">
-                    <id>cpe:2.3:a:fasterxml:jackson-core:2.22.1:*:*:*:*:*:*:*</id>
-                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Afasterxml%3Ajackson-core%3A2.22.1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
+                    <id>cpe:2.3:a:fasterxml:jackson-core:2.22.3:*:*:*:*:*:*:*</id>
+                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Afasterxml%3Ajackson-core%3A2.22.3%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
                 </vulnerabilityIds>
                 <vulnerabilityIds confidence="HIGHEST">
-                    <id>cpe:2.3:a:fasterxml:jackson-databind:2.22.1:*:*:*:*:*:*:*</id>
-                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Afasterxml%3Ajackson-databind%3A2.22.1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
+                    <id>cpe:2.3:a:fasterxml:jackson-databind:2.22.3:*:*:*:*:*:*:*</id>
+                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Afasterxml%3Ajackson-databind%3A2.22.3%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
                 </vulnerabilityIds>
                 <vulnerabilityIds confidence="LOW">
-                    <id>cpe:2.3:a:fasterxml:jackson-modules-java8:2.22.1:*:*:*:*:*:*:*</id>
+                    <id>cpe:2.3:a:fasterxml:jackson-modules-java8:2.22.3:*:*:*:*:*:*:*</id>
                 </vulnerabilityIds>
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>jackson-databind-3.1.5.jar</fileName>
-            <filePath>/home/runner/.m2/repository/tools/jackson/core/jackson-databind/3.1.5/jackson-databind-3.1.5.jar</filePath>
-            <md5>7b399cbb2bea1429c46c1b8c73af42b9</md5>
-            <sha1>782178f0b1fe088803c03b85eb9a406f60519044</sha1>
-            <sha256>3a2338d996fd3056791df8d335fa9ba8a62a706ed4245ecf81b3e583df37d08a</sha256>
+            <fileName>jackson-databind-3.1.7.jar</fileName>
+            <filePath>/home/runner/.m2/repository/tools/jackson/core/jackson-databind/3.1.7/jackson-databind-3.1.7.jar</filePath>
+            <md5>bd36876c84ba73520f0633336ca2f93a</md5>
+            <sha1>1f45f7dd68639c962435fae38ca100a70ccc0971</sha1>
+            <sha256>48c781de87e2016e1f0d973748a27130f11643e7ac080173f40e2d9669d84be3</sha256>
             <description>General data-binding functionality for Jackson: works on core streaming API</description>
             <license>The Apache Software License, Version 2.0: https://www.apache.org/licenses/LICENSE-2.0.txt</license>
             <projectReferences>
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/io.vertx/vertx-web@5.1.5</reference>
+                <reference>pkg:maven/io.vertx/vertx-web@5.2.1</reference>
             </includedBy>
             <evidenceCollected>
                 <evidence type="vendor" confidence="HIGH">
@@ -1202,44 +1202,44 @@
                 <evidence type="version" confidence="HIGH">
                     <source>file</source>
                     <name>version</name>
-                    <value>3.1.5</value>
+                    <value>3.1.7</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Bundle-Version</name>
-                    <value>3.1.5</value>
+                    <value>3.1.7</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Implementation-Version</name>
-                    <value>3.1.5</value>
+                    <value>3.1.7</value>
                 </evidence>
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>3.1.5</value>
+                    <value>3.1.7</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/tools.jackson.core/jackson-databind@3.1.5</id>
+                    <id>pkg:maven/tools.jackson.core/jackson-databind@3.1.7</id>
                 </package>
                 <vulnerabilityIds confidence="HIGHEST">
-                    <id>cpe:2.3:a:fasterxml:jackson-core:3.1.5:*:*:*:*:*:*:*</id>
-                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Afasterxml%3Ajackson-core%3A3.1.5%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
+                    <id>cpe:2.3:a:fasterxml:jackson-core:3.1.7:*:*:*:*:*:*:*</id>
+                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Afasterxml%3Ajackson-core%3A3.1.7%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
                 </vulnerabilityIds>
                 <vulnerabilityIds confidence="HIGHEST">
-                    <id>cpe:2.3:a:fasterxml:jackson-databind:3.1.5:*:*:*:*:*:*:*</id>
-                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Afasterxml%3Ajackson-databind%3A3.1.5%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
+                    <id>cpe:2.3:a:fasterxml:jackson-databind:3.1.7:*:*:*:*:*:*:*</id>
+                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Afasterxml%3Ajackson-databind%3A3.1.7%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
                 </vulnerabilityIds>
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>jackson-dataformat-yaml-2.22.1.jar</fileName>
-            <filePath>/home/runner/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.22.1/jackson-dataformat-yaml-2.22.1.jar</filePath>
-            <md5>8348dc064a58fb2ae67371764b634812</md5>
-            <sha1>af5fde2414e4a8d2617e7890f7068c26b5b66a33</sha1>
-            <sha256>cc3a0e540791a9a1cbcd7584767b84572ffda0b72823856558f47dea69ae8ed1</sha256>
+            <fileName>jackson-dataformat-yaml-2.22.3.jar</fileName>
+            <filePath>/home/runner/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.22.3/jackson-dataformat-yaml-2.22.3.jar</filePath>
+            <md5>ba1c8448785cea71b8cc68275d0e542b</md5>
+            <sha1>520097fe76cde11c7448c622e8cb6e07714c8c7c</sha1>
+            <sha256>2bcbc3b9abaefbeba11409b9e30ec35ed7071a61a47c8c2a9c688e40e45b90f9</sha256>
             <description>Support for reading and writing YAML-encoded data via Jackson abstractions.
   </description>
             <license>https://www.apache.org/licenses/LICENSE-2.0.txt</license>
@@ -1247,18 +1247,18 @@
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/uk.co.spudsoft/vertx-management-endpoints@0.2.3</reference>
+                <reference>pkg:maven/uk.co.spudsoft/vertx-management-endpoints@0.2.8</reference>
             </includedBy>
             <relatedDependencies>
                 <relatedDependency>
-                    <fileName>jackson-dataformat-properties-2.22.1.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-properties/2.22.1/jackson-dataformat-properties-2.22.1.jar</filePath>
-                    <sha256>fa5d38105e93260f8f9074ff944bf0db61926758573ee121112c439990987da1</sha256>
-                    <sha1>a7e9c52d89847b646f57fe5348c197efd43807c5</sha1>
-                    <md5>1dcbf1581c1911698033a824622d475b</md5>
+                    <fileName>jackson-dataformat-properties-2.22.3.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-properties/2.22.3/jackson-dataformat-properties-2.22.3.jar</filePath>
+                    <sha256>ffa35beeebdab281dce9bfd196f21c1270c4d7becf9e32055443bc0cefe3047f</sha256>
+                    <sha1>33ae86465c866ce8961703acd4ee01bb0c948172</sha1>
+                    <md5>022dce77db90fd13d9475e4ab942ed36</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-properties@2.22.1</id>
+                            <id>pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-properties@2.22.3</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
@@ -1442,47 +1442,47 @@
                 <evidence type="version" confidence="HIGH">
                     <source>file</source>
                     <name>version</name>
-                    <value>2.22.1</value>
+                    <value>2.22.3</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Bundle-Version</name>
-                    <value>2.22.1</value>
+                    <value>2.22.3</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Implementation-Version</name>
-                    <value>2.22.1</value>
+                    <value>2.22.3</value>
                 </evidence>
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>2.22.1</value>
+                    <value>2.22.3</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml@2.22.1</id>
+                    <id>pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml@2.22.3</id>
                 </package>
                 <vulnerabilityIds confidence="HIGHEST">
-                    <id>cpe:2.3:a:fasterxml:jackson-dataformat-xml:2.22.1:*:*:*:*:*:*:*</id>
-                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Afasterxml%3Ajackson-dataformat-xml%3A2.22.1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
+                    <id>cpe:2.3:a:fasterxml:jackson-dataformat-xml:2.22.3:*:*:*:*:*:*:*</id>
+                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Afasterxml%3Ajackson-dataformat-xml%3A2.22.3%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
                 </vulnerabilityIds>
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>jackson-datatype-jsr310-2.22.1.jar</fileName>
-            <filePath>/home/runner/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.22.1/jackson-datatype-jsr310-2.22.1.jar</filePath>
-            <md5>4dd3e0a2be3f88d720f9214954ed59b6</md5>
-            <sha1>3377a0589c1b0e62bbe245ac8e9f56fa7d7b8bb9</sha1>
-            <sha256>85da45b7e5e565418963ff8f0dcb184365b0557c15468933f4318dde5c3ce845</sha256>
+            <fileName>jackson-datatype-jsr310-2.22.3.jar</fileName>
+            <filePath>/home/runner/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.22.3/jackson-datatype-jsr310-2.22.3.jar</filePath>
+            <md5>1f14fa9b9779d0545287bba2bfb927df</md5>
+            <sha1>8d54f48cfe4865bdfa245b8a90fb15b56c8a4a3c</sha1>
+            <sha256>ec7052ee48c9d873bb8148338a643f02cf89c01d035dd219411473030d6d2b22</sha256>
             <description>Add-on module to support JSR-310 (Java 8 Date &amp; Time API) data types.</description>
             <license>http://www.apache.org/licenses/LICENSE-2.0.txt</license>
             <projectReferences>
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/uk.co.spudsoft/vertx-management-endpoints@0.2.3</reference>
+                <reference>pkg:maven/uk.co.spudsoft/vertx-management-endpoints@0.2.8</reference>
             </includedBy>
             <evidenceCollected>
                 <evidence type="vendor" confidence="HIGH">
@@ -1693,57 +1693,57 @@
                 <evidence type="version" confidence="HIGH">
                     <source>file</source>
                     <name>version</name>
-                    <value>2.22.1</value>
+                    <value>2.22.3</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Bundle-Version</name>
-                    <value>2.22.1</value>
+                    <value>2.22.3</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Implementation-Version</name>
-                    <value>2.22.1</value>
+                    <value>2.22.3</value>
                 </evidence>
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>2.22.1</value>
+                    <value>2.22.3</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/com.fasterxml.jackson.datatype/jackson-datatype-jsr310@2.22.1</id>
+                    <id>pkg:maven/com.fasterxml.jackson.datatype/jackson-datatype-jsr310@2.22.3</id>
                 </package>
                 <vulnerabilityIds confidence="LOW">
-                    <id>cpe:2.3:a:fasterxml:jackson-modules-java8:2.22.1:*:*:*:*:*:*:*</id>
+                    <id>cpe:2.3:a:fasterxml:jackson-modules-java8:2.22.3:*:*:*:*:*:*:*</id>
                 </vulnerabilityIds>
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>logback-core-1.6.0.jar</fileName>
-            <filePath>/home/runner/.m2/repository/ch/qos/logback/logback-core/1.6.0/logback-core-1.6.0.jar</filePath>
-            <md5>eaa85a6be0930af06f0b821ca09ce171</md5>
-            <sha1>5b87315554b55fbf03288f22564f75b4db50ad80</sha1>
-            <sha256>507c4145ab1344e198977286d7e304ed5b45cf8d27ef2c172477f3572e917261</sha256>
+            <fileName>logback-core-1.6.5.jar</fileName>
+            <filePath>/home/runner/.m2/repository/ch/qos/logback/logback-core/1.6.5/logback-core-1.6.5.jar</filePath>
+            <md5>c1fd0c330f33ec7c2e35f18f06d1c2f9</md5>
+            <sha1>821f011acaffb543404e94bc35f651b483a5a161</sha1>
+            <sha256>03dcbf053b40166849b8eb0a30cbde40c04a448820e9a7589c4b0a2ec3a9db63</sha256>
             <description>logback-core module</description>
             <license>https://www.eclipse.org/legal/epl-v20.html, https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</license>
             <projectReferences>
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/ch.qos.logback/logback-classic@1.6.0</reference>
+                <reference>pkg:maven/ch.qos.logback/logback-classic@1.6.5</reference>
             </includedBy>
             <relatedDependencies>
                 <relatedDependency>
-                    <fileName>logback-classic-1.6.0.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/ch/qos/logback/logback-classic/1.6.0/logback-classic-1.6.0.jar</filePath>
-                    <sha256>8aa4c7667d0dc51843b287d8e7dff194e11380671cc93dfd4dcb3d2d88912f97</sha256>
-                    <sha1>4e74ef2ed795b259364e33278c04f5265ca8266a</sha1>
-                    <md5>09e35dfecfb97373e1c93fa68715a9ea</md5>
+                    <fileName>logback-classic-1.6.5.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/ch/qos/logback/logback-classic/1.6.5/logback-classic-1.6.5.jar</filePath>
+                    <sha256>2e8c73aadad525e854af1ac95793af3dc75ecedd53c010ea2389de44c08e729b</sha256>
+                    <sha1>3a0959903d420ba1ca087100a34063938ac0602b</sha1>
+                    <md5>5d3aac2618d86f4e2b0b079eb545ac09</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/ch.qos.logback/logback-classic@1.6.0</id>
+                            <id>pkg:maven/ch.qos.logback/logback-classic@1.6.5</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
@@ -1922,40 +1922,104 @@
                 <evidence type="version" confidence="HIGH">
                     <source>file</source>
                     <name>version</name>
-                    <value>1.6.0</value>
+                    <value>1.6.5</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Bundle-Version</name>
-                    <value>1.6.0</value>
+                    <value>1.6.5</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Implementation-Version</name>
-                    <value>1.6.0</value>
+                    <value>1.6.5</value>
                 </evidence>
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>1.6.0</value>
+                    <value>1.6.5</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/ch.qos.logback/logback-core@1.6.0</id>
+                    <id>pkg:maven/ch.qos.logback/logback-core@1.6.5</id>
                 </package>
                 <vulnerabilityIds confidence="HIGHEST">
-                    <id>cpe:2.3:a:qos:logback:1.6.0:*:*:*:*:*:*:*</id>
-                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Aqos%3Alogback%3A1.6.0%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
+                    <id>cpe:2.3:a:qos:logback:1.6.5:*:*:*:*:*:*:*</id>
+                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Aqos%3Alogback%3A1.6.5%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
                 </vulnerabilityIds>
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>netty-common-4.2.16.Final.jar (shaded: org.jctools:jctools-core:4.0.6)</fileName>
-            <filePath>/home/runner/.m2/repository/io/netty/netty-common/4.2.16.Final/netty-common-4.2.16.Final.jar/META-INF/maven/org.jctools/jctools-core/pom.xml</filePath>
-            <md5>8341fc089534412b4da254daf73fafc9</md5>
-            <sha1>d7ad6a6097946fd431f78598315022370a402631</sha1>
-            <sha256>6a7d37edc57b6a2b90a05037013fcc0b5eeac5e3dbf1d7109f7639c71cde41e7</sha256>
+            <fileName>netty-common-4.2.19.Final.jar (shaded: org.jctools:jctools-core-jdk11:4.0.7)</fileName>
+            <filePath>/home/runner/.m2/repository/io/netty/netty-common/4.2.19.Final/netty-common-4.2.19.Final.jar/META-INF/maven/org.jctools/jctools-core-jdk11/pom.xml</filePath>
+            <md5>ba1cbe90e8746a1d75c74505e58d98ca</md5>
+            <sha1>ee1d8b096773616ad160c1f3d021a830b9c0d3da</sha1>
+            <sha256>e32377eaa76f88c9271025fa5d4442bc1963e1de5f4055c5819c8cc73eda1936</sha256>
+            <description>Java Concurrency Tools Core Library</description>
+            <license>Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0.txt</license>
+            <projectReferences>
+                <projectReference>Vertx Management Endpoints:compile</projectReference>
+            </projectReferences>
+            <evidenceCollected>
+                <evidence type="vendor" confidence="LOW">
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>jctools-core-jdk11</value>
+                </evidence>
+                <evidence type="vendor" confidence="HIGHEST">
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>org.jctools</value>
+                </evidence>
+                <evidence type="vendor" confidence="HIGH">
+                    <source>pom</source>
+                    <name>name</name>
+                    <value>Java Concurrency Tools Core Library</value>
+                </evidence>
+                <evidence type="vendor" confidence="HIGHEST">
+                    <source>pom</source>
+                    <name>url</name>
+                    <value>JCTools</value>
+                </evidence>
+                <evidence type="product" confidence="HIGHEST">
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>jctools-core-jdk11</value>
+                </evidence>
+                <evidence type="product" confidence="HIGHEST">
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>org.jctools</value>
+                </evidence>
+                <evidence type="product" confidence="HIGH">
+                    <source>pom</source>
+                    <name>name</name>
+                    <value>Java Concurrency Tools Core Library</value>
+                </evidence>
+                <evidence type="product" confidence="HIGH">
+                    <source>pom</source>
+                    <name>url</name>
+                    <value>JCTools</value>
+                </evidence>
+                <evidence type="version" confidence="HIGHEST">
+                    <source>pom</source>
+                    <name>version</name>
+                    <value>4.0.7</value>
+                </evidence>
+            </evidenceCollected>
+            <identifiers>
+                <package confidence="HIGH">
+                    <id>pkg:maven/org.jctools/jctools-core-jdk11@4.0.7</id>
+                </package>
+            </identifiers>
+        </dependency>
+        <dependency isVirtual="false">
+            <fileName>netty-common-4.2.19.Final.jar (shaded: org.jctools:jctools-core:4.0.7)</fileName>
+            <filePath>/home/runner/.m2/repository/io/netty/netty-common/4.2.19.Final/netty-common-4.2.19.Final.jar/META-INF/maven/org.jctools/jctools-core/pom.xml</filePath>
+            <md5>47e1366562570dfcc088cab9bee0b9c7</md5>
+            <sha1>4306deb28041ba8817a0c58e63e117a5eb3129bd</sha1>
+            <sha256>aed8e685ad1b1115fd687395d53afee8a1f1c4aaf79af8b03470cd71099814b1</sha256>
             <description>Java Concurrency Tools Core Library</description>
             <license>Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0.txt</license>
             <projectReferences>
@@ -2005,21 +2069,21 @@
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>4.0.6</value>
+                    <value>4.0.7</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/org.jctools/jctools-core@4.0.6</id>
+                    <id>pkg:maven/org.jctools/jctools-core@4.0.7</id>
                 </package>
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>netty-tcnative-classes-2.0.78.Final.jar</fileName>
-            <filePath>/home/runner/.m2/repository/io/netty/netty-tcnative-classes/2.0.78.Final/netty-tcnative-classes-2.0.78.Final.jar</filePath>
-            <md5>81661eca376719630527ed56323c301c</md5>
-            <sha1>e99c3d87cbfe544813fb012d5dfbf078bde76244</sha1>
-            <sha256>3ca66d8c6c0f003242f954cc1822a32445109ac25b8582840ba3d8e3c92f0a3e</sha256>
+            <fileName>netty-tcnative-classes-2.0.84.Final.jar</fileName>
+            <filePath>/home/runner/.m2/repository/io/netty/netty-tcnative-classes/2.0.84.Final/netty-tcnative-classes-2.0.84.Final.jar</filePath>
+            <md5>6779bba2d822f4bd89bd461f9bb1cf80</md5>
+            <sha1>30d95c719f174c33e5146f923cda62d7bdb65650</sha1>
+            <sha256>7a4437abf98b0cec053af4443fe321177d2cfccfec7bcad4e7d8b75571bbec4d</sha256>
             <description>
     A Mavenized fork of Tomcat Native which incorporates various patches. This artifact is dynamically linked
     to OpenSSL and Apache APR.
@@ -2029,7 +2093,7 @@
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/io.vertx/vertx-web@5.1.5</reference>
+                <reference>pkg:maven/io.vertx/vertx-web@5.2.1</reference>
             </includedBy>
             <evidenceCollected>
                 <evidence type="vendor" confidence="HIGH">
@@ -2200,217 +2264,217 @@
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Bundle-Version</name>
-                    <value>2.0.78.Final</value>
+                    <value>2.0.84.Final</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Implementation-Version</name>
-                    <value>2.0.78.Final</value>
+                    <value>2.0.84.Final</value>
                 </evidence>
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>2.0.78.Final</value>
+                    <value>2.0.84.Final</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/io.netty/netty-tcnative-classes@2.0.78.Final</id>
+                    <id>pkg:maven/io.netty/netty-tcnative-classes@2.0.84.Final</id>
                 </package>
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>netty-transport-4.2.16.Final.jar</fileName>
-            <filePath>/home/runner/.m2/repository/io/netty/netty-transport/4.2.16.Final/netty-transport-4.2.16.Final.jar</filePath>
-            <md5>d264fa6db3bc4aadc8b44ba4d4b650a6</md5>
-            <sha1>ae87a3bec51d503475a19fbd718bf777f2fc06c6</sha1>
-            <sha256>cfa3f654caff906653385f4b7ddaa539d795b78f5711a622482b17d2b73484c0</sha256>
+            <fileName>netty-transport-4.2.19.Final.jar</fileName>
+            <filePath>/home/runner/.m2/repository/io/netty/netty-transport/4.2.19.Final/netty-transport-4.2.19.Final.jar</filePath>
+            <md5>e78d0aa9032182a817da765ccabebeb7</md5>
+            <sha1>52c2306d4b71cfbfc8a6ab9de1d083d2978c3b83</sha1>
+            <sha256>d82d4e200456b8c5d8a1647a3724603f80616e5b35b9ada6e7a20d048f175075</sha256>
             <description>Netty is an asynchronous event-driven network application framework for    rapid development of maintainable high performance protocol servers and    clients.</description>
             <license>https://www.apache.org/licenses/LICENSE-2.0</license>
             <projectReferences>
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/io.vertx/vertx-web@5.1.5</reference>
+                <reference>pkg:maven/io.vertx/vertx-web@5.2.1</reference>
             </includedBy>
             <relatedDependencies>
                 <relatedDependency>
-                    <fileName>netty-buffer-4.2.16.Final.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/netty/netty-buffer/4.2.16.Final/netty-buffer-4.2.16.Final.jar</filePath>
-                    <sha256>cc36ae9fbd0b03fe755eb4eb4424ca53b59cfd297d7fd47d49e5b1059beded6c</sha256>
-                    <sha1>05397ef65dcb60670e0e0dba4854522873af3070</sha1>
-                    <md5>edf93a9f17ba93da1db411835dc0744c</md5>
+                    <fileName>netty-buffer-4.2.19.Final.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/netty/netty-buffer/4.2.19.Final/netty-buffer-4.2.19.Final.jar</filePath>
+                    <sha256>863f09b46cfe7d83872c9499086b9681cd9878c30a319d9f1f3a681bbfb0b12f</sha256>
+                    <sha1>c00e1256ce4f9c4ed44947bd8596be01d58141db</sha1>
+                    <md5>d0bb55da73eb917496596aa77c133437</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.netty/netty-buffer@4.2.16.Final</id>
+                            <id>pkg:maven/io.netty/netty-buffer@4.2.19.Final</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
                 <relatedDependency>
-                    <fileName>netty-codec-base-4.2.16.Final.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/netty/netty-codec-base/4.2.16.Final/netty-codec-base-4.2.16.Final.jar</filePath>
-                    <sha256>feb410225938d9970de6b624a0c031d079804fa5cc5e1ec6e9298f16db5998a7</sha256>
-                    <sha1>01a01d45a9efc228c6d747525848b065e0656b5f</sha1>
-                    <md5>668850c1c5f54beae7ba0755d2f361ee</md5>
+                    <fileName>netty-codec-base-4.2.19.Final.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/netty/netty-codec-base/4.2.19.Final/netty-codec-base-4.2.19.Final.jar</filePath>
+                    <sha256>5702c8097cc81e939dd12e5b39ac2e81f83737c320f6f4d88553577842f9ceb6</sha256>
+                    <sha1>abc65e2d8ff180f8f68bdefadb861f0e07b0a457</sha1>
+                    <md5>6b336140d0915fe0823afa9551207923</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.netty/netty-codec-base@4.2.16.Final</id>
+                            <id>pkg:maven/io.netty/netty-codec-base@4.2.19.Final</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
                 <relatedDependency>
-                    <fileName>netty-codec-classes-quic-4.2.16.Final.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/netty/netty-codec-classes-quic/4.2.16.Final/netty-codec-classes-quic-4.2.16.Final.jar</filePath>
-                    <sha256>9b2856532681b109ecc1d15ba81341665fea4ba1aab78788e3d74c1aff38ca00</sha256>
-                    <sha1>29e04d2f81b70c0b9e2646030dddc878786015be</sha1>
-                    <md5>e98ef54b56b512355eda4b9f2cd7e91f</md5>
+                    <fileName>netty-codec-classes-quic-4.2.19.Final.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/netty/netty-codec-classes-quic/4.2.19.Final/netty-codec-classes-quic-4.2.19.Final.jar</filePath>
+                    <sha256>c6f5765ac2cb37ce23156fce40629ff0221b80e53cfa68af21bad08def370098</sha256>
+                    <sha1>eed316868ef101dd0fb4cb684c89112d658b113b</sha1>
+                    <md5>98e005b9415d0944cb335ea342263aa7</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.netty/netty-codec-classes-quic@4.2.16.Final</id>
+                            <id>pkg:maven/io.netty/netty-codec-classes-quic@4.2.19.Final</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
                 <relatedDependency>
-                    <fileName>netty-codec-compression-4.2.16.Final.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/netty/netty-codec-compression/4.2.16.Final/netty-codec-compression-4.2.16.Final.jar</filePath>
-                    <sha256>13c8565414dd2115281303ef4ad1f7cc69bd7771d8d12c7d2fb31307dff26d11</sha256>
-                    <sha1>bdbbcfcdbe217b95c14a04df4fc5d31213d5c27c</sha1>
-                    <md5>f5fc869794ebb728cdbe8f91e0b72646</md5>
+                    <fileName>netty-codec-compression-4.2.19.Final.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/netty/netty-codec-compression/4.2.19.Final/netty-codec-compression-4.2.19.Final.jar</filePath>
+                    <sha256>8935c51c7217780ae56d178c938b50ea5729b1e088cf3c2568674e331665554c</sha256>
+                    <sha1>34392c72a81269eb2ef1b5f171ff9d93014188de</sha1>
+                    <md5>698ee9b49b7742d54b39dd5de16ccb49</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.netty/netty-codec-compression@4.2.16.Final</id>
+                            <id>pkg:maven/io.netty/netty-codec-compression@4.2.19.Final</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
                 <relatedDependency>
-                    <fileName>netty-codec-dns-4.2.16.Final.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/netty/netty-codec-dns/4.2.16.Final/netty-codec-dns-4.2.16.Final.jar</filePath>
-                    <sha256>f06a6f68d81877ab9da7bf29583a333ad1da5daaa2db26e27d344092499d8f19</sha256>
-                    <sha1>07533d77b74323f20848e5d8051b1dcec0336bb8</sha1>
-                    <md5>243f6a5f62e97d0c80609282691f4155</md5>
+                    <fileName>netty-codec-dns-4.2.19.Final.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/netty/netty-codec-dns/4.2.19.Final/netty-codec-dns-4.2.19.Final.jar</filePath>
+                    <sha256>d8177c55f0864807f6ab02d0af7c72a6b88dd6bfd1a39f3a17e5954e0942fcad</sha256>
+                    <sha1>0f3e2a455d50afff74c5a2c0d0737e0563ae7960</sha1>
+                    <md5>f782907366e55e68bf1e76fe036768c2</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.netty/netty-codec-dns@4.2.16.Final</id>
+                            <id>pkg:maven/io.netty/netty-codec-dns@4.2.19.Final</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
                 <relatedDependency>
-                    <fileName>netty-codec-http-4.2.16.Final.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/netty/netty-codec-http/4.2.16.Final/netty-codec-http-4.2.16.Final.jar</filePath>
-                    <sha256>0d16f981de8d0d304a2ab1a81f0a674892089fbaa8a583100aebb4a5b00456ec</sha256>
-                    <sha1>b5e0715df90047ee5a0138c8f704f43c751009e4</sha1>
-                    <md5>8272c8bab6f48d45e5d4525da86aa6ab</md5>
+                    <fileName>netty-codec-http-4.2.19.Final.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/netty/netty-codec-http/4.2.19.Final/netty-codec-http-4.2.19.Final.jar</filePath>
+                    <sha256>7c28809a4f527746fbce2369f5ac5d5fcef45cfe9da21aa3dd9d3f6bdf00cbe0</sha256>
+                    <sha1>14bc8cdb50ced3a4d51d09e2f1f869fb4046ac7f</sha1>
+                    <md5>9761552db6469d7a9eafe9ddd2539ecb</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.netty/netty-codec-http@4.2.16.Final</id>
+                            <id>pkg:maven/io.netty/netty-codec-http@4.2.19.Final</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
                 <relatedDependency>
-                    <fileName>netty-codec-http2-4.2.16.Final.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/netty/netty-codec-http2/4.2.16.Final/netty-codec-http2-4.2.16.Final.jar</filePath>
-                    <sha256>fe1ffc7ed6bfb40f91c4e265fe76e3be7f9049deef0e8cf5a992420e4f02b542</sha256>
-                    <sha1>7af476eb447afe6e933938f09a5097823cf6c46c</sha1>
-                    <md5>6663c577e66d0009c21789657e48c578</md5>
+                    <fileName>netty-codec-http2-4.2.19.Final.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/netty/netty-codec-http2/4.2.19.Final/netty-codec-http2-4.2.19.Final.jar</filePath>
+                    <sha256>f45756b12a75b907e98cd0158dc947308ca463cd3d27b9035d11a025a4fdbc4d</sha256>
+                    <sha1>c0e800f6265dbb5854d956b9ecdb2ca1f8a9d683</sha1>
+                    <md5>d02ebca2798204c079df479a171d532c</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.netty/netty-codec-http2@4.2.16.Final</id>
+                            <id>pkg:maven/io.netty/netty-codec-http2@4.2.19.Final</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
                 <relatedDependency>
-                    <fileName>netty-codec-http3-4.2.16.Final.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/netty/netty-codec-http3/4.2.16.Final/netty-codec-http3-4.2.16.Final.jar</filePath>
-                    <sha256>94a4b22187d0240bc299366a5135d439affd1fafd3b5162764e86d290d2e85a4</sha256>
-                    <sha1>506ab30d26e401aeb52922b9baf000d17f355957</sha1>
-                    <md5>ecaa666ba5b3441f3f28150131709f98</md5>
+                    <fileName>netty-codec-http3-4.2.19.Final.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/netty/netty-codec-http3/4.2.19.Final/netty-codec-http3-4.2.19.Final.jar</filePath>
+                    <sha256>a13018427735554428a409c27ae679c44614b31fd402837caa7530a9fd688a26</sha256>
+                    <sha1>3b12c630b4ad5d968b8a52722658aaba018f821f</sha1>
+                    <md5>ee93f783762c48cdb76ba4dba8ec68e8</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.netty/netty-codec-http3@4.2.16.Final</id>
+                            <id>pkg:maven/io.netty/netty-codec-http3@4.2.19.Final</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
                 <relatedDependency>
-                    <fileName>netty-codec-socks-4.2.16.Final.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/netty/netty-codec-socks/4.2.16.Final/netty-codec-socks-4.2.16.Final.jar</filePath>
-                    <sha256>e5230b4c467755bb570c846c8e3c0ffadcb1b568c1cd9a3a4ee946734baae54d</sha256>
-                    <sha1>0d227dd8807b28382ade355eaae4678d4a7cd13c</sha1>
-                    <md5>e8fd3924aa7e865c05572b40592b58ca</md5>
+                    <fileName>netty-codec-socks-4.2.19.Final.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/netty/netty-codec-socks/4.2.19.Final/netty-codec-socks-4.2.19.Final.jar</filePath>
+                    <sha256>b837044e8edbd977bafe4e643c13958a45cf0caefd1338b7e6660e716a769624</sha256>
+                    <sha1>ac0652893932696257322ce3581e52b22da74982</sha1>
+                    <md5>9b99110999246740ebe0207272f6c1f6</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.netty/netty-codec-socks@4.2.16.Final</id>
+                            <id>pkg:maven/io.netty/netty-codec-socks@4.2.19.Final</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
                 <relatedDependency>
-                    <fileName>netty-common-4.2.16.Final.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/netty/netty-common/4.2.16.Final/netty-common-4.2.16.Final.jar</filePath>
-                    <sha256>9825ee68a0dc4cd2b53e2f532502401b2211bad9b77e8b04882d9e64487283ff</sha256>
-                    <sha1>c2bc7fa5acfa2afc777e944d84f0aa65559cc81e</sha1>
-                    <md5>cb87c4d5675795bdb591626dbe73a705</md5>
+                    <fileName>netty-common-4.2.19.Final.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/netty/netty-common/4.2.19.Final/netty-common-4.2.19.Final.jar</filePath>
+                    <sha256>22fa74761f6e35c8c88972f35cf65664566b922dd73d3424528e97c34278fa79</sha256>
+                    <sha1>aae16e793dd13a63fc9a9935ff11fa19d0de7885</sha1>
+                    <md5>728e6110b2a25fd100b722baa750d926</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.netty/netty-common@4.2.16.Final</id>
+                            <id>pkg:maven/io.netty/netty-common@4.2.19.Final</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
                 <relatedDependency>
-                    <fileName>netty-handler-4.2.16.Final.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/netty/netty-handler/4.2.16.Final/netty-handler-4.2.16.Final.jar</filePath>
-                    <sha256>a259ca496da05ac1981f95cd856211f894a328056a6129e9cd70dbbd5df401f7</sha256>
-                    <sha1>cc82873ae4b6d14effe480740ad838de09add70d</sha1>
-                    <md5>71e9f0d2b76977c1e305f06449fde0c9</md5>
+                    <fileName>netty-handler-4.2.19.Final.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/netty/netty-handler/4.2.19.Final/netty-handler-4.2.19.Final.jar</filePath>
+                    <sha256>8b469cf23ddf21ba84291f4dff470d2277a28deac95e7084b0ff2ce853e58276</sha256>
+                    <sha1>6cfc1334a230b3c4c8325417fada299067648672</sha1>
+                    <md5>ebe2d43768d8396f33de09a948451473</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.netty/netty-handler@4.2.16.Final</id>
+                            <id>pkg:maven/io.netty/netty-handler@4.2.19.Final</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
                 <relatedDependency>
-                    <fileName>netty-handler-proxy-4.2.16.Final.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/netty/netty-handler-proxy/4.2.16.Final/netty-handler-proxy-4.2.16.Final.jar</filePath>
-                    <sha256>c53706ebaffd2fcef17b5f675b81eab4be13a714886cb4b2a7d0b73275cd39fe</sha256>
-                    <sha1>df9f359db740a1dd2d3a02608cb8b43daf63c9d2</sha1>
-                    <md5>7c1aa7a6299bda9d00c2508ad446731b</md5>
+                    <fileName>netty-handler-proxy-4.2.19.Final.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/netty/netty-handler-proxy/4.2.19.Final/netty-handler-proxy-4.2.19.Final.jar</filePath>
+                    <sha256>6a46fb5716c8b2a227e3d5e4533ab67abaccc6cb3a4f431ff0ed0859ae8a6993</sha256>
+                    <sha1>06da1b66407b417323afc0abb61c16839e6ab66f</sha1>
+                    <md5>3508eb0956404a287832388a4fef655d</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.netty/netty-handler-proxy@4.2.16.Final</id>
+                            <id>pkg:maven/io.netty/netty-handler-proxy@4.2.19.Final</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
                 <relatedDependency>
-                    <fileName>netty-resolver-4.2.16.Final.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/netty/netty-resolver/4.2.16.Final/netty-resolver-4.2.16.Final.jar</filePath>
-                    <sha256>c9eca6a99036485cf1d186b4a6a595b0a54c53808319ee03924270eae04c32bb</sha256>
-                    <sha1>fcea6d64273b59ab9127b68c16ae98af34642139</sha1>
-                    <md5>561b09ee8c3b2f10190bbe3f923cb71e</md5>
+                    <fileName>netty-resolver-4.2.19.Final.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/netty/netty-resolver/4.2.19.Final/netty-resolver-4.2.19.Final.jar</filePath>
+                    <sha256>3ded47536faeb3c4c544a84871d82f461511589afb2a892a180ca425f281363e</sha256>
+                    <sha1>58689765eb4fc7176aaa7e48b5350c34526d9887</sha1>
+                    <md5>e0059e2e2139584b9788f9225f0d63bd</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.netty/netty-resolver@4.2.16.Final</id>
+                            <id>pkg:maven/io.netty/netty-resolver@4.2.19.Final</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
                 <relatedDependency>
-                    <fileName>netty-resolver-dns-4.2.16.Final.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/netty/netty-resolver-dns/4.2.16.Final/netty-resolver-dns-4.2.16.Final.jar</filePath>
-                    <sha256>4e8adad4d30e4344accf74922fc10d9cdbc162d72b2136bdf371bb3864e0b03d</sha256>
-                    <sha1>efbe0a1f5bf910c3d9a4ebef53fd3c982543dde6</sha1>
-                    <md5>033aaeca8da3f20adc55e663a06495e6</md5>
+                    <fileName>netty-resolver-dns-4.2.19.Final.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/netty/netty-resolver-dns/4.2.19.Final/netty-resolver-dns-4.2.19.Final.jar</filePath>
+                    <sha256>417aaf5cf25cd07865ea91d2e08916b6974995c54aa83730264fc0e06dd4ea90</sha256>
+                    <sha1>fc3043ad2fa4caacb01c527aa7c8cb5627e3504b</sha1>
+                    <md5>b66aca0abfa9e38808e7fd70d30e2812</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.netty/netty-resolver-dns@4.2.16.Final</id>
+                            <id>pkg:maven/io.netty/netty-resolver-dns@4.2.19.Final</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
                 <relatedDependency>
-                    <fileName>netty-transport-native-unix-common-4.2.16.Final.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/netty/netty-transport-native-unix-common/4.2.16.Final/netty-transport-native-unix-common-4.2.16.Final.jar</filePath>
-                    <sha256>41ca8fe192083d17917be7ddcecded4da4fc1db1d1656d03d0bcb14e2f431155</sha256>
-                    <sha1>3cf32390f1b80af890ac44aa0698c2ff58c2a4d7</sha1>
-                    <md5>02c5d0ada8dfa345c991e38d59198dd9</md5>
+                    <fileName>netty-transport-native-unix-common-4.2.19.Final.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/netty/netty-transport-native-unix-common/4.2.19.Final/netty-transport-native-unix-common-4.2.19.Final.jar</filePath>
+                    <sha256>341e91b8e69e6b7d92c353c845ffd91f34e921b7186254c176a64c7089b3e721</sha256>
+                    <sha1>8ca98433d3ff179b2aab7f526a16435cb4242b7e</sha1>
+                    <md5>d589fb2934e86c3aca0abec2894bda89</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.netty/netty-transport-native-unix-common@4.2.16.Final</id>
+                            <id>pkg:maven/io.netty/netty-transport-native-unix-common@4.2.19.Final</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
@@ -2579,26 +2643,26 @@
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Bundle-Version</name>
-                    <value>4.2.16.Final</value>
+                    <value>4.2.19.Final</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Implementation-Version</name>
-                    <value>4.2.16.Final</value>
+                    <value>4.2.19.Final</value>
                 </evidence>
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>4.2.16.Final</value>
+                    <value>4.2.19.Final</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/io.netty/netty-transport@4.2.16.Final</id>
+                    <id>pkg:maven/io.netty/netty-transport@4.2.19.Final</id>
                 </package>
                 <vulnerabilityIds confidence="HIGHEST">
-                    <id>cpe:2.3:a:netty:netty:4.2.16:*:*:*:*:*:*:*</id>
-                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Anetty%3Anetty%3A4.2.16%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
+                    <id>cpe:2.3:a:netty:netty:4.2.19:*:*:*:*:*:*:*</id>
+                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Anetty%3Anetty%3A4.2.19%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
                 </vulnerabilityIds>
             </identifiers>
         </dependency>
@@ -2614,7 +2678,7 @@
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/uk.co.spudsoft/vertx-management-endpoints@0.2.3</reference>
+                <reference>pkg:maven/uk.co.spudsoft/vertx-management-endpoints@0.2.8</reference>
             </includedBy>
             <evidenceCollected>
                 <evidence type="vendor" confidence="HIGH">
@@ -2771,7 +2835,7 @@
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml@2.22.1</reference>
+                <reference>pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml@2.22.3</reference>
             </includedBy>
             <evidenceCollected>
                 <evidence type="vendor" confidence="HIGH">
@@ -2996,16 +3060,16 @@
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>vertx-auth-common-5.1.5.jar</fileName>
-            <filePath>/home/runner/.m2/repository/io/vertx/vertx-auth-common/5.1.5/vertx-auth-common-5.1.5.jar</filePath>
-            <md5>df6173b8124ea91ee53921e7ba522232</md5>
-            <sha1>611784b531e7b60c94d8acb200daa40b9e99c95b</sha1>
-            <sha256>81f5f55b9b9e731640e83d7d191ed2095da25f4ea98d24ae243ea6cc192ba351</sha256>
+            <fileName>vertx-auth-common-5.2.1.jar</fileName>
+            <filePath>/home/runner/.m2/repository/io/vertx/vertx-auth-common/5.2.1/vertx-auth-common-5.2.1.jar</filePath>
+            <md5>6391f7e6fe31ff188185f2b018a10ee8</md5>
+            <sha1>4d38bb53f7e296fc017503fbfe2109c403930d4b</sha1>
+            <sha256>783773c5af7d6f2af1888ac3ba02a6e70521e8c5701f8177a2194c58801cc436</sha256>
             <projectReferences>
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/io.vertx/vertx-web@5.1.5</reference>
+                <reference>pkg:maven/io.vertx/vertx-web@5.2.1</reference>
             </includedBy>
             <evidenceCollected>
                 <evidence type="vendor" confidence="HIGH">
@@ -3136,41 +3200,41 @@
                 <evidence type="version" confidence="HIGH">
                     <source>file</source>
                     <name>version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Implementation-Version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="MEDIUM">
                     <source>Manifest</source>
                     <name>maven-version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/io.vertx/vertx-auth-common@5.1.5</id>
+                    <id>pkg:maven/io.vertx/vertx-auth-common@5.2.1</id>
                 </package>
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>vertx-codegen-5.1.5.jar</fileName>
-            <filePath>/home/runner/.m2/repository/io/vertx/vertx-codegen/5.1.5/vertx-codegen-5.1.5.jar</filePath>
-            <md5>bc8742041dd38865605f8515e9e9d911</md5>
-            <sha1>11c89be2ce1795f6f1c621da3e58b91f7a94c517</sha1>
-            <sha256>15efa37231574d8339faf05987343773766fe1c8067369cfdbbfbf723417b52e</sha256>
+            <fileName>vertx-codegen-5.2.1.jar</fileName>
+            <filePath>/home/runner/.m2/repository/io/vertx/vertx-codegen/5.2.1/vertx-codegen-5.2.1.jar</filePath>
+            <md5>28e4d03843ff3324e3e13cacd672f22d</md5>
+            <sha1>26afbbe050c5a81ba71ed314cbd61e8e4b242969</sha1>
+            <sha256>5a124dce889aa2f2ee5c8e43fea5d1a1e3eb17d30e637c62d90ae84662fb2b86</sha256>
             <projectReferences>
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/uk.co.spudsoft/vertx-management-endpoints@0.2.3</reference>
+                <reference>pkg:maven/uk.co.spudsoft/vertx-management-endpoints@0.2.8</reference>
             </includedBy>
             <evidenceCollected>
                 <evidence type="vendor" confidence="HIGH">
@@ -3301,41 +3365,41 @@
                 <evidence type="version" confidence="HIGH">
                     <source>file</source>
                     <name>version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Implementation-Version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="MEDIUM">
                     <source>Manifest</source>
                     <name>maven-version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/io.vertx/vertx-codegen@5.1.5</id>
+                    <id>pkg:maven/io.vertx/vertx-codegen@5.2.1</id>
                 </package>
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>vertx-codegen-api-5.1.5.jar</fileName>
-            <filePath>/home/runner/.m2/repository/io/vertx/vertx-codegen-api/5.1.5/vertx-codegen-api-5.1.5.jar</filePath>
-            <md5>cb4db476e36bf8e1e11ef37bb9546131</md5>
-            <sha1>a14c5ebb09d57813c8389778b58d7c560cb29e13</sha1>
-            <sha256>641011521cfa3f3546e16c252036ef4d89272c4f97bfb1d382bf1571435de648</sha256>
+            <fileName>vertx-codegen-api-5.2.1.jar</fileName>
+            <filePath>/home/runner/.m2/repository/io/vertx/vertx-codegen-api/5.2.1/vertx-codegen-api-5.2.1.jar</filePath>
+            <md5>e8cf7bd44c71a2b9140e1f062b8ae376</md5>
+            <sha1>10bdd9ec644b0d9a4038ed1c63f49f54e333c47d</sha1>
+            <sha256>3eb2b1dc02cc58935c3c201811cfd5f60488664df5f0bca0f278167007758534</sha256>
             <projectReferences>
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/io.vertx/vertx-codegen@5.1.5</reference>
+                <reference>pkg:maven/io.vertx/vertx-codegen@5.2.1</reference>
             </includedBy>
             <evidenceCollected>
                 <evidence type="vendor" confidence="HIGH">
@@ -3466,41 +3530,41 @@
                 <evidence type="version" confidence="HIGH">
                     <source>file</source>
                     <name>version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Implementation-Version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="MEDIUM">
                     <source>Manifest</source>
                     <name>maven-version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/io.vertx/vertx-codegen-api@5.1.5</id>
+                    <id>pkg:maven/io.vertx/vertx-codegen-api@5.2.1</id>
                 </package>
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>vertx-codegen-json-5.1.5.jar</fileName>
-            <filePath>/home/runner/.m2/repository/io/vertx/vertx-codegen-json/5.1.5/vertx-codegen-json-5.1.5.jar</filePath>
-            <md5>8bdcb629a1c0c7aaf89b7f4725680644</md5>
-            <sha1>344e9200af1d44f8ac329ef0f8f3b18faf5bd4ac</sha1>
-            <sha256>98503c8723fb3c84e9c0e74b377aa8d597c6f0b72a39b862068984da70dd8652</sha256>
+            <fileName>vertx-codegen-json-5.2.1.jar</fileName>
+            <filePath>/home/runner/.m2/repository/io/vertx/vertx-codegen-json/5.2.1/vertx-codegen-json-5.2.1.jar</filePath>
+            <md5>84e78dca23a28e8730c8013d79ca0d2d</md5>
+            <sha1>c7546b4150dacd576e58414e06ade2d1dd729f8a</sha1>
+            <sha256>e4ae33f4152742d0ee010e14e8823372e71626b592efa1b06ee7f5127f7d8492</sha256>
             <projectReferences>
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/io.vertx/vertx-codegen@5.1.5</reference>
+                <reference>pkg:maven/io.vertx/vertx-codegen@5.2.1</reference>
             </includedBy>
             <evidenceCollected>
                 <evidence type="vendor" confidence="HIGH">
@@ -3641,41 +3705,41 @@
                 <evidence type="version" confidence="HIGH">
                     <source>file</source>
                     <name>version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Implementation-Version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="MEDIUM">
                     <source>Manifest</source>
                     <name>maven-version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/io.vertx/vertx-codegen-json@5.1.5</id>
+                    <id>pkg:maven/io.vertx/vertx-codegen-json@5.2.1</id>
                 </package>
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>vertx-codegen-processor-5.1.5.jar</fileName>
-            <filePath>/home/runner/.m2/repository/io/vertx/vertx-codegen-processor/5.1.5/vertx-codegen-processor-5.1.5.jar</filePath>
-            <md5>1a8a908c171b05ee6316a98b71fb74da</md5>
-            <sha1>eeb8186887ab13cf53f26a0872ab6086029abf7d</sha1>
-            <sha256>e3bb96b06e52f18d7ed41ae999011d9ba41a77b773e65ee1f21ab9613dea39fc</sha256>
+            <fileName>vertx-codegen-processor-5.2.1.jar</fileName>
+            <filePath>/home/runner/.m2/repository/io/vertx/vertx-codegen-processor/5.2.1/vertx-codegen-processor-5.2.1.jar</filePath>
+            <md5>b396e6ad9b34b3643ebdea59a5200d3a</md5>
+            <sha1>4f57b34e2f0716a4bc1834be4dc89d55cf6b53a2</sha1>
+            <sha256>07e26aea0fe708853072970d20cd39786afd5ef7fad0182994898fbbca6a7a1e</sha256>
             <projectReferences>
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/io.vertx/vertx-codegen@5.1.5</reference>
+                <reference>pkg:maven/io.vertx/vertx-codegen@5.2.1</reference>
             </includedBy>
             <evidenceCollected>
                 <evidence type="vendor" confidence="HIGH">
@@ -3816,76 +3880,76 @@
                 <evidence type="version" confidence="HIGH">
                     <source>file</source>
                     <name>version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Implementation-Version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="MEDIUM">
                     <source>Manifest</source>
                     <name>maven-version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/io.vertx/vertx-codegen-processor@5.1.5</id>
+                    <id>pkg:maven/io.vertx/vertx-codegen-processor@5.2.1</id>
                 </package>
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>vertx-core-5.1.5.jar</fileName>
-            <filePath>/home/runner/.m2/repository/io/vertx/vertx-core/5.1.5/vertx-core-5.1.5.jar</filePath>
-            <md5>a83e82d2151b84bb356e151b18fffaa4</md5>
-            <sha1>4b95f5d4e58c14095ba4b2b62d2f48c8cdcea61d</sha1>
-            <sha256>95614e23274a9110fc5399aa254c846ec52d6a75534e6c3a81b6ddda13e60552</sha256>
+            <fileName>vertx-core-5.2.1.jar</fileName>
+            <filePath>/home/runner/.m2/repository/io/vertx/vertx-core/5.2.1/vertx-core-5.2.1.jar</filePath>
+            <md5>826cfa381dc76f672d9dc2018a9cad49</md5>
+            <sha1>10e3a94e6e6f887a3d8fe953e55db55c39279774</sha1>
+            <sha256>408b01d12a8f888d2afb163bb2139a23b7d134c89f85d5186be745988cc162ad</sha256>
             <projectReferences>
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/io.vertx/vertx-web@5.1.5</reference>
+                <reference>pkg:maven/io.vertx/vertx-web@5.2.1</reference>
             </includedBy>
             <relatedDependencies>
                 <relatedDependency>
-                    <fileName>vertx-bridge-common-5.1.5.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/vertx/vertx-bridge-common/5.1.5/vertx-bridge-common-5.1.5.jar</filePath>
-                    <sha256>39c94b787895e50766a82d8140bc282898d6798604e41a47d87d0d74efd9440e</sha256>
-                    <sha1>d0bb89be64994c3a7258083bad8210d87d072af2</sha1>
-                    <md5>019c00e0f8fc8f0a20b75740c3ec9c79</md5>
+                    <fileName>vertx-bridge-common-5.2.1.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/vertx/vertx-bridge-common/5.2.1/vertx-bridge-common-5.2.1.jar</filePath>
+                    <sha256>f8c7d6d37e25cf91417b0773cadac0f324ddc5661f9a233a470d7e0d374d6b88</sha256>
+                    <sha1>d27833d52bd2e1920767566401e96d6612e6bb26</sha1>
+                    <md5>cdc7d43290ecd83f2e4e53abcfeac749</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.vertx/vertx-bridge-common@5.1.5</id>
+                            <id>pkg:maven/io.vertx/vertx-bridge-common@5.2.1</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
                 <relatedDependency>
-                    <fileName>vertx-core-logging-5.1.5.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/vertx/vertx-core-logging/5.1.5/vertx-core-logging-5.1.5.jar</filePath>
-                    <sha256>686cc13ed1bdf9f00075242ddd553e7b17fff2e3c61726a8367d405c02518210</sha256>
-                    <sha1>edd7b722d7767feaf59c0c41ad2015d415938a4e</sha1>
-                    <md5>615af162b506080aac7722f844bcf15f</md5>
+                    <fileName>vertx-core-logging-5.2.1.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/vertx/vertx-core-logging/5.2.1/vertx-core-logging-5.2.1.jar</filePath>
+                    <sha256>639971da24450026a127ebde37b671030a30387dd759745ed26fa395ed3db72f</sha256>
+                    <sha1>f0d054bb0985c454419da3d32f56c016b87cb90b</sha1>
+                    <md5>d0edbad4abc8896f84c264adde4d8cd6</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.vertx/vertx-core-logging@5.1.5</id>
+                            <id>pkg:maven/io.vertx/vertx-core-logging@5.2.1</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
                 <relatedDependency>
-                    <fileName>vertx-eventbus-bridge-common-5.1.5.jar</fileName>
-                    <filePath>/home/runner/.m2/repository/io/vertx/vertx-eventbus-bridge-common/5.1.5/vertx-eventbus-bridge-common-5.1.5.jar</filePath>
-                    <sha256>c0112d543f454c4fae7a0ae583963fdd5b8a793cb7296a4017b3893a9ba52cf5</sha256>
-                    <sha1>ff6493f42b085edc362fc47a1e532acf7291c3fd</sha1>
-                    <md5>d33058dd1173f41a2b709fc83df4daa4</md5>
+                    <fileName>vertx-eventbus-bridge-common-5.2.1.jar</fileName>
+                    <filePath>/home/runner/.m2/repository/io/vertx/vertx-eventbus-bridge-common/5.2.1/vertx-eventbus-bridge-common-5.2.1.jar</filePath>
+                    <sha256>fbd543fcf36dffa77d4ae42996dfd4d52bcb010645c6d99f8aa9a05b01a09abf</sha256>
+                    <sha1>1e03d9bf73d131348348e1a5cb1449356a125723</sha1>
+                    <md5>7ecceff80f02a3c5e5c95ac9a0399d73</md5>
                     <identifiers>
                         <package>
-                            <id>pkg:maven/io.vertx/vertx-eventbus-bridge-common@5.1.5</id>
+                            <id>pkg:maven/io.vertx/vertx-eventbus-bridge-common@5.2.1</id>
                         </package>
                     </identifiers>
                 </relatedDependency>
@@ -4029,47 +4093,47 @@
                 <evidence type="version" confidence="HIGH">
                     <source>file</source>
                     <name>version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Implementation-Version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="MEDIUM">
                     <source>Manifest</source>
                     <name>maven-version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/io.vertx/vertx-core@5.1.5</id>
+                    <id>pkg:maven/io.vertx/vertx-core@5.2.1</id>
                 </package>
                 <vulnerabilityIds confidence="HIGH">
-                    <id>cpe:2.3:a:eclipse:vert.x:5.1.5:*:*:*:*:*:*:*</id>
-                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Aeclipse%3Avert.x%3A5.1.5%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
+                    <id>cpe:2.3:a:eclipse:vert.x:5.2.1:*:*:*:*:*:*:*</id>
+                    <url>https://nvd.nist.gov/vuln/search#/nvd/home?sortOrder=3&amp;sortDirection=2&amp;cpeFilterMode=applicability&amp;resultType=records&amp;cpeName=cpe%3A2.3%3Aa%3Aeclipse%3Avert.x%3A5.2.1%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A%3A%2A</url>
                 </vulnerabilityIds>
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>vertx-web-5.1.5.jar</fileName>
-            <filePath>/home/runner/.m2/repository/io/vertx/vertx-web/5.1.5/vertx-web-5.1.5.jar</filePath>
-            <md5>d819b1a18f9cbf4338ecba05a4c25d71</md5>
-            <sha1>e3882ff972dbcfa5422f4783350a2c0d2f905bd6</sha1>
-            <sha256>ce6333704df0a82f5b79e4469c05c2efbc62bd6b3f7bd717ce06d8c04f32121e</sha256>
+            <fileName>vertx-web-5.2.1.jar</fileName>
+            <filePath>/home/runner/.m2/repository/io/vertx/vertx-web/5.2.1/vertx-web-5.2.1.jar</filePath>
+            <md5>fac26c84a3232afb264a0786d6e20858</md5>
+            <sha1>cafb2bb9a51f356c6437e95905a309ad844d5bd7</sha1>
+            <sha256>6bca4017404755b65f3e563e25136e8df275b7ed05b72b36f6463db78ea5a282</sha256>
             <license>The Apache Software License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0.txt
 Eclipse Public License - v 2.0: http://www.eclipse.org/legal/epl-v20.html</license>
             <projectReferences>
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/uk.co.spudsoft/vertx-management-endpoints@0.2.3</reference>
+                <reference>pkg:maven/uk.co.spudsoft/vertx-management-endpoints@0.2.8</reference>
             </includedBy>
             <evidenceCollected>
                 <evidence type="vendor" confidence="HIGH">
@@ -4200,41 +4264,41 @@ Eclipse Public License - v 2.0: http://www.eclipse.org/legal/epl-v20.html</licen
                 <evidence type="version" confidence="HIGH">
                     <source>file</source>
                     <name>version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Implementation-Version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="MEDIUM">
                     <source>Manifest</source>
                     <name>maven-version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/io.vertx/vertx-web@5.1.5</id>
+                    <id>pkg:maven/io.vertx/vertx-web@5.2.1</id>
                 </package>
             </identifiers>
         </dependency>
         <dependency isVirtual="false">
-            <fileName>vertx-web-common-5.1.5.jar</fileName>
-            <filePath>/home/runner/.m2/repository/io/vertx/vertx-web-common/5.1.5/vertx-web-common-5.1.5.jar</filePath>
-            <md5>4a796255645d27a5269cf161ee285f40</md5>
-            <sha1>649bc6c6e13c5b19a246e2a6763805d8605c5d9e</sha1>
-            <sha256>86022ff012c13ec2b6db2ee4060f425629f276262b533c071c4cb7bd6f55af47</sha256>
+            <fileName>vertx-web-common-5.2.1.jar</fileName>
+            <filePath>/home/runner/.m2/repository/io/vertx/vertx-web-common/5.2.1/vertx-web-common-5.2.1.jar</filePath>
+            <md5>d06a6692ce5f95ca87fafeda635f91c1</md5>
+            <sha1>faf1484b6ff7d113729bf64c7aaeca9317ead397</sha1>
+            <sha256>93fa646b5379ec3c29f4b3c170a425ec7d18619332e5db60ac812a5f4d090019</sha256>
             <projectReferences>
                 <projectReference>Vertx Management Endpoints:compile</projectReference>
             </projectReferences>
             <includedBy>
-                <reference>pkg:maven/io.vertx/vertx-web@5.1.5</reference>
+                <reference>pkg:maven/io.vertx/vertx-web@5.2.1</reference>
             </includedBy>
             <evidenceCollected>
                 <evidence type="vendor" confidence="HIGH">
@@ -4365,27 +4429,27 @@ Eclipse Public License - v 2.0: http://www.eclipse.org/legal/epl-v20.html</licen
                 <evidence type="version" confidence="HIGH">
                     <source>file</source>
                     <name>version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="HIGH">
                     <source>Manifest</source>
                     <name>Implementation-Version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="MEDIUM">
                     <source>Manifest</source>
                     <name>maven-version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
                 <evidence type="version" confidence="HIGHEST">
                     <source>pom</source>
                     <name>version</name>
-                    <value>5.1.5</value>
+                    <value>5.2.1</value>
                 </evidence>
             </evidenceCollected>
             <identifiers>
                 <package confidence="HIGH">
-                    <id>pkg:maven/io.vertx/vertx-web-common@5.1.5</id>
+                    <id>pkg:maven/io.vertx/vertx-web-common@5.2.1</id>
                 </package>
             </identifiers>
         </dependency>

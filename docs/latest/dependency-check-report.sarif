@@ -6,7 +6,7 @@
       "tool": {
         "driver": {
           "name": "dependency-check",
-          "version": "12.2.2",
+          "version": "13.0.0",
           "informationUri": "https://dependency-check.github.io/DependencyCheck/",
         "rules": [
           ],
@@ -17,10 +17,10 @@
           "npm": "This report may contain data retrieved from the the Github Advisory Database (via NPM Audit API): https://github.com/advisories/",
           "retirejs": "This report may contain data retrieved from the RetireJS community: https://retirejs.github.io/retire.js/",
           "ossindex": "This report may contain data retrieved from the Sonatype Guide OSS Index API: https://www.sonatype.com/products/sonatype-guide/oss-index-users"
-            ,"NVD API Last Checked": "2026-07-26T07:15:48Z"
-            ,"NVD API Last Modified": "2026-07-26T01:00:05-04"
-            ,"NVD Cache Last Checked": "2026-07-26T07:15:48Z"
-            ,"NVD Cache Last Modified": "2026-07-26T01:00:05-04"
+            ,"NVD API Last Checked": "2026-10-11T16:40:31Z"
+            ,"NVD API Last Modified": "2026-10-11T12:00:05-04"
+            ,"NVD Cache Last Checked": "2026-10-11T16:40:31Z"
+            ,"NVD Cache Last Modified": "2026-10-11T12:00:05-04"
           }
         }
       },
@@ -47,16 +47,16 @@
              "text": "Core Jackson processing abstractions (aka Streaming API), implementation for JSON"
           },
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/com\/fasterxml\/jackson\/core\/jackson-core\/2.22.1\/jackson-core-2.22.1.jar"
+            "uri": "file://\/home\/runner\/.m2\/repository\/com\/fasterxml\/jackson\/core\/jackson-core\/2.22.3\/jackson-core-2.22.3.jar"
           },
           "hashes": {
-            "md5": "09e866bcd73613665ef49f5086704fb1",
-            "sha1": "da7ffb60088d7e8f37ecdd3b617520971cc7b9bf",
-            "sha256": "941ff029bcdb93e83d209ce516c1a7fb8bbac07d0a2fa122f5bf194b2cd7b4f4"
+            "md5": "75691eef4483b7eb0e1c43e08dcb6573",
+            "sha1": "8695aab38355c65b60e242ec62edf13c52916d88",
+            "sha256": "8a501126a385b25841915d839508f8a66e2a0dbc8a6709d055ef3b3e852b094c"
           },          "properties": {
-"license": "The Apache Software License, Version 2.0: https:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id2": "pkg:maven\/com.fasterxml.jackson.core\/jackson-core@2.22.1"
-,                    "vid3": "cpe:2.3:a:fasterxml:jackson-core:2.22.1:*:*:*:*:*:*:*"
-,                    "vid4": "cpe:2.3:a:fasterxml:jackson-modules-java8:2.22.1:*:*:*:*:*:*:*"
+"license": "The Apache Software License, Version 2.0: https:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id2": "pkg:maven\/com.fasterxml.jackson.core\/jackson-core@2.22.3"
+,                    "vid3": "cpe:2.3:a:fasterxml:jackson-core:2.22.3:*:*:*:*:*:*:*"
+,                    "vid4": "cpe:2.3:a:fasterxml:jackson-modules-java8:2.22.3:*:*:*:*:*:*:*"
           }
         }
 ,{
@@ -64,15 +64,15 @@
              "text": "Core Jackson processing abstractions (aka Streaming API), implementation for JSON"
           },
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/tools\/jackson\/core\/jackson-core\/3.1.5\/jackson-core-3.1.5.jar"
+            "uri": "file://\/home\/runner\/.m2\/repository\/tools\/jackson\/core\/jackson-core\/3.1.7\/jackson-core-3.1.7.jar"
           },
           "hashes": {
-            "md5": "ed1c26680ceec80183239a74ef15a838",
-            "sha1": "ccd7eb3269b8d33bc097b36770f367cdfe2f1150",
-            "sha256": "9431b7fa2673bbb618c11d865fe15e13222fd182a214ff998cb7e56afd8f35d2"
+            "md5": "4dcb2a5b488b0e020f6546a2973c0a28",
+            "sha1": "a2b54921d5528a9df7f014222d2d519a14858801",
+            "sha256": "7608c367fd8a92666d28711519599543c180298259963184ce04d2947a8f71e7"
           },          "properties": {
-"license": "The Apache Software License, Version 2.0: https:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id3": "pkg:maven\/tools.jackson.core\/jackson-core@3.1.5"
-,                    "vid5": "cpe:2.3:a:fasterxml:jackson-core:3.1.5:*:*:*:*:*:*:*"
+"license": "The Apache Software License, Version 2.0: https:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id3": "pkg:maven\/tools.jackson.core\/jackson-core@3.1.7"
+,                    "vid5": "cpe:2.3:a:fasterxml:jackson-core:3.1.7:*:*:*:*:*:*:*"
           }
         }
 ,{
@@ -80,17 +80,17 @@
              "text": "General data-binding functionality for Jackson: works on core streaming API"
           },
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/com\/fasterxml\/jackson\/core\/jackson-databind\/2.22.1\/jackson-databind-2.22.1.jar"
+            "uri": "file://\/home\/runner\/.m2\/repository\/com\/fasterxml\/jackson\/core\/jackson-databind\/2.22.3\/jackson-databind-2.22.3.jar"
           },
           "hashes": {
-            "md5": "df2dcf8d581836d48aae7387311cba93",
-            "sha1": "9e2fb91831cce9cb9262909cd76647508949f232",
-            "sha256": "7dcd7e53bec1f56c7ad278bd1ca0840bebcc595d61ce44d6a8439abb75b965b2"
+            "md5": "e1fbe6bbbb606fad49068fd2670a5208",
+            "sha1": "d0d4b2cdb0a1440ac02178fc2ff01dfb05cd06a8",
+            "sha256": "556db5439e206114346043f68d200497dc96a0bca62a360a81784092ebd0e0a9"
           },          "properties": {
-"license": "The Apache Software License, Version 2.0: https:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id4": "pkg:maven\/com.fasterxml.jackson.core\/jackson-databind@2.22.1"
-,                    "vid6": "cpe:2.3:a:fasterxml:jackson-core:2.22.1:*:*:*:*:*:*:*"
-,                    "vid7": "cpe:2.3:a:fasterxml:jackson-databind:2.22.1:*:*:*:*:*:*:*"
-,                    "vid8": "cpe:2.3:a:fasterxml:jackson-modules-java8:2.22.1:*:*:*:*:*:*:*"
+"license": "The Apache Software License, Version 2.0: https:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id4": "pkg:maven\/com.fasterxml.jackson.core\/jackson-databind@2.22.3"
+,                    "vid6": "cpe:2.3:a:fasterxml:jackson-core:2.22.3:*:*:*:*:*:*:*"
+,                    "vid7": "cpe:2.3:a:fasterxml:jackson-databind:2.22.3:*:*:*:*:*:*:*"
+,                    "vid8": "cpe:2.3:a:fasterxml:jackson-modules-java8:2.22.3:*:*:*:*:*:*:*"
           }
         }
 ,{
@@ -98,16 +98,16 @@
              "text": "General data-binding functionality for Jackson: works on core streaming API"
           },
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/tools\/jackson\/core\/jackson-databind\/3.1.5\/jackson-databind-3.1.5.jar"
+            "uri": "file://\/home\/runner\/.m2\/repository\/tools\/jackson\/core\/jackson-databind\/3.1.7\/jackson-databind-3.1.7.jar"
           },
           "hashes": {
-            "md5": "7b399cbb2bea1429c46c1b8c73af42b9",
-            "sha1": "782178f0b1fe088803c03b85eb9a406f60519044",
-            "sha256": "3a2338d996fd3056791df8d335fa9ba8a62a706ed4245ecf81b3e583df37d08a"
+            "md5": "bd36876c84ba73520f0633336ca2f93a",
+            "sha1": "1f45f7dd68639c962435fae38ca100a70ccc0971",
+            "sha256": "48c781de87e2016e1f0d973748a27130f11643e7ac080173f40e2d9669d84be3"
           },          "properties": {
-"license": "The Apache Software License, Version 2.0: https:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id5": "pkg:maven\/tools.jackson.core\/jackson-databind@3.1.5"
-,                    "vid9": "cpe:2.3:a:fasterxml:jackson-core:3.1.5:*:*:*:*:*:*:*"
-,                    "vid10": "cpe:2.3:a:fasterxml:jackson-databind:3.1.5:*:*:*:*:*:*:*"
+"license": "The Apache Software License, Version 2.0: https:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id5": "pkg:maven\/tools.jackson.core\/jackson-databind@3.1.7"
+,                    "vid9": "cpe:2.3:a:fasterxml:jackson-core:3.1.7:*:*:*:*:*:*:*"
+,                    "vid10": "cpe:2.3:a:fasterxml:jackson-databind:3.1.7:*:*:*:*:*:*:*"
           }
         }
 ,{
@@ -115,15 +115,15 @@
              "text": "Support for reading and writing YAML-encoded data via Jackson abstractions.\n  "
           },
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/com\/fasterxml\/jackson\/dataformat\/jackson-dataformat-yaml\/2.22.1\/jackson-dataformat-yaml-2.22.1.jar"
+            "uri": "file://\/home\/runner\/.m2\/repository\/com\/fasterxml\/jackson\/dataformat\/jackson-dataformat-yaml\/2.22.3\/jackson-dataformat-yaml-2.22.3.jar"
           },
           "hashes": {
-            "md5": "8348dc064a58fb2ae67371764b634812",
-            "sha1": "af5fde2414e4a8d2617e7890f7068c26b5b66a33",
-            "sha256": "cc3a0e540791a9a1cbcd7584767b84572ffda0b72823856558f47dea69ae8ed1"
+            "md5": "ba1c8448785cea71b8cc68275d0e542b",
+            "sha1": "520097fe76cde11c7448c622e8cb6e07714c8c7c",
+            "sha256": "2bcbc3b9abaefbeba11409b9e30ec35ed7071a61a47c8c2a9c688e40e45b90f9"
           },          "properties": {
-"license": "https:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id6": "pkg:maven\/com.fasterxml.jackson.dataformat\/jackson-dataformat-yaml@2.22.1"
-,                    "vid11": "cpe:2.3:a:fasterxml:jackson-dataformat-xml:2.22.1:*:*:*:*:*:*:*"
+"license": "https:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id6": "pkg:maven\/com.fasterxml.jackson.dataformat\/jackson-dataformat-yaml@2.22.3"
+,                    "vid11": "cpe:2.3:a:fasterxml:jackson-dataformat-xml:2.22.3:*:*:*:*:*:*:*"
           }
         }
 ,{
@@ -131,15 +131,15 @@
              "text": "Add-on module to support JSR-310 (Java 8 Date & Time API) data types."
           },
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/com\/fasterxml\/jackson\/datatype\/jackson-datatype-jsr310\/2.22.1\/jackson-datatype-jsr310-2.22.1.jar"
+            "uri": "file://\/home\/runner\/.m2\/repository\/com\/fasterxml\/jackson\/datatype\/jackson-datatype-jsr310\/2.22.3\/jackson-datatype-jsr310-2.22.3.jar"
           },
           "hashes": {
-            "md5": "4dd3e0a2be3f88d720f9214954ed59b6",
-            "sha1": "3377a0589c1b0e62bbe245ac8e9f56fa7d7b8bb9",
-            "sha256": "85da45b7e5e565418963ff8f0dcb184365b0557c15468933f4318dde5c3ce845"
+            "md5": "1f14fa9b9779d0545287bba2bfb927df",
+            "sha1": "8d54f48cfe4865bdfa245b8a90fb15b56c8a4a3c",
+            "sha256": "ec7052ee48c9d873bb8148338a643f02cf89c01d035dd219411473030d6d2b22"
           },          "properties": {
-"license": "http:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id7": "pkg:maven\/com.fasterxml.jackson.datatype\/jackson-datatype-jsr310@2.22.1"
-,                    "vid12": "cpe:2.3:a:fasterxml:jackson-modules-java8:2.22.1:*:*:*:*:*:*:*"
+"license": "http:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id7": "pkg:maven\/com.fasterxml.jackson.datatype\/jackson-datatype-jsr310@2.22.3"
+,                    "vid12": "cpe:2.3:a:fasterxml:jackson-modules-java8:2.22.3:*:*:*:*:*:*:*"
           }
         }
 ,{
@@ -147,15 +147,15 @@
              "text": "logback-core module"
           },
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/ch\/qos\/logback\/logback-core\/1.6.0\/logback-core-1.6.0.jar"
+            "uri": "file://\/home\/runner\/.m2\/repository\/ch\/qos\/logback\/logback-core\/1.6.5\/logback-core-1.6.5.jar"
           },
           "hashes": {
-            "md5": "eaa85a6be0930af06f0b821ca09ce171",
-            "sha1": "5b87315554b55fbf03288f22564f75b4db50ad80",
-            "sha256": "507c4145ab1344e198977286d7e304ed5b45cf8d27ef2c172477f3572e917261"
+            "md5": "c1fd0c330f33ec7c2e35f18f06d1c2f9",
+            "sha1": "821f011acaffb543404e94bc35f651b483a5a161",
+            "sha256": "03dcbf053b40166849b8eb0a30cbde40c04a448820e9a7589c4b0a2ec3a9db63"
           },          "properties": {
-"license": "https:\/\/www.eclipse.org\/legal\/epl-v20.html, https:\/\/www.gnu.org\/licenses\/old-licenses\/lgpl-2.1.html",                    "id8": "pkg:maven\/ch.qos.logback\/logback-core@1.6.0"
-,                    "vid13": "cpe:2.3:a:qos:logback:1.6.0:*:*:*:*:*:*:*"
+"license": "https:\/\/www.eclipse.org\/legal\/epl-v20.html, https:\/\/www.gnu.org\/licenses\/old-licenses\/lgpl-2.1.html",                    "id8": "pkg:maven\/ch.qos.logback\/logback-core@1.6.5"
+,                    "vid13": "cpe:2.3:a:qos:logback:1.6.5:*:*:*:*:*:*:*"
           }
         }
 ,{
@@ -163,14 +163,29 @@
              "text": "Java Concurrency Tools Core Library"
           },
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/io\/netty\/netty-common\/4.2.16.Final\/netty-common-4.2.16.Final.jar\/META-INF\/maven\/org.jctools\/jctools-core\/pom.xml"
+            "uri": "file://\/home\/runner\/.m2\/repository\/io\/netty\/netty-common\/4.2.19.Final\/netty-common-4.2.19.Final.jar\/META-INF\/maven\/org.jctools\/jctools-core-jdk11\/pom.xml"
           },
           "hashes": {
-            "md5": "8341fc089534412b4da254daf73fafc9",
-            "sha1": "d7ad6a6097946fd431f78598315022370a402631",
-            "sha256": "6a7d37edc57b6a2b90a05037013fcc0b5eeac5e3dbf1d7109f7639c71cde41e7"
+            "md5": "ba1cbe90e8746a1d75c74505e58d98ca",
+            "sha1": "ee1d8b096773616ad160c1f3d021a830b9c0d3da",
+            "sha256": "e32377eaa76f88c9271025fa5d4442bc1963e1de5f4055c5819c8cc73eda1936"
           },          "properties": {
-"license": "Apache License, Version 2.0: http:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id9": "pkg:maven\/org.jctools\/jctools-core@4.0.6"
+"license": "Apache License, Version 2.0: http:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id9": "pkg:maven\/org.jctools\/jctools-core-jdk11@4.0.7"
+          }
+        }
+,{
+          "description": {
+             "text": "Java Concurrency Tools Core Library"
+          },
+          "location": {
+            "uri": "file://\/home\/runner\/.m2\/repository\/io\/netty\/netty-common\/4.2.19.Final\/netty-common-4.2.19.Final.jar\/META-INF\/maven\/org.jctools\/jctools-core\/pom.xml"
+          },
+          "hashes": {
+            "md5": "47e1366562570dfcc088cab9bee0b9c7",
+            "sha1": "4306deb28041ba8817a0c58e63e117a5eb3129bd",
+            "sha256": "aed8e685ad1b1115fd687395d53afee8a1f1c4aaf79af8b03470cd71099814b1"
+          },          "properties": {
+"license": "Apache License, Version 2.0: http:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id10": "pkg:maven\/org.jctools\/jctools-core@4.0.7"
           }
         }
 ,{
@@ -178,14 +193,14 @@
              "text": "\n    A Mavenized fork of Tomcat Native which incorporates various patches. This artifact is dynamically linked\n    to OpenSSL and Apache APR.\n  "
           },
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/io\/netty\/netty-tcnative-classes\/2.0.78.Final\/netty-tcnative-classes-2.0.78.Final.jar"
+            "uri": "file://\/home\/runner\/.m2\/repository\/io\/netty\/netty-tcnative-classes\/2.0.84.Final\/netty-tcnative-classes-2.0.84.Final.jar"
           },
           "hashes": {
-            "md5": "81661eca376719630527ed56323c301c",
-            "sha1": "e99c3d87cbfe544813fb012d5dfbf078bde76244",
-            "sha256": "3ca66d8c6c0f003242f954cc1822a32445109ac25b8582840ba3d8e3c92f0a3e"
+            "md5": "6779bba2d822f4bd89bd461f9bb1cf80",
+            "sha1": "30d95c719f174c33e5146f923cda62d7bdb65650",
+            "sha256": "7a4437abf98b0cec053af4443fe321177d2cfccfec7bcad4e7d8b75571bbec4d"
           },          "properties": {
-"license": "http:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id10": "pkg:maven\/io.netty\/netty-tcnative-classes@2.0.78.Final"
+"license": "http:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id11": "pkg:maven\/io.netty\/netty-tcnative-classes@2.0.84.Final"
           }
         }
 ,{
@@ -193,15 +208,15 @@
              "text": "Netty is an asynchronous event-driven network application framework for    rapid development of maintainable high performance protocol servers and    clients."
           },
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/io\/netty\/netty-transport\/4.2.16.Final\/netty-transport-4.2.16.Final.jar"
+            "uri": "file://\/home\/runner\/.m2\/repository\/io\/netty\/netty-transport\/4.2.19.Final\/netty-transport-4.2.19.Final.jar"
           },
           "hashes": {
-            "md5": "d264fa6db3bc4aadc8b44ba4d4b650a6",
-            "sha1": "ae87a3bec51d503475a19fbd718bf777f2fc06c6",
-            "sha256": "cfa3f654caff906653385f4b7ddaa539d795b78f5711a622482b17d2b73484c0"
+            "md5": "e78d0aa9032182a817da765ccabebeb7",
+            "sha1": "52c2306d4b71cfbfc8a6ab9de1d083d2978c3b83",
+            "sha256": "d82d4e200456b8c5d8a1647a3724603f80616e5b35b9ada6e7a20d048f175075"
           },          "properties": {
-"license": "https:\/\/www.apache.org\/licenses\/LICENSE-2.0",                    "id11": "pkg:maven\/io.netty\/netty-transport@4.2.16.Final"
-,                    "vid14": "cpe:2.3:a:netty:netty:4.2.16:*:*:*:*:*:*:*"
+"license": "https:\/\/www.apache.org\/licenses\/LICENSE-2.0",                    "id12": "pkg:maven\/io.netty\/netty-transport@4.2.19.Final"
+,                    "vid14": "cpe:2.3:a:netty:netty:4.2.19:*:*:*:*:*:*:*"
           }
         }
 ,{
@@ -216,7 +231,7 @@
             "sha1": "4e2525fc4327cc553c52e3937427c7cf2114735f",
             "sha256": "9ab7ffa646202b499d05995a3ec82f31bccb7a50345c1514d8cb42ec8ccea353"
           },          "properties": {
-"license": "http:\/\/www.opensource.org\/licenses\/mit-license.php",                    "id12": "pkg:maven\/org.slf4j\/slf4j-api@2.1.0-alpha1"
+"license": "http:\/\/www.opensource.org\/licenses\/mit-license.php",                    "id13": "pkg:maven\/org.slf4j\/slf4j-api@2.1.0-alpha1"
           }
         }
 ,{
@@ -231,105 +246,105 @@
             "sha1": "2d53ddec134280cb384c1e35d094e5f71c1f2316",
             "sha256": "e6682acf1ace77508ef13649cbf4f8d09d2cf5457bdb61d25ffb6ac0233d78dd"
           },          "properties": {
-"license": "Apache License, Version 2.0: http:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id13": "pkg:maven\/org.yaml\/snakeyaml@2.5"
+"license": "Apache License, Version 2.0: http:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt",                    "id14": "pkg:maven\/org.yaml\/snakeyaml@2.5"
 ,                    "vid15": "cpe:2.3:a:snakeyaml_project:snakeyaml:2.5:*:*:*:*:*:*:*"
           }
         }
 ,{
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/io\/vertx\/vertx-auth-common\/5.1.5\/vertx-auth-common-5.1.5.jar"
+            "uri": "file://\/home\/runner\/.m2\/repository\/io\/vertx\/vertx-auth-common\/5.2.1\/vertx-auth-common-5.2.1.jar"
           },
           "hashes": {
-            "md5": "df6173b8124ea91ee53921e7ba522232",
-            "sha1": "611784b531e7b60c94d8acb200daa40b9e99c95b",
-            "sha256": "81f5f55b9b9e731640e83d7d191ed2095da25f4ea98d24ae243ea6cc192ba351"
+            "md5": "6391f7e6fe31ff188185f2b018a10ee8",
+            "sha1": "4d38bb53f7e296fc017503fbfe2109c403930d4b",
+            "sha256": "783773c5af7d6f2af1888ac3ba02a6e70521e8c5701f8177a2194c58801cc436"
           },          "properties": {
-                    "id14": "pkg:maven\/io.vertx\/vertx-auth-common@5.1.5"
+                    "id15": "pkg:maven\/io.vertx\/vertx-auth-common@5.2.1"
           }
         }
 ,{
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/io\/vertx\/vertx-codegen\/5.1.5\/vertx-codegen-5.1.5.jar"
+            "uri": "file://\/home\/runner\/.m2\/repository\/io\/vertx\/vertx-codegen\/5.2.1\/vertx-codegen-5.2.1.jar"
           },
           "hashes": {
-            "md5": "bc8742041dd38865605f8515e9e9d911",
-            "sha1": "11c89be2ce1795f6f1c621da3e58b91f7a94c517",
-            "sha256": "15efa37231574d8339faf05987343773766fe1c8067369cfdbbfbf723417b52e"
+            "md5": "28e4d03843ff3324e3e13cacd672f22d",
+            "sha1": "26afbbe050c5a81ba71ed314cbd61e8e4b242969",
+            "sha256": "5a124dce889aa2f2ee5c8e43fea5d1a1e3eb17d30e637c62d90ae84662fb2b86"
           },          "properties": {
-                    "id15": "pkg:maven\/io.vertx\/vertx-codegen@5.1.5"
+                    "id16": "pkg:maven\/io.vertx\/vertx-codegen@5.2.1"
           }
         }
 ,{
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/io\/vertx\/vertx-codegen-api\/5.1.5\/vertx-codegen-api-5.1.5.jar"
+            "uri": "file://\/home\/runner\/.m2\/repository\/io\/vertx\/vertx-codegen-api\/5.2.1\/vertx-codegen-api-5.2.1.jar"
           },
           "hashes": {
-            "md5": "cb4db476e36bf8e1e11ef37bb9546131",
-            "sha1": "a14c5ebb09d57813c8389778b58d7c560cb29e13",
-            "sha256": "641011521cfa3f3546e16c252036ef4d89272c4f97bfb1d382bf1571435de648"
+            "md5": "e8cf7bd44c71a2b9140e1f062b8ae376",
+            "sha1": "10bdd9ec644b0d9a4038ed1c63f49f54e333c47d",
+            "sha256": "3eb2b1dc02cc58935c3c201811cfd5f60488664df5f0bca0f278167007758534"
           },          "properties": {
-                    "id16": "pkg:maven\/io.vertx\/vertx-codegen-api@5.1.5"
+                    "id17": "pkg:maven\/io.vertx\/vertx-codegen-api@5.2.1"
           }
         }
 ,{
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/io\/vertx\/vertx-codegen-json\/5.1.5\/vertx-codegen-json-5.1.5.jar"
+            "uri": "file://\/home\/runner\/.m2\/repository\/io\/vertx\/vertx-codegen-json\/5.2.1\/vertx-codegen-json-5.2.1.jar"
           },
           "hashes": {
-            "md5": "8bdcb629a1c0c7aaf89b7f4725680644",
-            "sha1": "344e9200af1d44f8ac329ef0f8f3b18faf5bd4ac",
-            "sha256": "98503c8723fb3c84e9c0e74b377aa8d597c6f0b72a39b862068984da70dd8652"
+            "md5": "84e78dca23a28e8730c8013d79ca0d2d",
+            "sha1": "c7546b4150dacd576e58414e06ade2d1dd729f8a",
+            "sha256": "e4ae33f4152742d0ee010e14e8823372e71626b592efa1b06ee7f5127f7d8492"
           },          "properties": {
-                    "id17": "pkg:maven\/io.vertx\/vertx-codegen-json@5.1.5"
+                    "id18": "pkg:maven\/io.vertx\/vertx-codegen-json@5.2.1"
           }
         }
 ,{
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/io\/vertx\/vertx-codegen-processor\/5.1.5\/vertx-codegen-processor-5.1.5.jar"
+            "uri": "file://\/home\/runner\/.m2\/repository\/io\/vertx\/vertx-codegen-processor\/5.2.1\/vertx-codegen-processor-5.2.1.jar"
           },
           "hashes": {
-            "md5": "1a8a908c171b05ee6316a98b71fb74da",
-            "sha1": "eeb8186887ab13cf53f26a0872ab6086029abf7d",
-            "sha256": "e3bb96b06e52f18d7ed41ae999011d9ba41a77b773e65ee1f21ab9613dea39fc"
+            "md5": "b396e6ad9b34b3643ebdea59a5200d3a",
+            "sha1": "4f57b34e2f0716a4bc1834be4dc89d55cf6b53a2",
+            "sha256": "07e26aea0fe708853072970d20cd39786afd5ef7fad0182994898fbbca6a7a1e"
           },          "properties": {
-                    "id18": "pkg:maven\/io.vertx\/vertx-codegen-processor@5.1.5"
+                    "id19": "pkg:maven\/io.vertx\/vertx-codegen-processor@5.2.1"
           }
         }
 ,{
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/io\/vertx\/vertx-core\/5.1.5\/vertx-core-5.1.5.jar"
+            "uri": "file://\/home\/runner\/.m2\/repository\/io\/vertx\/vertx-core\/5.2.1\/vertx-core-5.2.1.jar"
           },
           "hashes": {
-            "md5": "a83e82d2151b84bb356e151b18fffaa4",
-            "sha1": "4b95f5d4e58c14095ba4b2b62d2f48c8cdcea61d",
-            "sha256": "95614e23274a9110fc5399aa254c846ec52d6a75534e6c3a81b6ddda13e60552"
+            "md5": "826cfa381dc76f672d9dc2018a9cad49",
+            "sha1": "10e3a94e6e6f887a3d8fe953e55db55c39279774",
+            "sha256": "408b01d12a8f888d2afb163bb2139a23b7d134c89f85d5186be745988cc162ad"
           },          "properties": {
-                    "id19": "pkg:maven\/io.vertx\/vertx-core@5.1.5"
-,                    "vid16": "cpe:2.3:a:eclipse:vert.x:5.1.5:*:*:*:*:*:*:*"
+                    "id20": "pkg:maven\/io.vertx\/vertx-core@5.2.1"
+,                    "vid16": "cpe:2.3:a:eclipse:vert.x:5.2.1:*:*:*:*:*:*:*"
           }
         }
 ,{
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/io\/vertx\/vertx-web\/5.1.5\/vertx-web-5.1.5.jar"
+            "uri": "file://\/home\/runner\/.m2\/repository\/io\/vertx\/vertx-web\/5.2.1\/vertx-web-5.2.1.jar"
           },
           "hashes": {
-            "md5": "d819b1a18f9cbf4338ecba05a4c25d71",
-            "sha1": "e3882ff972dbcfa5422f4783350a2c0d2f905bd6",
-            "sha256": "ce6333704df0a82f5b79e4469c05c2efbc62bd6b3f7bd717ce06d8c04f32121e"
+            "md5": "fac26c84a3232afb264a0786d6e20858",
+            "sha1": "cafb2bb9a51f356c6437e95905a309ad844d5bd7",
+            "sha256": "6bca4017404755b65f3e563e25136e8df275b7ed05b72b36f6463db78ea5a282"
           },          "properties": {
-"license": "The Apache Software License, Version 2.0: http:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt\nEclipse Public License - v 2.0: http:\/\/www.eclipse.org\/legal\/epl-v20.html",                    "id20": "pkg:maven\/io.vertx\/vertx-web@5.1.5"
+"license": "The Apache Software License, Version 2.0: http:\/\/www.apache.org\/licenses\/LICENSE-2.0.txt\nEclipse Public License - v 2.0: http:\/\/www.eclipse.org\/legal\/epl-v20.html",                    "id21": "pkg:maven\/io.vertx\/vertx-web@5.2.1"
           }
         }
 ,{
           "location": {
-            "uri": "file://\/home\/runner\/.m2\/repository\/io\/vertx\/vertx-web-common\/5.1.5\/vertx-web-common-5.1.5.jar"
+            "uri": "file://\/home\/runner\/.m2\/repository\/io\/vertx\/vertx-web-common\/5.2.1\/vertx-web-common-5.2.1.jar"
           },
           "hashes": {
-            "md5": "4a796255645d27a5269cf161ee285f40",
-            "sha1": "649bc6c6e13c5b19a246e2a6763805d8605c5d9e",
-            "sha256": "86022ff012c13ec2b6db2ee4060f425629f276262b533c071c4cb7bd6f55af47"
+            "md5": "d06a6692ce5f95ca87fafeda635f91c1",
+            "sha1": "faf1484b6ff7d113729bf64c7aaeca9317ead397",
+            "sha256": "93fa646b5379ec3c29f4b3c170a425ec7d18619332e5db60ac812a5f4d090019"
           },          "properties": {
-                    "id21": "pkg:maven\/io.vertx\/vertx-web-common@5.1.5"
+                    "id22": "pkg:maven\/io.vertx\/vertx-web-common@5.2.1"
           }
         }
       ],

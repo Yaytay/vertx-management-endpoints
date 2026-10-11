@@ -139,64 +139,67 @@ public class HeapDumpRoute implements Handler&lt;RoutingContext&gt; {
 <span class="nc" id="L139">          return ;</span>
 <span class="fc" id="L140">        }</span>
 
-        try {
+<span class="fc" id="L142">        rc.vertx().executeBlocking(() -&gt; {</span>
 <span class="fc" id="L143">          HotSpotDiagnosticMXBean mxBean = ManagementFactory.getPlatformMXBean(HotSpotDiagnosticMXBean.class);</span>
 <span class="fc" id="L144">          mxBean.dumpHeap(tempFile.getAbsolutePath(), false);</span>
-<span class="nc" id="L145">        } catch (Throwable ex) {</span>
-<span class="nc" id="L146">          reportError(&quot;Failed to generate heap dump: &quot;, ex, response);</span>
-<span class="nc" id="L147">          return ;</span>
-<span class="fc" id="L148">        }</span>
+<span class="fc" id="L145">          return tempFile;</span>
+<span class="fc" id="L146">        }).onSuccess(dumpFile -&gt; {</span>
+<span class="fc" id="L147">          response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_BINARY);</span>
+<span class="fc" id="L148">          response.putHeader(&quot;Content-Disposition&quot;, &quot;attachment; filename=\&quot;&quot; + filename + &quot;.hprof\&quot;&quot;);</span>
 
-<span class="fc" id="L150">        response.putHeader(HttpHeaderNames.CONTENT_TYPE, ContentTypes.TYPE_BINARY);</span>
-<span class="fc" id="L151">        response.putHeader(&quot;Content-Disposition&quot;, &quot;attachment; filename=\&quot;&quot; + filename + &quot;.hprof\&quot;&quot;);</span>
-
-<span class="fc" id="L153">        response.sendFile(tempFile.getAbsolutePath())</span>
-<span class="fc" id="L154">                .onComplete((ar) -&gt; {</span>
-<span class="pc bpc" id="L155" title="1 of 2 branches missed.">                  if (!tempFile.delete()) {</span>
-<span class="nc" id="L156">                    logger.error(&quot;Failed to delete temporary files: {}&quot;, tempFile);</span>
-                  } else {
-<span class="fc" id="L158">                    logger.debug(&quot;Deleted temporary file: {}&quot;, tempFile);</span>
-                  }
-<span class="fc" id="L160">                });</span>
-<span class="fc" id="L161">      }</span>
+<span class="fc" id="L150">          response.sendFile(dumpFile.getAbsolutePath())</span>
+<span class="fc" id="L151">                  .onComplete((ar) -&gt; {</span>
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">                    if (!dumpFile.delete()) {</span>
+<span class="nc" id="L153">                      logger.error(&quot;Failed to delete temporary files: {}&quot;, dumpFile);</span>
+                    } else {
+<span class="fc" id="L155">                      logger.debug(&quot;Deleted temporary file: {}&quot;, dumpFile);</span>
+                    }
+<span class="fc" id="L157">                  });</span>
+<span class="fc" id="L158">        }).onFailure(ex -&gt; {</span>
+<span class="nc bnc" id="L159" title="All 4 branches missed.">          if (tempFile.exists() &amp;&amp; !tempFile.delete()) {</span>
+<span class="nc" id="L160">            logger.error(&quot;Failed to delete temporary file after heap dump failure: {}&quot;, tempFile);</span>
+          }
+<span class="nc" id="L162">          reportError(&quot;Failed to generate heap dump: &quot;, ex, response);</span>
+<span class="nc" id="L163">        });</span>
+<span class="fc" id="L164">      }</span>
       
     } else {
-<span class="nc" id="L164">      rc.next();</span>
+<span class="nc" id="L167">      rc.next();</span>
     }
-<span class="fc" id="L166">  }</span>
+<span class="fc" id="L169">  }</span>
 
   static void reportError(String message, Throwable ex, HttpServerResponse response) {
-<span class="fc" id="L169">    logger.error(message, ex);</span>
-<span class="fc" id="L170">    response.setStatusCode(500);</span>
-<span class="fc" id="L171">    response.end(&quot;Failed to generate heap dump&quot;);</span>
-<span class="fc" id="L172">  }</span>
+<span class="fc" id="L172">    logger.error(message, ex);</span>
+<span class="fc" id="L173">    response.setStatusCode(500);</span>
+<span class="fc" id="L174">    response.end(&quot;Failed to generate heap dump&quot;);</span>
+<span class="fc" id="L175">  }</span>
 
   static String getProcessName() {
-<span class="pc" id="L175">    return getProcessName(System.getProperty(&quot;sun.java.command&quot;), () -&gt; ProcessHandle.current());</span>
+<span class="pc" id="L178">    return getProcessName(System.getProperty(&quot;sun.java.command&quot;), () -&gt; ProcessHandle.current());</span>
   }
   
   static String getProcessName(String sunJavaCommand, Supplier&lt;ProcessHandle&gt; processHandleSupplier) {
-<span class="fc" id="L179">    String processName = sunJavaCommand;</span>
-<span class="fc bfc" id="L180" title="All 2 branches covered.">    int idx = processName == null ? 0 : processName.indexOf(&quot; &quot;);</span>
-<span class="fc bfc" id="L181" title="All 2 branches covered.">    if (idx &gt; 0) {</span>
-<span class="fc" id="L182">      processName = processName.substring(0, idx);</span>
+<span class="fc" id="L182">    String processName = sunJavaCommand;</span>
+<span class="fc bfc" id="L183" title="All 2 branches covered.">    int idx = processName == null ? 0 : processName.indexOf(&quot; &quot;);</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">    if (idx &gt; 0) {</span>
+<span class="fc" id="L185">      processName = processName.substring(0, idx);</span>
     }
-<span class="fc bfc" id="L184" title="All 4 branches covered.">    if (processName == null || processName.isEmpty()) {</span>
-<span class="fc" id="L185">      processName = processHandleSupplier.get().info().command().orElse(&quot;heap&quot;);</span>
+<span class="fc bfc" id="L187" title="All 4 branches covered.">    if (processName == null || processName.isEmpty()) {</span>
+<span class="fc" id="L188">      processName = processHandleSupplier.get().info().command().orElse(&quot;heap&quot;);</span>
     }
-<span class="fc" id="L187">    idx = processName.lastIndexOf(&quot;/&quot;);</span>
-<span class="fc bfc" id="L188" title="All 2 branches covered.">    if (idx &gt; 0) {</span>
-<span class="fc" id="L189">      processName = processName.substring(idx + 1);</span>
+<span class="fc" id="L190">    idx = processName.lastIndexOf(&quot;/&quot;);</span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">    if (idx &gt; 0) {</span>
+<span class="fc" id="L192">      processName = processName.substring(idx + 1);</span>
     }
-<span class="fc" id="L191">    idx = processName.lastIndexOf(&quot;\\&quot;);</span>
-<span class="fc bfc" id="L192" title="All 2 branches covered.">    if (idx &gt; 0) {</span>
-<span class="fc" id="L193">      processName = processName.substring(idx + 1);</span>
+<span class="fc" id="L194">    idx = processName.lastIndexOf(&quot;\\&quot;);</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">    if (idx &gt; 0) {</span>
+<span class="fc" id="L196">      processName = processName.substring(idx + 1);</span>
     }
-<span class="fc" id="L195">    idx = processName.lastIndexOf(&quot;.jar&quot;);</span>
-<span class="fc bfc" id="L196" title="All 2 branches covered.">    if (idx &gt; 0) {</span>
-<span class="fc" id="L197">      processName = processName.substring(0, idx);</span>
+<span class="fc" id="L198">    idx = processName.lastIndexOf(&quot;.jar&quot;);</span>
+<span class="fc bfc" id="L199" title="All 2 branches covered.">    if (idx &gt; 0) {</span>
+<span class="fc" id="L200">      processName = processName.substring(0, idx);</span>
     }
-<span class="fc" id="L199">    return processName;</span>
+<span class="fc" id="L202">    return processName;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

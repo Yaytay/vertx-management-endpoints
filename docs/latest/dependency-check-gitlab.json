@@ -4,7 +4,7 @@
                 "scanner": {
             "id": "org.owasp.dependency-check",
             "name": "Dependency-Check Core",
-            "version": "12.2.2",
+            "version": "13.0.0",
             "vendor": {
                 "name": "OWASP"
             },
@@ -14,7 +14,7 @@
                         "analyzer": {
             "id": "org.owasp.dependency-check",
             "name": "Dependency-Check Core",
-            "version": "12.2.2",
+            "version": "13.0.0",
             "vendor": {
                 "name": "OWASP"
             },
@@ -22,8 +22,8 @@
                         "url": "https://github.com/dependency-check/DependencyCheck/"
         },
 
-        "end_time": "2026-07-26T07:21:59",
-                "start_time": "2026-07-26T07:21:59",
+        "end_time": "2026-10-11T16:42:14",
+                "start_time": "2026-10-11T16:42:14",
                 "status":  "success"  ,
                 "type": "dependency_scanning"
 
@@ -46,70 +46,77 @@
                         "package": {
                             "name": "com.fasterxml.jackson.core:jackson-core"
                         },
-                        "version": "2.22.1"
+                        "version": "2.22.3"
 
                                                                                                                     }
 ,                    {
                         "package": {
                             "name": "tools.jackson.core:jackson-core"
                         },
-                        "version": "3.1.5"
+                        "version": "3.1.7"
 
                                                                                                                     }
 ,                    {
                         "package": {
                             "name": "com.fasterxml.jackson.core:jackson-databind"
                         },
-                        "version": "2.22.1"
+                        "version": "2.22.3"
 
                                                                                                                     }
 ,                    {
                         "package": {
                             "name": "tools.jackson.core:jackson-databind"
                         },
-                        "version": "3.1.5"
+                        "version": "3.1.7"
 
                                                                                                                     }
 ,                    {
                         "package": {
                             "name": "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
                         },
-                        "version": "2.22.1"
+                        "version": "2.22.3"
 
                                                                                                                     }
 ,                    {
                         "package": {
                             "name": "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
                         },
-                        "version": "2.22.1"
+                        "version": "2.22.3"
 
                                                                                                                     }
 ,                    {
                         "package": {
                             "name": "ch.qos.logback:logback-core"
                         },
-                        "version": "1.6.0"
+                        "version": "1.6.5"
+
+                                                                                                                    }
+,                    {
+                        "package": {
+                            "name": "org.jctools:jctools-core-jdk11"
+                        },
+                        "version": "4.0.7"
 
                                                                                                                     }
 ,                    {
                         "package": {
                             "name": "org.jctools:jctools-core"
                         },
-                        "version": "4.0.6"
+                        "version": "4.0.7"
 
                                                                                                                     }
 ,                    {
                         "package": {
                             "name": "io.netty:netty-tcnative-classes"
                         },
-                        "version": "2.0.78.Final"
+                        "version": "2.0.84.Final"
 
                                                                                                                     }
 ,                    {
                         "package": {
                             "name": "io.netty:netty-transport"
                         },
-                        "version": "4.2.16.Final"
+                        "version": "4.2.19.Final"
 
                                                                                                                     }
 ,                    {
@@ -130,56 +137,56 @@
                         "package": {
                             "name": "io.vertx:vertx-auth-common"
                         },
-                        "version": "5.1.5"
+                        "version": "5.2.1"
 
                                                                                                                     }
 ,                    {
                         "package": {
                             "name": "io.vertx:vertx-codegen"
                         },
-                        "version": "5.1.5"
+                        "version": "5.2.1"
 
                                                                                                                     }
 ,                    {
                         "package": {
                             "name": "io.vertx:vertx-codegen-api"
                         },
-                        "version": "5.1.5"
+                        "version": "5.2.1"
 
                                                                                                                     }
 ,                    {
                         "package": {
                             "name": "io.vertx:vertx-codegen-json"
                         },
-                        "version": "5.1.5"
+                        "version": "5.2.1"
 
                                                                                                                     }
 ,                    {
                         "package": {
                             "name": "io.vertx:vertx-codegen-processor"
                         },
-                        "version": "5.1.5"
+                        "version": "5.2.1"
 
                                                                                                                     }
 ,                    {
                         "package": {
                             "name": "io.vertx:vertx-core"
                         },
-                        "version": "5.1.5"
+                        "version": "5.2.1"
 
                                                                                                                     }
 ,                    {
                         "package": {
                             "name": "io.vertx:vertx-web"
                         },
-                        "version": "5.1.5"
+                        "version": "5.2.1"
 
                                                                                                                     }
 ,                    {
                         "package": {
                             "name": "io.vertx:vertx-web-common"
                         },
-                        "version": "5.1.5"
+                        "version": "5.2.1"
 
                                                                                                                     }
             ]
