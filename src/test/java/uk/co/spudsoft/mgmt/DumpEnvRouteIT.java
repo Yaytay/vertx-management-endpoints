@@ -59,6 +59,7 @@ public class DumpEnvRouteIT {
     vertx
             .deployVerticle(httperServerVerticle)
             .compose(verticleName -> {
+              return vertx.executeBlocking(() -> {
                 port = httperServerVerticle.getPort();
                 RestAssured.port = port;
                 logger.debug("Listening on port {}", port);
@@ -100,10 +101,10 @@ public class DumpEnvRouteIT {
                       ;                  
                   logger.debug("Env vars (plain): {}", body);
                 });
-                        
+                return null;
+              }).onComplete(ar -> {
                 testContext.completeNow();
-                return Future.succeededFuture();
-                
+              });
             });
   }
 }

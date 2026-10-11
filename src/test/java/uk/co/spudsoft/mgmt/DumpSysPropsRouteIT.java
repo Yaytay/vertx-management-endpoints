@@ -58,6 +58,7 @@ public class DumpSysPropsRouteIT {
     vertx
             .deployVerticle(httperServerVerticle)
             .compose(verticleName -> {
+              return vertx.executeBlocking(() -> {
                 port = httperServerVerticle.getPort();
                 RestAssured.port = port;
                 logger.debug("Listening on port {}", port);
@@ -99,10 +100,10 @@ public class DumpSysPropsRouteIT {
                       ;                  
                   logger.debug("System properties (plain): {}", body);
                 });
-                        
+                return null;
+              }).onComplete(ar -> {
                 testContext.completeNow();
-                return Future.succeededFuture();
-                
+              }); 
             });
   }
 }

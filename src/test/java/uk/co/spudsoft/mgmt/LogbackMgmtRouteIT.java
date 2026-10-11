@@ -58,6 +58,7 @@ public class LogbackMgmtRouteIT {
     vertx
             .deployVerticle(httperServerVerticle)
             .compose(verticleName -> {
+              return vertx.executeBlocking(() -> {
                 port = httperServerVerticle.getPort();
                 RestAssured.port = port;
                 logger.debug("Listening on port {}", port);
@@ -123,9 +124,10 @@ public class LogbackMgmtRouteIT {
                       ;                          
                   logger.debug("Sixth request took {}s", (System.currentTimeMillis() - start) / 1000.0);
                 });
-
+                return null;
+              }).onComplete(ar -> {
                 testContext.completeNow();
-                return Future.succeededFuture();
               });
+            });
   }
 }

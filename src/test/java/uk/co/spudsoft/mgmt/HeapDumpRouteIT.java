@@ -65,6 +65,7 @@ public class HeapDumpRouteIT {
     vertx
             .deployVerticle(httperServerVerticle)
             .compose(verticleName -> {
+              return vertx.executeBlocking(() -> {
                 port = httperServerVerticle.getPort();
                 RestAssured.port = port;
                 logger.debug("Listening on port {}", port);
@@ -106,10 +107,10 @@ public class HeapDumpRouteIT {
                   logger.debug("Downloaded {} bytes", bytes.length);
 
                 });
-                        
+                return null;
+              }).onComplete(ar -> {
                 testContext.completeNow();
-                return Future.succeededFuture();
-                
+              });
             });
   }
 }
